@@ -1,0 +1,599 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		61C3418224EC7A2F0065C5D4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C3418124EC7A2F0065C5D4 /* AppDelegate.swift */; };
+		61C3418424EC7A2F0065C5D4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C3418324EC7A2F0065C5D4 /* SceneDelegate.swift */; };
+		61C3418624EC7A2F0065C5D4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C3418524EC7A2F0065C5D4 /* ContentView.swift */; };
+		61C3418824EC7A3A0065C5D4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 61C3418724EC7A3A0065C5D4 /* Assets.xcassets */; };
+		61C3418B24EC7A3A0065C5D4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 61C3418A24EC7A3A0065C5D4 /* Preview Assets.xcassets */; };
+		61C3418E24EC7A3A0065C5D4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 61C3418C24EC7A3A0065C5D4 /* LaunchScreen.storyboard */; };
+		61C3419924EC7A3B0065C5D4 /* com_arrrink_StreetArtMarketplaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C3419824EC7A3B0065C5D4 /* com_arrrink_StreetArtMarketplaceTests.swift */; };
+		61C341A424EC7A3B0065C5D4 /* com_arrrink_StreetArtMarketplaceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C341A324EC7A3B0065C5D4 /* com_arrrink_StreetArtMarketplaceUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		61C3419524EC7A3B0065C5D4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 61C3417624EC7A2E0065C5D4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 61C3417D24EC7A2F0065C5D4;
+			remoteInfo = com.arrrink.StreetArtMarketplace;
+		};
+		61C341A024EC7A3B0065C5D4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 61C3417624EC7A2E0065C5D4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 61C3417D24EC7A2F0065C5D4;
+			remoteInfo = com.arrrink.StreetArtMarketplace;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		61C3417E24EC7A2F0065C5D4 /* com.arrrink.StreetArtMarketplace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = com.arrrink.StreetArtMarketplace.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		61C3418124EC7A2F0065C5D4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		61C3418324EC7A2F0065C5D4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		61C3418524EC7A2F0065C5D4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		61C3418724EC7A3A0065C5D4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		61C3418A24EC7A3A0065C5D4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		61C3418D24EC7A3A0065C5D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		61C3418F24EC7A3A0065C5D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		61C3419424EC7A3B0065C5D4 /* com.arrrink.StreetArtMarketplaceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = com.arrrink.StreetArtMarketplaceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		61C3419824EC7A3B0065C5D4 /* com_arrrink_StreetArtMarketplaceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = com_arrrink_StreetArtMarketplaceTests.swift; sourceTree = "<group>"; };
+		61C3419A24EC7A3B0065C5D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		61C3419F24EC7A3B0065C5D4 /* com.arrrink.StreetArtMarketplaceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = com.arrrink.StreetArtMarketplaceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		61C341A324EC7A3B0065C5D4 /* com_arrrink_StreetArtMarketplaceUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = com_arrrink_StreetArtMarketplaceUITests.swift; sourceTree = "<group>"; };
+		61C341A524EC7A3B0065C5D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		61C3417B24EC7A2F0065C5D4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		61C3419124EC7A3B0065C5D4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		61C3419C24EC7A3B0065C5D4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		61C3417524EC7A2E0065C5D4 = {
+			isa = PBXGroup;
+			children = (
+				61C3418024EC7A2F0065C5D4 /* com.arrrink.StreetArtMarketplace */,
+				61C3419724EC7A3B0065C5D4 /* com.arrrink.StreetArtMarketplaceTests */,
+				61C341A224EC7A3B0065C5D4 /* com.arrrink.StreetArtMarketplaceUITests */,
+				61C3417F24EC7A2F0065C5D4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		61C3417F24EC7A2F0065C5D4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				61C3417E24EC7A2F0065C5D4 /* com.arrrink.StreetArtMarketplace.app */,
+				61C3419424EC7A3B0065C5D4 /* com.arrrink.StreetArtMarketplaceTests.xctest */,
+				61C3419F24EC7A3B0065C5D4 /* com.arrrink.StreetArtMarketplaceUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		61C3418024EC7A2F0065C5D4 /* com.arrrink.StreetArtMarketplace */ = {
+			isa = PBXGroup;
+			children = (
+				61C3418124EC7A2F0065C5D4 /* AppDelegate.swift */,
+				61C3418324EC7A2F0065C5D4 /* SceneDelegate.swift */,
+				61C3418524EC7A2F0065C5D4 /* ContentView.swift */,
+				61C3418724EC7A3A0065C5D4 /* Assets.xcassets */,
+				61C3418C24EC7A3A0065C5D4 /* LaunchScreen.storyboard */,
+				61C3418F24EC7A3A0065C5D4 /* Info.plist */,
+				61C3418924EC7A3A0065C5D4 /* Preview Content */,
+			);
+			path = com.arrrink.StreetArtMarketplace;
+			sourceTree = "<group>";
+		};
+		61C3418924EC7A3A0065C5D4 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				61C3418A24EC7A3A0065C5D4 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		61C3419724EC7A3B0065C5D4 /* com.arrrink.StreetArtMarketplaceTests */ = {
+			isa = PBXGroup;
+			children = (
+				61C3419824EC7A3B0065C5D4 /* com_arrrink_StreetArtMarketplaceTests.swift */,
+				61C3419A24EC7A3B0065C5D4 /* Info.plist */,
+			);
+			path = com.arrrink.StreetArtMarketplaceTests;
+			sourceTree = "<group>";
+		};
+		61C341A224EC7A3B0065C5D4 /* com.arrrink.StreetArtMarketplaceUITests */ = {
+			isa = PBXGroup;
+			children = (
+				61C341A324EC7A3B0065C5D4 /* com_arrrink_StreetArtMarketplaceUITests.swift */,
+				61C341A524EC7A3B0065C5D4 /* Info.plist */,
+			);
+			path = com.arrrink.StreetArtMarketplaceUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		61C3417D24EC7A2F0065C5D4 /* com.arrrink.StreetArtMarketplace */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 61C341A824EC7A3B0065C5D4 /* Build configuration list for PBXNativeTarget "com.arrrink.StreetArtMarketplace" */;
+			buildPhases = (
+				61C3417A24EC7A2F0065C5D4 /* Sources */,
+				61C3417B24EC7A2F0065C5D4 /* Frameworks */,
+				61C3417C24EC7A2F0065C5D4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = com.arrrink.StreetArtMarketplace;
+			productName = com.arrrink.StreetArtMarketplace;
+			productReference = 61C3417E24EC7A2F0065C5D4 /* com.arrrink.StreetArtMarketplace.app */;
+			productType = "com.apple.product-type.application";
+		};
+		61C3419324EC7A3B0065C5D4 /* com.arrrink.StreetArtMarketplaceTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 61C341AB24EC7A3B0065C5D4 /* Build configuration list for PBXNativeTarget "com.arrrink.StreetArtMarketplaceTests" */;
+			buildPhases = (
+				61C3419024EC7A3B0065C5D4 /* Sources */,
+				61C3419124EC7A3B0065C5D4 /* Frameworks */,
+				61C3419224EC7A3B0065C5D4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				61C3419624EC7A3B0065C5D4 /* PBXTargetDependency */,
+			);
+			name = com.arrrink.StreetArtMarketplaceTests;
+			productName = com.arrrink.StreetArtMarketplaceTests;
+			productReference = 61C3419424EC7A3B0065C5D4 /* com.arrrink.StreetArtMarketplaceTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		61C3419E24EC7A3B0065C5D4 /* com.arrrink.StreetArtMarketplaceUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 61C341AE24EC7A3B0065C5D4 /* Build configuration list for PBXNativeTarget "com.arrrink.StreetArtMarketplaceUITests" */;
+			buildPhases = (
+				61C3419B24EC7A3B0065C5D4 /* Sources */,
+				61C3419C24EC7A3B0065C5D4 /* Frameworks */,
+				61C3419D24EC7A3B0065C5D4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				61C341A124EC7A3B0065C5D4 /* PBXTargetDependency */,
+			);
+			name = com.arrrink.StreetArtMarketplaceUITests;
+			productName = com.arrrink.StreetArtMarketplaceUITests;
+			productReference = 61C3419F24EC7A3B0065C5D4 /* com.arrrink.StreetArtMarketplaceUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		61C3417624EC7A2E0065C5D4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1150;
+				LastUpgradeCheck = 1150;
+				ORGANIZATIONNAME = "Арина Нефёдова";
+				TargetAttributes = {
+					61C3417D24EC7A2F0065C5D4 = {
+						CreatedOnToolsVersion = 11.5;
+					};
+					61C3419324EC7A3B0065C5D4 = {
+						CreatedOnToolsVersion = 11.5;
+						TestTargetID = 61C3417D24EC7A2F0065C5D4;
+					};
+					61C3419E24EC7A3B0065C5D4 = {
+						CreatedOnToolsVersion = 11.5;
+						TestTargetID = 61C3417D24EC7A2F0065C5D4;
+					};
+				};
+			};
+			buildConfigurationList = 61C3417924EC7A2E0065C5D4 /* Build configuration list for PBXProject "com.arrrink.StreetArtMarketplace" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 61C3417524EC7A2E0065C5D4;
+			productRefGroup = 61C3417F24EC7A2F0065C5D4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				61C3417D24EC7A2F0065C5D4 /* com.arrrink.StreetArtMarketplace */,
+				61C3419324EC7A3B0065C5D4 /* com.arrrink.StreetArtMarketplaceTests */,
+				61C3419E24EC7A3B0065C5D4 /* com.arrrink.StreetArtMarketplaceUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		61C3417C24EC7A2F0065C5D4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				61C3418E24EC7A3A0065C5D4 /* LaunchScreen.storyboard in Resources */,
+				61C3418B24EC7A3A0065C5D4 /* Preview Assets.xcassets in Resources */,
+				61C3418824EC7A3A0065C5D4 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		61C3419224EC7A3B0065C5D4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		61C3419D24EC7A3B0065C5D4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		61C3417A24EC7A2F0065C5D4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				61C3418224EC7A2F0065C5D4 /* AppDelegate.swift in Sources */,
+				61C3418424EC7A2F0065C5D4 /* SceneDelegate.swift in Sources */,
+				61C3418624EC7A2F0065C5D4 /* ContentView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		61C3419024EC7A3B0065C5D4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				61C3419924EC7A3B0065C5D4 /* com_arrrink_StreetArtMarketplaceTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		61C3419B24EC7A3B0065C5D4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				61C341A424EC7A3B0065C5D4 /* com_arrrink_StreetArtMarketplaceUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		61C3419624EC7A3B0065C5D4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 61C3417D24EC7A2F0065C5D4 /* com.arrrink.StreetArtMarketplace */;
+			targetProxy = 61C3419524EC7A3B0065C5D4 /* PBXContainerItemProxy */;
+		};
+		61C341A124EC7A3B0065C5D4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 61C3417D24EC7A2F0065C5D4 /* com.arrrink.StreetArtMarketplace */;
+			targetProxy = 61C341A024EC7A3B0065C5D4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		61C3418C24EC7A3A0065C5D4 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				61C3418D24EC7A3A0065C5D4 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		61C341A624EC7A3B0065C5D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		61C341A724EC7A3B0065C5D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		61C341A924EC7A3B0065C5D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"com.arrrink.StreetArtMarketplace/Preview Content\"";
+				DEVELOPMENT_TEAM = QD79G26U3W;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = com.arrrink.StreetArtMarketplace/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "-.com-arrrink-StreetArtMarketplace";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		61C341AA24EC7A3B0065C5D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"com.arrrink.StreetArtMarketplace/Preview Content\"";
+				DEVELOPMENT_TEAM = QD79G26U3W;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = com.arrrink.StreetArtMarketplace/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "-.com-arrrink-StreetArtMarketplace";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		61C341AC24EC7A3B0065C5D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QD79G26U3W;
+				INFOPLIST_FILE = com.arrrink.StreetArtMarketplaceTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "-.com-arrrink-StreetArtMarketplaceTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/com.arrrink.StreetArtMarketplace.app/com.arrrink.StreetArtMarketplace";
+			};
+			name = Debug;
+		};
+		61C341AD24EC7A3B0065C5D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QD79G26U3W;
+				INFOPLIST_FILE = com.arrrink.StreetArtMarketplaceTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "-.com-arrrink-StreetArtMarketplaceTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/com.arrrink.StreetArtMarketplace.app/com.arrrink.StreetArtMarketplace";
+			};
+			name = Release;
+		};
+		61C341AF24EC7A3B0065C5D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QD79G26U3W;
+				INFOPLIST_FILE = com.arrrink.StreetArtMarketplaceUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "-.com-arrrink-StreetArtMarketplaceUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = com.arrrink.StreetArtMarketplace;
+			};
+			name = Debug;
+		};
+		61C341B024EC7A3B0065C5D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QD79G26U3W;
+				INFOPLIST_FILE = com.arrrink.StreetArtMarketplaceUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "-.com-arrrink-StreetArtMarketplaceUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = com.arrrink.StreetArtMarketplace;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		61C3417924EC7A2E0065C5D4 /* Build configuration list for PBXProject "com.arrrink.StreetArtMarketplace" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				61C341A624EC7A3B0065C5D4 /* Debug */,
+				61C341A724EC7A3B0065C5D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		61C341A824EC7A3B0065C5D4 /* Build configuration list for PBXNativeTarget "com.arrrink.StreetArtMarketplace" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				61C341A924EC7A3B0065C5D4 /* Debug */,
+				61C341AA24EC7A3B0065C5D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		61C341AB24EC7A3B0065C5D4 /* Build configuration list for PBXNativeTarget "com.arrrink.StreetArtMarketplaceTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				61C341AC24EC7A3B0065C5D4 /* Debug */,
+				61C341AD24EC7A3B0065C5D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		61C341AE24EC7A3B0065C5D4 /* Build configuration list for PBXNativeTarget "com.arrrink.StreetArtMarketplaceUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				61C341AF24EC7A3B0065C5D4 /* Debug */,
+				61C341B024EC7A3B0065C5D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 61C3417624EC7A2E0065C5D4 /* Project object */;
+}
