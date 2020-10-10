@@ -18,9 +18,8 @@ struct IpotekaView: View {
   //  @ObservedObject var dataMaxPrice = getDataForIpotekaCalc()
     @EnvironmentObject private var navigationStack: NavigationStack
     @State var size = UIScreen.main.bounds.width - 20
-   
-    @ObservedObject var to = To(to: 0.202, to2: 0.36, to3: 0.667, to4: 0.228, to5: 0.285, workType: "Найм", checkMoneyType: "2-НДФЛ", bank : "domrf")
-    
+    @Environment(\.colorScheme) var colorScheme
+    @ObservedObject var to = To(to: 0.202, to2: 0.36, to3: 0.667, to4: 0.228, to5: 0.285, workType: "Найм", checkMoneyType: "2-НДФЛ", checkSpecialType: "default", bank : "domrf", ifRF: "Не являюсь налоговым резидентом РФ")
     
     func map(_ v: [Bank]) -> [Bank] {
         
@@ -101,53 +100,54 @@ struct IpotekaView: View {
     ZStack{
         
         // Price
-        ProgressBar(height: size - (1 * size / 7), to: $to.value, color: Color("ColorMain"), movable: true, min: 0, max: 1).onReceive(to.publisher) { (v) in
+        ProgressBar(height: size - (1 * size / 7), to: $to.flatPrice, color: Color("ColorMain"), movable: true, min: 0, max: 1).onReceive(to.publisher) { (v) in
             let monthPercentConctant = to.percent / 12 / 100
-            let totalPercentConctant = pow(value: (1 + monthPercentConctant), count: Int(to.value3 * 30 * 12))
+            let totalPercentConctant = pow(value: (1 + monthPercentConctant), count: Int(to.creditDuration * 30 * 12))
             
             
             let summIpoteka = (v * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))) - to.value2 * v * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))
             
             guard (Double(to.value4 * 500000)) < 500000 else { print("(((")
                 return }
-            guard (summIpoteka * monthPercentConctant * totalPercentConctant / (totalPercentConctant - 1)) / 500000 < 1 else { print("((nnnnnn(")
+            guard (summIpoteka * monthPercentConctant * totalPercentConctant / (totalPercentConctant - 1)) / 5000000 < 1 else { print("((nnnnnn(")
                 return }
             withAnimation(Animation.linear(duration: 0.15)){
                 
-                to.value4 = (summIpoteka * monthPercentConctant * totalPercentConctant / (totalPercentConctant - 1)) / 500000
-                
+                to.value4 = (summIpoteka * monthPercentConctant * totalPercentConctant / (totalPercentConctant - 1)) / 5000000
+                to.findPercent()
             }
+            
         }
         
         // First Payment
         ProgressBar(height: size - (2 * size / 7), to: $to.value2, color: Color("ColorYellow"), movable: true, min: 0.1, max: 0.9).onReceive(to.publisher2) { (v) in
             
             let monthPercentConctant = to.percent / 12 / 100
-            let totalPercentConctant = pow(value: (1 + monthPercentConctant), count: Int(to.value3 * 30 * 12))
+            let totalPercentConctant = pow(value: (1 + monthPercentConctant), count: Int(to.creditDuration * 30 * 12))
             
             
-            let summIpoteka = (to.value * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))) - to.value * v * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))
+            let summIpoteka = (to.flatPrice * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))) - to.flatPrice * v * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))
             
             guard (Double(to.value4 * 500000)) < 500000 else { print("(((")
                 return }
-            guard (summIpoteka * monthPercentConctant * totalPercentConctant / (totalPercentConctant - 1)) / 500000 < 1 else { print("((nnnnnn(")
+            guard (summIpoteka * monthPercentConctant * totalPercentConctant / (totalPercentConctant - 1)) / 500000 < 1 else {
                 return }
             
             withAnimation(Animation.linear(duration: 0.15)){
             
             to.value4 = (summIpoteka * monthPercentConctant * totalPercentConctant / (totalPercentConctant - 1)) / 500000
-                
+                to.findPercent()
             }
         }
         
         // Duration
-        ProgressBar(height: size - (3 * size / 7) , to: $to.value3, color: Color("ColorLightBlue"), movable: true, min: 0.03, max: 1).onReceive(to.publisher3) { (v) in
+        ProgressBar(height: size - (3 * size / 7) , to: $to.creditDuration, color: Color("ColorLightBlue"), movable: true, min: 0.03, max: 1).onReceive(to.publisher3) { (v) in
             
             let monthPercentConctant = to.percent / 12 / 100
              let totalPercentConctant = pow(value: (1 + monthPercentConctant), count: Int(v * 30 * 12))
              
              
-            let summIpoteka = (to.value * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))) - to.value2 * to.value * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))
+            let summIpoteka = (to.flatPrice * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))) - to.value2 * to.flatPrice * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))
              
              guard (summIpoteka * monthPercentConctant * totalPercentConctant / (totalPercentConctant - 1)) / 500000 < 1 else {
                  return }
@@ -155,7 +155,7 @@ struct IpotekaView: View {
             withAnimation(Animation.linear(duration: 0.15)){
             
             to.value4 = (summIpoteka * monthPercentConctant * totalPercentConctant / (totalPercentConctant - 1)) / 500000
-                
+                to.findPercent()
             }
             
              
@@ -256,7 +256,7 @@ struct IpotekaView: View {
                         
                         //.fontWeight(.regular)
                         .font(.footnote).fixedSize(horizontal: false, vertical: true)
-                    Text(String(format: "%.1f", Double(to.value * (to.maxPrice == "" ? 22.0 : CGFloat(Double(
+                    Text(String(format: "%.1f", Double(to.flatPrice * (to.maxPrice == "" ? 22.0 : CGFloat(Double(
                     to.maxPrice) ?? 22.0))) / 1000000.0)
                         + " млн").font(.title).fontWeight(.bold).fixedSize(horizontal: false, vertical: true)
                     
@@ -287,7 +287,7 @@ struct IpotekaView: View {
                            // .fontWeight(.heavy)
                             
                             .font(.footnote).fixedSize(horizontal: false, vertical: true)
-                        Text(String(format: "%.1f", Double(to.value * to.value2 * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))) / 1000000.0) + " млн").font(.title).fontWeight(.bold)
+                        Text(String(format: "%.1f", Double(to.flatPrice * to.value2 * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))) / 1000000.0) + " млн").font(.title).fontWeight(.bold)
                             .fixedSize(horizontal: false, vertical: true)
                         
                     }
@@ -316,8 +316,8 @@ struct IpotekaView: View {
                            // .fontWeight(.heavy)
                             
                             .font(.footnote).fixedSize(horizontal: false, vertical: true)
-                        Text(String(format: "%.0f", Double(to.value3 * 30))
-                                + "\(self.getYearString(to: to.value3))").font(.title).fontWeight(.bold)
+                        Text(String(format: "%.0f", Double(to.creditDuration * 30))
+                                + "\(self.getYearString(to: to.creditDuration))").font(.title).fontWeight(.bold)
                             .fixedSize(horizontal: false, vertical: true)
                     
                     }
@@ -407,12 +407,16 @@ struct IpotekaView: View {
   
                         let findPercent = i.checkMoneyTypes.filter{$0.typeName == to.checkMoneyType}
                         
-                        
+                        if findPercent.count > 0 {
+                            return BankCell(selected: $to.bank, canClick: findPercent[0].percent == 0.0 ? false : true, data: i)
+                        } else {
+                            return BankCell(selected: $to.bank, canClick: false, data: i)
+                        }
                     
-                        return BankCell(selected: $to.bank, canClick: findPercent[0].percent == 0.0 ? false : true, data: i)
+                        
                     }
                 }
-             }.padding().onReceive(to.publisherBank) { (v) in
+             }.padding([.horizontal, .bottom]).onReceive(to.publisherBank) { (v) in
                 
                 self.to.bank = v
 //                let find = to.dataBank.filter{$0.img == v}
@@ -423,10 +427,10 @@ struct IpotekaView: View {
 //                    to.percent = newPercent
                     
                     let monthPercentConctant = to.percent / 12 / 100
-                    let totalPercentConctant = pow(value: (1 + monthPercentConctant), count: Int(to.value3 * 30 * 12))
+                    let totalPercentConctant = pow(value: (1 + monthPercentConctant), count: Int(to.creditDuration * 30 * 12))
                     
                     
-                    let summIpoteka = (to.value * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))) - to.value * to.value2 * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))
+                    let summIpoteka = (to.flatPrice * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))) - to.flatPrice * to.value2 * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))
                     
                     guard (Double(to.value4 * 500000)) < 500000 else {
                         return }
@@ -455,7 +459,7 @@ struct IpotekaView: View {
             
             Text("Трудоустройство").foregroundColor(.secondary).fontWeight(.heavy).font(.title).fixedSize(horizontal: false, vertical: true).padding().multilineTextAlignment(.leading)
         
-        HStack(spacing: 0){
+        HStack(spacing: 15){
                           
             TabButton(selected: $to.workType, title: "Найм")
                           
@@ -465,6 +469,7 @@ struct IpotekaView: View {
         }.onReceive(to.publisherWorkType) { (v) in
            
             self.to.workType = v
+            to.findPercent()
         }
                       .background(Color.white.opacity(0.08))
                       .clipShape(Capsule())
@@ -482,7 +487,7 @@ struct IpotekaView: View {
             
             
         ScrollView(.horizontal, showsIndicators: false) {
-        HStack(spacing: 0){
+        HStack(spacing: 15){
                           
                           TabButton(selected: $to.checkMoneyType, title: "2-НДФЛ")
                           
@@ -493,12 +498,97 @@ struct IpotekaView: View {
                       }.onReceive(to.publisherCheckMoneyType) { (v) in
                         
                         self.to.checkMoneyType = v
+                        to.findPercent()
                     }
                       .background(Color.white.opacity(0.08))
                       .clipShape(Capsule())
                       .padding(.horizontal)
                 
             }
+            
+            
+            Text("Госпрограммы")
+                .foregroundColor(.secondary)
+                .fontWeight(.heavy)
+                .font(.title)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding([.horizontal, .top])
+                .multilineTextAlignment(.leading)
+                
+        ScrollView(.horizontal, showsIndicators: false) {
+        HStack(spacing: 15){
+            TabButtonForSpecialType(selected: $to.checkSpecialType, title: "Госпрограмма 6,5 %")
+                          TabButtonForSpecialType(selected: $to.checkSpecialType, title: "Военная ипотека")
+                          
+            TabButtonForSpecialType(selected: $to.checkSpecialType, title: "Семейная ипотека")
+            
+                        
+           
+                      }.onReceive(to.publisherCheckSpecialType) { (v) in
+                        
+                        self.to.checkSpecialType = v
+                        to.findPercent()
+                    }
+       
+        .background(Color.white.opacity(0.08))
+        
+                      .clipShape(Capsule())
+        .padding(.horizontal)
+        
+                
+            }
+            
+            Text("Доход за пределами РФ")
+                .foregroundColor(.secondary)
+                .fontWeight(.heavy)
+                .font(.title)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding()
+                .multilineTextAlignment(.leading)
+            
+            ZStack() {
+                Capsule().fill(colorScheme == .dark ?  Color.white.opacity(0.08) : Color.white).shadow(color: Color.gray.opacity(0.3), radius: colorScheme == .dark ? 0 : 5)
+                Text(to.ifRF)
+                    .fontWeight(.bold)
+                    .padding(.leading, 70)
+                    .padding(.trailing, 15)
+                    .multilineTextAlignment(.center)
+                
+                HStack {
+                    Capsule()
+                        .fill(Color("ColorMain"))
+                        .frame(width: calcWidth() + 55)
+                    Spacer(minLength: 0)
+                }
+
+                HStack{
+                    ZStack {
+                        Color("ColorMain")
+                        HStack {
+                        Image(systemName: "chevron.right").foregroundColor(.white)
+                            .font(.title)
+                            .offset(x: 5)
+                        
+                        Image(systemName: "chevron.right").offset(x: -5).foregroundColor(.white)
+                            .font(.title)
+                        }
+                    }.clipShape(Circle())
+                        
+                        .offset(x: 5)
+                        
+                    .frame(width: 55, height: 55)
+                    .offset(x: offset)
+                    .gesture(DragGesture().onChanged(onChanged(value: )).onEnded(onEnded(value:)))
+                    Spacer()
+                }
+
+            }.frame(width: maxwidth,height: 55, alignment: .center)
+            .padding([.bottom, .trailing])
+            .padding(.leading, 20)
+            .onReceive(to.publisherIfRF, perform: { _ in
+                to.findPercent()
+            })
+            
             
         }
         
@@ -514,8 +604,38 @@ struct IpotekaView: View {
   //.frame(height: 135)
 
 }
+    @State var offset : CGFloat = 0
+    @State var maxwidth = UIScreen.main.bounds.width - 40
+
     
+    func calcWidth() -> CGFloat {
+        let percent = offset / maxwidth
+        return percent * maxwidth
+    }
     
+    func onChanged(value: DragGesture.Value) {
+        if value.translation.width > 0 && offset <= maxwidth - 55 {
+            offset = value.translation.width
+        }
+        
+    }
+    func onEnded(value: DragGesture.Value) {
+        
+        withAnimation(Animation.easeInOut(duration: 0.3)) {
+            if offset > 180 {
+                offset = maxwidth - 55
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                    offset = 0
+                    to.ifRF = to.ifRF == "Не являюсь налоговым резидентом РФ" ? "Являюсь налоговым резидентом РФ" : "Не являюсь налоговым резидентом РФ"
+                    
+                }
+            } else {
+                offset = 0
+            }
+        }
+        
+    }
         //  @Namespace var animation
     var body: some View {
        // ScrollView(.vertical, showsIndicators: false) {
@@ -585,6 +705,55 @@ struct TabButton : View {
       )
       }
 }
+
+
+struct TabButtonForSpecialType : View {
+      
+      @Binding var selected : String
+      var title : String
+    var colorBGactive : Color {
+        return colorScheme == .dark ? Color.white : Color("ColorMain")
+        
+    }
+    var colorBG : Color {
+        return colorScheme == .dark ? Color.clear : Color.white
+        
+    }
+    
+    @Environment(\.colorScheme) var colorScheme
+
+      var body: some View{
+
+    return AnyView(
+        VStack(spacing: 15) {
+          Button(action: {
+              
+            withAnimation(.default){
+                
+                if selected == title {
+                    selected = "default"
+                    
+                } else {
+                    selected = title
+                }
+                
+              }
+              
+          }) {
+   
+                  Text(title)
+                    .foregroundColor(selected == title ? Color.init(.systemBackground) : .primary)
+                    .fontWeight(.bold).padding().fixedSize(horizontal: false, vertical: true).multilineTextAlignment(.center)
+                    .background(Capsule().fill(selected == title ?  colorBGactive : colorBG).shadow(color: Color.gray.opacity(0.3), radius: 5))
+                    
+            
+          }}.padding(colorScheme == .dark ? Edge.Set(rawValue: 0) : .vertical)
+           
+      )
+      }
+}
+
+
 struct BankCell : View {
       
       @Binding var selected : String
@@ -814,8 +983,10 @@ class To: ObservableObject, Identifiable {
     
     let publisherWorkType = PassthroughSubject<String, Never>()
     let publisherCheckMoneyType = PassthroughSubject<String, Never>()
+    let publisherCheckSpecialType = PassthroughSubject<String, Never>()
     
     let publisherBank = PassthroughSubject<String, Never>()
+    let publisherIfRF  = PassthroughSubject<String, Never>()
     
     @Published var maxPrice : String = "30000000"
     
@@ -838,17 +1009,17 @@ class To: ObservableObject, Identifiable {
         }
 
     }
-    var value: CGFloat {
+    var flatPrice: CGFloat {
         willSet {
             
-            if newValue != value {
+            if newValue != flatPrice {
             objectWillChange.send()
                
             }
         }
         didSet {
-            if oldValue != value {
-            publisher.send(value)
+            if oldValue != flatPrice {
+            publisher.send(flatPrice)
                
             }
             }
@@ -868,17 +1039,17 @@ class To: ObservableObject, Identifiable {
         }
     }
    
-    var value3: CGFloat {
+    var creditDuration: CGFloat {
             
             willSet {
                 
-                if newValue != value3 {
+                if newValue != creditDuration {
                 objectWillChange.send()
                 }
             }
             didSet {
-                if oldValue != value3 {
-                publisher3.send(value3)
+                if oldValue != creditDuration {
+                publisher3.send(creditDuration)
                 }
             }
     }
@@ -909,6 +1080,22 @@ class To: ObservableObject, Identifiable {
         didSet {
             if oldValue != value5 {
             publisher5.send(value5)
+            }
+        }
+    }
+    
+    
+    var ifRF: String {
+        willSet {
+           
+            if newValue != ifRF {
+            objectWillChange.send()
+                
+            }
+        }
+        didSet {
+            if oldValue != ifRF {
+            publisherIfRF.send(ifRF)
             }
         }
     }
@@ -947,7 +1134,7 @@ class To: ObservableObject, Identifiable {
                                                                  maxSumOfCredit: 50000000,
                                                                  maxPV: 0.9,
                                                                  accentColor: Color.init(red: 255 / 255, green: 102 / 255, blue: 2 / 255),
-                                                                 ifNotFromRussia: false,
+                                                                 ifNotFromRussia: true,
                                                                  ifcheckMoneyTypePFR: false,
                                                                  if2docs: false,
                                                                  maxYearCreditDuration: 30,
@@ -1014,6 +1201,19 @@ class To: ObservableObject, Identifiable {
         }
     }
     
+    var checkSpecialType : String {
+       willSet {
+           if newValue != checkSpecialType {
+           objectWillChange.send()
+           }
+       }
+       didSet {
+           if oldValue != checkSpecialType {
+           publisherCheckSpecialType.send(checkSpecialType)
+           }
+       }
+   }
+    
     var bank : String {
        willSet {
         if newValue != bank {
@@ -1027,45 +1227,123 @@ class To: ObservableObject, Identifiable {
        }
    }
     
-    init( to: CGFloat, to2: CGFloat, to3: CGFloat, to4: CGFloat, to5: CGFloat, workType: String, checkMoneyType: String, bank : String) {
+    init( to: CGFloat, to2: CGFloat, to3: CGFloat, to4: CGFloat, to5: CGFloat, workType: String, checkMoneyType: String, checkSpecialType: String, bank : String, ifRF : String) {
         
-        self.value = to
-        self.value2 = to2
-        self.value3 = to3
-        self.value4 = to4
+        self.flatPrice = to // total price of flat
+        self.value2 = to2 // PV
+        self.creditDuration = to3 // Duration
+        self.value4 = to4 // Month payment
         self.value5 = to5
         self.workType = workType
         self.checkMoneyType = checkMoneyType
+        self.checkSpecialType = checkSpecialType
         self.bank = bank
-        // getMaxPrice()
+        self.ifRF = ifRF
         
-      //  findPercent()
+        getMaxPrice()
+        
+        findPercent()
        
     }
-//    func findPercent() {
-//
-//
-//
-//
-//
-//        for i in dataBank {
-//
-//
-//
-//
-//
-//
-//
-//        var index = 0
-//        let filter = dataBank.filter{ $0.img == i.img }
-//        guard filter.count == 1 else {return}
-//
-//        index = filter[0].id
-//        dataBank[index].percent = 66.0
-//
-//        }
-//
-//    }
+    func findPercent() {
+
+        var err = ""
+        var index = 0
+        let price = flatPrice * (maxPrice == "" ? 22.0 : CGFloat(Double(maxPrice) ?? 22.0))
+
+        for i in dataBank {
+           
+        let filter = dataBank.filter{ $0.img == i.img }
+        guard filter.count == 1 else {return}
+        index = filter[0].id
+        
+//            guard (price - price * value2) > i.minSumOfCredit else { err = "Минимальная сумма кредита должна быть не менее \(Int(i.minSumOfCredit) / 1000) 000 рублей"
+//                print(i.name," ",err)
+//                return }
+            
+            if (price - price * value2) > i.minSumOfCredit {
+                
+//                guard (price - price * value2) < i.maxSumOfCredit else { err = "Максимальная сумма кредита должна быть не более \(Int(i.maxSumOfCredit) / 1000000) 000 000 рублей"
+//                    print(i.name," ",err)
+//                    return }
+                
+                if (price - price * value2) < i.maxSumOfCredit {
+                    
+                    
+//                    guard value2 < i.maxPV else { err = "Первоначальный взнос больше максимально допустимых \(Int(i.maxPV * 100))%"
+//                        print(i.name," ",err)
+//                        return }
+                    
+                    
+                    if value2 < i.maxPV {
+                        if (ifRF == "Являюсь налоговым резидентом РФ") && i.ifNotFromRussia == false{
+                            err = "Ипотека не выдаётся налоговым нерезидентам РФ"
+                            print(i.name," ",err)
+                        } else {
+                            if (checkMoneyType == "Выписка из ПФР") && i.ifcheckMoneyTypePFR == false {
+                                
+                                err = "Не принимает подтверждение дохода из ПФР"
+                                print(i.name," ",err)
+                            } else {
+                                
+                                if (checkMoneyType == "По двум документам") && i.if2docs == false {
+                                    
+                                    err = "Ипотека не может быть выдана по двум документам"
+                                    print(i.name," ",err)
+                                } else {
+                                    if creditDuration * 30 > i.maxYearCreditDuration {
+                                        
+                                        err = "Максимальный срок ипотеки может быть не более \(Int(i.maxYearCreditDuration)) лет"
+                                        print(i.name," ",err)
+                                    } else {
+                                        if creditDuration * 30 < i.minSumOfCredit {
+                                            
+                                            err = "Минимальный срок ипотеки может быть не менее \(Int(i.minYearCreditDuration)) лет"
+                                            print(i.name," ",err)
+                                        } else {
+                                            print("suc")
+                                        }
+                                    }
+                                    
+                                }
+                                
+                                
+                                
+                            }
+                        }
+                       
+                    } else {
+                        err = "Первоначальный взнос больше максимально допустимых \(Int(i.maxPV * 100))%"
+                            print(i.name," ",err)
+                    }
+                } else {
+                    err = "Максимальная сумма кредита должна быть не более \(Int(i.maxSumOfCredit) / 1000000) 000 000 рублей"
+                        print(i.name," ",err)
+                }
+                
+                
+                
+            } else {
+                err = "Минимальная сумма кредита должна быть не менее \(Int(i.minSumOfCredit) / 1000) 000 рублей"
+                    print(i.name," ",err)
+            }
+            
+           
+            
+            
+            
+            
+            
+            
+            
+            
+
+        
+       // dataBank[index].percent = 66.0
+
+        }
+
+    }
     
     func pow(value: CGFloat, count: Int) -> CGFloat {
         

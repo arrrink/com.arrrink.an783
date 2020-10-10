@@ -57,49 +57,49 @@ struct MapView : UIViewRepresentable {
         
         map.showsUserLocation = true
         
-
-        let databaseReference = Database.database().reference()
-        databaseReference.child("objects").observe(.value)
-                             { (objects) in
-                                guard let geoDict = objects.value as? [[String: AnyObject]] else { print("(")
-                                    return }
-                                for i in geoDict {
-
-
-                                  //  print(geoDict )
-
-
-                                    let geoRef = GeoFire(firebaseRef: databaseReference.child("geo"))
-                                    geoRef.getLocationForKey("geo_id_\(i["id"] as? Int ?? 0)") { (loc, err) in
-
-
-
-                                        guard var location = loc else { return }
-                                        let anno = MKPointAnnotation()
-                                        anno.title = i["complex"] as? String ?? ""
-                                        anno.subtitle = "\(i["developer"] as? String ?? "") | \(i["address"] as? String ?? "") | \(i["deadline"] as? String ?? "")"
-
-
-
-                                        location = CLLocation(latitude: self.getBase(number: location.coordinate.latitude - 0.0) , longitude: self.getBase(number: location.coordinate.longitude - 0.0))
-
-                                        anno.coordinate = location.coordinate
-
-
-
-
-
-
-
-
-                                        DispatchQueue.main.async {
-                                            self.map.addAnnotation(anno)
-
-                                                                                                              }
-
-                                    }
-        }
-        }
+//
+//        let databaseReference = Database.database().reference()
+//        databaseReference.child("objects").observe(.value)
+//                             { (objects) in
+//                                guard let geoDict = objects.value as? [[String: AnyObject]] else { print("(")
+//                                    return }
+//                                for i in geoDict {
+//
+//
+//                                  //  print(geoDict )
+//
+//
+//                                    let geoRef = GeoFire(firebaseRef: databaseReference.child("geo"))
+//                                    geoRef.getLocationForKey("geo_id_\(i["id"] as? Int ?? 0)") { (loc, err) in
+//
+//
+//
+//                                        guard var location = loc else { return }
+//                                        let anno = MKPointAnnotation()
+//                                        anno.title = i["complex"] as? String ?? ""
+//                                        anno.subtitle = "\(i["developer"] as? String ?? "") | \(i["address"] as? String ?? "") | \(i["deadline"] as? String ?? "")"
+//
+//
+//
+//                                        location = CLLocation(latitude: self.getBase(number: location.coordinate.latitude - 0.0) , longitude: self.getBase(number: location.coordinate.longitude - 0.0))
+//
+//                                        anno.coordinate = location.coordinate
+//
+//
+//
+//
+//
+//
+//
+//
+//                                        DispatchQueue.main.async {
+//                                            self.map.addAnnotation(anno)
+//
+//                                                                                                              }
+//
+//                                    }
+//        }
+//        }
 
 
 
