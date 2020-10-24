@@ -15,6 +15,8 @@ import Combine
 
 
 struct EnterPhoneNumberView : View {
+    
+    @Binding var detailView : taFlatPlans
     @Binding var modalController : Bool
     @State var ccode = ""
       @State var no = ""
@@ -22,7 +24,6 @@ struct EnterPhoneNumberView : View {
       @State var msg = ""
       @State var alert = false
       @State var ID = ""
-    
     @State private var number: String = ""
     @State private var isEditing = false
       
@@ -80,7 +81,7 @@ struct EnterPhoneNumberView : View {
                 
               } .padding(.vertical, 15)
   
-                NavigationLink(destination: LoginCodeView(modalController: $modalController, show: $show, ID: $ID, number: number), isActive: $show) {
+                NavigationLink(destination: LoginCodeView(detailView: $detailView, modalController: $modalController, show: $show, ID: $ID, number: number), isActive: $show) {
                   
                   
                   Button(action: {
@@ -152,7 +153,7 @@ struct EnterPhoneNumberView : View {
   }
   
   struct LoginCodeView : View {
-    
+    @Binding var detailView : taFlatPlans
     @Binding var modalController : Bool
    //   @Environment(\.presentationMode) var presentation
       @State var code = ""
@@ -163,7 +164,6 @@ struct EnterPhoneNumberView : View {
       @EnvironmentObject var navigationStack: NavigationStack
     var number : String
     @State private var isActive = false
-
       var body : some View{
             
       //  NavigationView {
@@ -176,7 +176,7 @@ struct EnterPhoneNumberView : View {
                   
                 VStack(alignment: .leading,spacing: 20) {
                       
-                    HStack(spacing: 15) {
+                    HStack(spacing: 20) {
                     Button(action: {
                         
                         self.show.toggle()
@@ -189,11 +189,23 @@ struct EnterPhoneNumberView : View {
                      
                         Text("Подтверждение").font(.title).fontWeight(.heavy)
                     }
-                      Text("Код отправлен на номер \(number)")
+                    HStack {
+                        Spacer()
+                      Text("Код отправлен на номер ")
                           .font(.body)
                           .foregroundColor(.gray)
-                        .padding(.top, 12).multilineTextAlignment(.center)
-  
+                       .multilineTextAlignment(.center)
+                        Spacer()
+                    } .padding(.top, 15)
+                    HStack {
+                        Spacer()
+                        Text("+\(number)").font(.title)
+                            .foregroundColor(.primary)
+                          .multilineTextAlignment(.center)
+                        
+                        Spacer()
+                        
+                    }.padding(.top, 15)
                      // TextField("Код", text: self.$code)
                     FormattedTextField(
                                         "0 0 0 0 0 0",
@@ -208,7 +220,7 @@ struct EnterPhoneNumberView : View {
                       
                         
                    // PushView(destination: HomeView(), isActive: $isActive) {
-                  //  NavigationLink(destination: ScndPage(show: $show, ID: $ID), isActive: $show) {
+                    NavigationLink(destination: DetailFlatView(data: detailView), isActive: $show) {
                       Button(action: {
                         
                        
@@ -227,7 +239,10 @@ struct EnterPhoneNumberView : View {
                               UserDefaults.standard.set(true, forKey: "status")
                               
                               NotificationCenter.default.post(name: NSNotification.Name("statusChange"), object: nil)
-                            self.modalController.toggle()
+                                
+                                 self.show.toggle()
+                               // self.navigationStack.push(OrderView(data: detailView))
+                                // self.modalController.toggle()
                               }
                           }
                      //   self.presentation.wrappedValue.dismiss()
@@ -244,7 +259,7 @@ struct EnterPhoneNumberView : View {
                       .navigationBarBackButtonHidden(true)
                       .padding(.vertical, 15)
                     
-                  //}
+                  }
                     
                   
                       

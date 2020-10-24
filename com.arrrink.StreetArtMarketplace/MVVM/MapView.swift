@@ -12,40 +12,41 @@ import CoreLocation
 import Combine
 import Alamofire
 import Firebase
-import GeoFire
+
 import GoogleMaps
 import GooglePlaces
-
+import MapKitGoogleStyler
+import PromiseKit
 import SwiftUIMapView
 import Contacts
 
 struct MapView : UIViewRepresentable {
 
     var lastLocation = CLLocation(latitude: 59.939095, longitude: 30.315868).coordinate
-    
     @Binding var manager : CLLocationManager
     @Binding var alert : Bool
-
+    @Binding var showObjectDetails : Bool
+    
+    @EnvironmentObject var getObjects : getTaFlatPlansData
+    
+    
+    
+    @Binding var complexNameArray: [MKPointAnnotation]
+    
+    
     let map = MKMapView()
     
     func makeCoordinator() -> MapView.Coordinator {
         return Coordinator(parent1: self)
     }
-    func getBase(number: Double) -> Double {
-        return round(number * 1000)/1000
-    }
-    
-    
-    func randomCoordinate() -> Double {
-        return Double(arc4random_uniform(140)) * 0.00002
-    }
    
-
+  
+   
      func makeUIView(context: UIViewRepresentableContext<MapView>) -> MKMapView {
-    
         manager.delegate = context.coordinator
         let center = CLLocation(latitude: 59.939095, longitude: 30.315868).coordinate
         let region = MKCoordinateRegion(center: center, latitudinalMeters: 2000, longitudinalMeters: 2000)
+       
         map.region = region
         manager.requestWhenInUseAuthorization()
         manager.delegate = context.coordinator
@@ -56,64 +57,62 @@ struct MapView : UIViewRepresentable {
                                 forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
         
         map.showsUserLocation = true
+       
+            map.translatesAutoresizingMaskIntoConstraints = false
+
+       
+    
+        map.delegate = context.coordinator
+    
+        // MARK: map custom style
         
+        // We first need to have the path of the overlay configuration JSON
+//        guard let overlayFileURLString = Bundle.main.path(forResource: UITraitCollection.current.userInterfaceStyle == .dark ? "darkoverlay" : "overlay", ofType: "json") else {
+//                print("not f")
+//                       return map
+//               }
+//               let overlayFileURL = URL(fileURLWithPath: overlayFileURLString)
 //
-//        let databaseReference = Database.database().reference()
-//        databaseReference.child("objects").observe(.value)
-//                             { (objects) in
-//                                guard let geoDict = objects.value as? [[String: AnyObject]] else { print("(")
-//                                    return }
-//                                for i in geoDict {
+//               // After that, you can create the tile overlay using MapKitGoogleStyler
+//               guard let tileOverlay = try? MapKitGoogleStyler.buildOverlay(with: overlayFileURL) else {
+//                print("not build")
+//                   return map
+//               }
 //
-//
-//                                  //  print(geoDict )
-//
-//
-//                                    let geoRef = GeoFire(firebaseRef: databaseReference.child("geo"))
-//                                    geoRef.getLocationForKey("geo_id_\(i["id"] as? Int ?? 0)") { (loc, err) in
-//
-//
-//
-//                                        guard var location = loc else { return }
-//                                        let anno = MKPointAnnotation()
-//                                        anno.title = i["complex"] as? String ?? ""
-//                                        anno.subtitle = "\(i["developer"] as? String ?? "") | \(i["address"] as? String ?? "") | \(i["deadline"] as? String ?? "")"
-//
-//
-//
-//                                        location = CLLocation(latitude: self.getBase(number: location.coordinate.latitude - 0.0) , longitude: self.getBase(number: location.coordinate.longitude - 0.0))
-//
-//                                        anno.coordinate = location.coordinate
-//
-//
-//
-//
-//
-//
-//
-//
-//                                        DispatchQueue.main.async {
-//                                            self.map.addAnnotation(anno)
-//
-//                                                                                                              }
-//
-//                                    }
-//        }
-//        }
-
-
-
-
-
-
-
+               // And finally add it to your MKMapView
+       // map.addOverlay(tileOverlay)
+        
+        
+          
 
         return map
     }
+    
+   
     func updateUIView(_ uiView: MKMapView, context: UIViewRepresentableContext<MapView>) {
+        
+        uiView.removeAnnotations(uiView.annotations)
+        
+        
+       
+         
+           
+            DispatchQueue.main.async {
+                
+                
+               
+                uiView.addAnnotations(complexNameArray)
+
+        
+        }
+        
+       
+        
+        
+          
     }
     
-    class Coordinator : NSObject,CLLocationManagerDelegate{
+    class Coordinator : NSObject,CLLocationManagerDelegate, MKMapViewDelegate {
         
          var isFirst = true
         
@@ -124,9 +123,49 @@ struct MapView : UIViewRepresentable {
         init(parent1 : MapView) {
             
             parent = parent1
+            
+           
         }
         
-        
+        func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+            
+            guard view.annotation != nil else {
+                return
+            }
+            guard !view.annotation!.isKind(of: MKUserLocation.self) else {
+                // Make a fast exit if the annotation is the `MKUserLocation`, as it's not an annotation view we wish to customize.
+                return
+            }
+            
+            
+            if let title = view.annotation?.title! {
+                self.parent.getObjects.tappedObjectComplexName = title
+                
+                self.parent.showObjectDetails = true
+                
+                
+                
+                if self.parent.getObjects.tappedObjectComplexName != "" {
+                    let filter = self.parent.getObjects.objects.filter{$0.complexName == self.parent.getObjects.tappedObjectComplexName}
+                    
+                    self.parent.getObjects.tappedObject = filter[0]
+                    
+                    
+                }
+                
+               
+            }
+            
+            
+        }
+        func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+                
+                if let tileOverlay = overlay as? MKTileOverlay {
+                    return MKTileOverlayRenderer(tileOverlay: tileOverlay)
+                } else {
+                    return MKOverlayRenderer(overlay: overlay)
+                }
+        }
         func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
             
             if status == .denied{
@@ -149,9 +188,12 @@ struct MapView : UIViewRepresentable {
         }
     }
    
+  
     
     /// The map view asks `mapView(_:viewFor:)` for an appropiate annotation view for a specific annotation.
     /// - Tag: CreateAnnotationViews
+    
+ 
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
         guard !annotation.isKind(of: MKUserLocation.self) else {
@@ -161,12 +203,17 @@ struct MapView : UIViewRepresentable {
         
         var annotationView: MKAnnotationView?
         
+        
+        
       if let annotation = annotation as? CustomAnnotation {
             annotationView = setupCustomAnnotationView(for: annotation, on: mapView)
+            annotationView?.displayPriority = .required
         } else if let annotation = annotation as? MKClusterAnnotation {
-            
+            annotationView?.displayPriority = .required
         annotation.subtitle = nil
         }
+
+
         
         return annotationView
     }
@@ -182,88 +229,4 @@ struct MapView : UIViewRepresentable {
            }
 
 }
-//                       // get geo of objects?
-//
-//
-//                              let databaseReference = Database.database().reference()
-//
-//                                     databaseReference.child("objects").observe(.value)
-//                                     { (objects) in
-//                                        guard let objDict = objects.value as? [[String:AnyObject]] else { return }
-//var count = 0
-//
-//
-//
-//                                        for objItem in objDict {
-//
-//
-//
-//                                                              // coordinates
-//
-//                                                                      let key : String = "AIzaSyAsGfs4rovz0-6EFUerfwiSA6OMTs2Ox-M"
-//                                                                      let postParameters:[String: Any] = [ "address": "Россия  \(objItem["address"] as? String ?? "")" ,"key":key]
-//                                                                      let url : String = "https://maps.googleapis.com/maps/api/geocode/json"
-//
-//                                                                      AF.request(url, method: .get, parameters: postParameters, encoding: URLEncoding.default, headers: nil).responseJSON { (response) in
-//
-//
-//                                                                          guard let value = response.value as? [String: AnyObject] else {
-//                                                                              return
-//                                                                          }
-//
-//
-//                                                                          guard  let results = value["results"]  as? [[String: AnyObject]] else {
-//                                                                              return
-//                                                                          }
-//
-//
-//                                                                          if results.count > 0 {
-//
-//                                                                          guard let coor = results[0]["geometry"] as? [String: AnyObject]  else {
-//                                                                              print("(")
-//                                                                              return
-//                                                                          }
-//
-//
-//                                                                          if  let location = coor["location"] as? [String: AnyObject]  {
-//
-//
-//
-//                                                                            let geoRef = GeoFire(firebaseRef: databaseReference.child("geo"))
-//                                                                    count += 1
-//                                                                            print(count)
-//
-//
-//                                                                            geoRef.setLocation(CLLocation(latitude: location["lat"] as! CLLocationDegrees, longitude: location["lng"] as! CLLocationDegrees), forKey: "geo_id_\(objItem["id"] as! Int)")
-//                                                                            //print("g")
-//
-//        //                                                                  let anno = MKPointAnnotation()
-//        //                                                                  anno.title = objItem["complex"] as? String ?? ""
-//        //                                                                      anno.coordinate = CLLocationCoordinate2D(latitude: location["lat"] as! CLLocationDegrees, longitude: location["lng"] as! CLLocationDegrees)
-//        //
-//        //                                                       DispatchQueue.main.async {
-//        //
-//        //                                                                    self.map.addAnnotation(anno)
-//        //                                                                 }
-//          //                                                                    }
-//
-//
-//
-//                                                                      }
-//
-//
-//
-//                                                      }
-//
-//                                                     }
-//
-//        }
-//
-//
-//
-//                }
-//
-//
-//
-//
 

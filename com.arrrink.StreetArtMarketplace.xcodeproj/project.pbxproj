@@ -8,7 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		610BB2EE2525FE6E00C9A329 /* IpotekaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610BB2ED2525FE6E00C9A329 /* IpotekaView.swift */; };
+		611A5DD62535E51D00872513 /* overlay.json in Resources */ = {isa = PBXBuildFile; fileRef = 611A5DD52535E51C00872513 /* overlay.json */; };
+		611A5DDF2535F85100872513 /* darkoverlay.json in Resources */ = {isa = PBXBuildFile; fileRef = 611A5DDE2535F85100872513 /* darkoverlay.json */; };
+		611A5DF52536665100872513 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611A5DF42536665100872513 /* FilterView.swift */; };
+		611A5DF925366EED00872513 /* To.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611A5DF825366EED00872513 /* To.swift */; };
 		61259149250AADFD00B62B75 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61259148250AADFD00B62B75 /* MapView.swift */; };
+		6130448F254384CE00807952 /* VRDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6130448E254384CE00807952 /* VRDestination.swift */; };
 		61383185252F5393006A12D5 /* LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61383184252F5393006A12D5 /* LoaderView.swift */; };
 		6138318F252F58E9006A12D5 /* GetFlatsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6138318E252F58E9006A12D5 /* GetFlatsData.swift */; };
 		613BD86D251374490000B9F8 /* SwiftUIMapView in Frameworks */ = {isa = PBXBuildFile; productRef = 613BD86C251374490000B9F8 /* SwiftUIMapView */; };
@@ -21,12 +26,14 @@
 		6146F306252205D500410573 /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6146F305252205D500410573 /* SessionStore.swift */; };
 		6146F30A2522064000410573 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6146F3092522064000410573 /* LoginView.swift */; };
 		6146F316252254CC00410573 /* InputMask in Frameworks */ = {isa = PBXBuildFile; productRef = 6146F315252254CC00410573 /* InputMask */; };
+		6189144B253F21FD001914A8 /* CellObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6189144A253F21FC001914A8 /* CellObject.swift */; };
 		618DE305251F1E420045587E /* FirstLaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618DE304251F1E420045587E /* FirstLaunchView.swift */; };
+		619ABF2225431FBD00E2B4EE /* logomain.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 619ABF2125431FBC00E2B4EE /* logomain.jpg */; };
 		61A06B562510C49F0039ACD0 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 61A06B552510C49F0039ACD0 /* SDWebImageSwiftUI */; };
 		61A06B592510F54F0039ACD0 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 61A06B582510F54F0039ACD0 /* Alamofire */; };
-		61A89C68251F45FB00883023 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 61A89C67251F45FB00883023 /* GoogleService-Info.plist */; };
-		61AD464D2524F00C00BCA797 /* bggg.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 61AD464C2524F00C00BCA797 /* bggg.PNG */; };
+		61A89C68251F45FB00883023 /* GoogleService-Info34.plist in Resources */ = {isa = PBXBuildFile; fileRef = 61A89C67251F45FB00883023 /* GoogleService-Info34.plist */; };
 		61B0EF342507F04A0053A472 /* LoadStoryImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B0EF332507F04A0053A472 /* LoadStoryImage.swift */; };
+		61B256EF2540281D001271D5 /* DetailFlatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B256EE2540281D001271D5 /* DetailFlatView.swift */; };
 		61C3418224EC7A2F0065C5D4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C3418124EC7A2F0065C5D4 /* AppDelegate.swift */; };
 		61C3418424EC7A2F0065C5D4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C3418324EC7A2F0065C5D4 /* SceneDelegate.swift */; };
 		61C3418624EC7A2F0065C5D4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C3418524EC7A2F0065C5D4 /* ContentView.swift */; };
@@ -35,6 +42,13 @@
 		61C3418E24EC7A3A0065C5D4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 61C3418C24EC7A3A0065C5D4 /* LaunchScreen.storyboard */; };
 		61C3419924EC7A3B0065C5D4 /* com_arrrink_StreetArtMarketplaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C3419824EC7A3B0065C5D4 /* com_arrrink_StreetArtMarketplaceTests.swift */; };
 		61C341A424EC7A3B0065C5D4 /* com_arrrink_StreetArtMarketplaceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C341A324EC7A3B0065C5D4 /* com_arrrink_StreetArtMarketplaceUITests.swift */; };
+		61C91CB72541DB4600DF6B85 /* Pages in Frameworks */ = {isa = PBXBuildFile; productRef = 61C91CB62541DB4600DF6B85 /* Pages */; };
+		61C91D1025430D8800DF6B85 /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C91D0F25430D8800DF6B85 /* ARViewController.swift */; };
+		61C91D562543167E00DF6B85 /* main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 61C91D552543167D00DF6B85 /* main.storyboard */; };
+		61CC2207254030EB002E3E03 /* launchscreen3.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 61CC2206254030EA002E3E03 /* launchscreen3.PNG */; };
+		61CC220B25403201002E3E03 /* launchscreen4.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 61CC220A254031FF002E3E03 /* launchscreen4.PNG */; };
+		61CC2211254095D6002E3E03 /* CellFlat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61CC2210254095D6002E3E03 /* CellFlat.swift */; };
+		61EFD8342535A2F600F21580 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 61EFD8332535A2F600F21580 /* GoogleService-Info.plist */; };
 		850B24B8CAB820580764AB3E /* Pods_com_arrrink_StreetArtMarketplaceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88CC2AC90F36BCD3DE40CFB1 /* Pods_com_arrrink_StreetArtMarketplaceTests.framework */; };
 		9649EDCB79E2CE38F91877D8 /* Pods_com_arrrink_StreetArtMarketplace_com_arrrink_StreetArtMarketplaceUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9DC6E04FCBF50B4C7794664 /* Pods_com_arrrink_StreetArtMarketplace_com_arrrink_StreetArtMarketplaceUITests.framework */; };
 		E34B341D412C0BD25FC40B91 /* Pods_com_arrrink_StreetArtMarketplace.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB08B99CF6EE13D396BE9180 /* Pods_com_arrrink_StreetArtMarketplace.framework */; };
@@ -74,7 +88,12 @@
 		2254579784634310ED6AC71B /* Pods-com.arrrink.StreetArtMarketplaceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.arrrink.StreetArtMarketplaceTests.release.xcconfig"; path = "Target Support Files/Pods-com.arrrink.StreetArtMarketplaceTests/Pods-com.arrrink.StreetArtMarketplaceTests.release.xcconfig"; sourceTree = "<group>"; };
 		2F5AAB612638E605DFB4B28C /* Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.release.xcconfig"; path = "Target Support Files/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.release.xcconfig"; sourceTree = "<group>"; };
 		610BB2ED2525FE6E00C9A329 /* IpotekaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IpotekaView.swift; sourceTree = "<group>"; };
+		611A5DD52535E51C00872513 /* overlay.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = overlay.json; sourceTree = "<group>"; };
+		611A5DDE2535F85100872513 /* darkoverlay.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = darkoverlay.json; sourceTree = "<group>"; };
+		611A5DF42536665100872513 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
+		611A5DF825366EED00872513 /* To.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = To.swift; sourceTree = "<group>"; };
 		61259148250AADFD00B62B75 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		6130448E254384CE00807952 /* VRDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VRDestination.swift; sourceTree = "<group>"; };
 		61383184252F5393006A12D5 /* LoaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderView.swift; sourceTree = "<group>"; };
 		6138318E252F58E9006A12D5 /* GetFlatsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFlatsData.swift; sourceTree = "<group>"; };
 		613BD86E251383B30000B9F8 /* CustomAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAnnotationView.swift; sourceTree = "<group>"; };
@@ -85,10 +104,12 @@
 		61432C3924EEACA600E9A141 /* extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extensions.swift; sourceTree = "<group>"; };
 		6146F305252205D500410573 /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
 		6146F3092522064000410573 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		6189144A253F21FC001914A8 /* CellObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellObject.swift; sourceTree = "<group>"; };
 		618DE304251F1E420045587E /* FirstLaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstLaunchView.swift; sourceTree = "<group>"; };
-		61A89C67251F45FB00883023 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		61AD464C2524F00C00BCA797 /* bggg.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bggg.PNG; sourceTree = "<group>"; };
+		619ABF2125431FBC00E2B4EE /* logomain.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = logomain.jpg; sourceTree = "<group>"; };
+		61A89C67251F45FB00883023 /* GoogleService-Info34.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info34.plist"; sourceTree = "<group>"; };
 		61B0EF332507F04A0053A472 /* LoadStoryImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadStoryImage.swift; sourceTree = "<group>"; };
+		61B256EE2540281D001271D5 /* DetailFlatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailFlatView.swift; sourceTree = "<group>"; };
 		61C3417E24EC7A2F0065C5D4 /* AN78.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AN78.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		61C3418124EC7A2F0065C5D4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		61C3418324EC7A2F0065C5D4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -103,6 +124,12 @@
 		61C3419F24EC7A3B0065C5D4 /* com.arrrink.StreetArtMarketplaceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = com.arrrink.StreetArtMarketplaceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		61C341A324EC7A3B0065C5D4 /* com_arrrink_StreetArtMarketplaceUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = com_arrrink_StreetArtMarketplaceUITests.swift; sourceTree = "<group>"; };
 		61C341A524EC7A3B0065C5D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		61C91D0F25430D8800DF6B85 /* ARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
+		61C91D552543167D00DF6B85 /* main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = main.storyboard; sourceTree = "<group>"; };
+		61CC2206254030EA002E3E03 /* launchscreen3.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = launchscreen3.PNG; sourceTree = "<group>"; };
+		61CC220A254031FF002E3E03 /* launchscreen4.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = launchscreen4.PNG; sourceTree = "<group>"; };
+		61CC2210254095D6002E3E03 /* CellFlat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellFlat.swift; sourceTree = "<group>"; };
+		61EFD8332535A2F600F21580 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		88CC2AC90F36BCD3DE40CFB1 /* Pods_com_arrrink_StreetArtMarketplaceTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_com_arrrink_StreetArtMarketplaceTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9DC6E04FCBF50B4C7794664 /* Pods_com_arrrink_StreetArtMarketplace_com_arrrink_StreetArtMarketplaceUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_com_arrrink_StreetArtMarketplace_com_arrrink_StreetArtMarketplaceUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABE27AE7DA71E9A669675AA8 /* Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.debug.xcconfig"; path = "Target Support Files/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -120,6 +147,7 @@
 				61A06B592510F54F0039ACD0 /* Alamofire in Frameworks */,
 				61A06B562510C49F0039ACD0 /* SDWebImageSwiftUI in Frameworks */,
 				6146F316252254CC00410573 /* InputMask in Frameworks */,
+				61C91CB72541DB4600DF6B85 /* Pages in Frameworks */,
 				613BD86D251374490000B9F8 /* SwiftUIMapView in Frameworks */,
 				E34B341D412C0BD25FC40B91 /* Pods_com_arrrink_StreetArtMarketplace.framework in Frameworks */,
 			);
@@ -183,7 +211,8 @@
 			isa = PBXGroup;
 			children = (
 				61C3418724EC7A3A0065C5D4 /* Assets.xcassets */,
-				61AD464C2524F00C00BCA797 /* bggg.PNG */,
+				61CC2206254030EA002E3E03 /* launchscreen3.PNG */,
+				61CC220A254031FF002E3E03 /* launchscreen4.PNG */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -203,8 +232,19 @@
 				61C3418524EC7A2F0065C5D4 /* ContentView.swift */,
 				610BB2ED2525FE6E00C9A329 /* IpotekaView.swift */,
 				61432C3724EE7B3700E9A141 /* SearchView.swift */,
+				61B256EE2540281D001271D5 /* DetailFlatView.swift */,
+				6130448E254384CE00807952 /* VRDestination.swift */,
+				61C91D0F25430D8800DF6B85 /* ARViewController.swift */,
+				61CC2210254095D6002E3E03 /* CellFlat.swift */,
+				6189144A253F21FC001914A8 /* CellObject.swift */,
+				619ABF2125431FBC00E2B4EE /* logomain.jpg */,
+				611A5DF42536665100872513 /* FilterView.swift */,
+				611A5DF825366EED00872513 /* To.swift */,
+				611A5DD52535E51C00872513 /* overlay.json */,
 				61259148250AADFD00B62B75 /* MapView.swift */,
 				6138318E252F58E9006A12D5 /* GetFlatsData.swift */,
+				61C91D552543167D00DF6B85 /* main.storyboard */,
+				611A5DDE2535F85100872513 /* darkoverlay.json */,
 			);
 			path = MVVM;
 			sourceTree = "<group>";
@@ -247,7 +287,8 @@
 				61383184252F5393006A12D5 /* LoaderView.swift */,
 				61432C3924EEACA600E9A141 /* extensions.swift */,
 				6138317D252F5338006A12D5 /* MVVM */,
-				61A89C67251F45FB00883023 /* GoogleService-Info.plist */,
+				61A89C67251F45FB00883023 /* GoogleService-Info34.plist */,
+				61EFD8332535A2F600F21580 /* GoogleService-Info.plist */,
 				61C3418F24EC7A3A0065C5D4 /* Info.plist */,
 				61C3418C24EC7A3A0065C5D4 /* LaunchScreen.storyboard */,
 				6138317C252F530B006A12D5 /* Auth */,
@@ -310,6 +351,7 @@
 				61A06B582510F54F0039ACD0 /* Alamofire */,
 				613BD86C251374490000B9F8 /* SwiftUIMapView */,
 				6146F315252254CC00410573 /* InputMask */,
+				61C91CB62541DB4600DF6B85 /* Pages */,
 			);
 			productName = com.arrrink.StreetArtMarketplace;
 			productReference = 61C3417E24EC7A2F0065C5D4 /* AN78.app */;
@@ -392,6 +434,7 @@
 				61A06B572510F54F0039ACD0 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				613BD86B251374490000B9F8 /* XCRemoteSwiftPackageReference "swiftui-mapview" */,
 				6146F314252254CB00410573 /* XCRemoteSwiftPackageReference "input-mask-ios" */,
+				61C91CB52541DB4600DF6B85 /* XCRemoteSwiftPackageReference "Pages" */,
 			);
 			productRefGroup = 61C3417F24EC7A2F0065C5D4 /* Products */;
 			projectDirPath = "";
@@ -410,10 +453,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				61C3418E24EC7A3A0065C5D4 /* LaunchScreen.storyboard in Resources */,
-				61AD464D2524F00C00BCA797 /* bggg.PNG in Resources */,
 				61C3418B24EC7A3A0065C5D4 /* Preview Assets.xcassets in Resources */,
 				61C3418824EC7A3A0065C5D4 /* Assets.xcassets in Resources */,
-				61A89C68251F45FB00883023 /* GoogleService-Info.plist in Resources */,
+				61CC2207254030EB002E3E03 /* launchscreen3.PNG in Resources */,
+				619ABF2225431FBD00E2B4EE /* logomain.jpg in Resources */,
+				61CC220B25403201002E3E03 /* launchscreen4.PNG in Resources */,
+				61C91D562543167E00DF6B85 /* main.storyboard in Resources */,
+				61EFD8342535A2F600F21580 /* GoogleService-Info.plist in Resources */,
+				61A89C68251F45FB00883023 /* GoogleService-Info34.plist in Resources */,
+				611A5DD62535E51D00872513 /* overlay.json in Resources */,
+				611A5DDF2535F85100872513 /* darkoverlay.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -579,18 +628,25 @@
 				61C3418224EC7A2F0065C5D4 /* AppDelegate.swift in Sources */,
 				61259149250AADFD00B62B75 /* MapView.swift in Sources */,
 				61432C3A24EEACA700E9A141 /* extensions.swift in Sources */,
+				61CC2211254095D6002E3E03 /* CellFlat.swift in Sources */,
+				611A5DF52536665100872513 /* FilterView.swift in Sources */,
 				61432C3324EC91DF00E9A141 /* StoryTimer.swift in Sources */,
 				61432C3824EE7B3700E9A141 /* SearchView.swift in Sources */,
 				613BD86F251383B40000B9F8 /* CustomAnnotationView.swift in Sources */,
 				61B0EF342507F04A0053A472 /* LoadStoryImage.swift in Sources */,
 				6146F30A2522064000410573 /* LoginView.swift in Sources */,
+				61B256EF2540281D001271D5 /* DetailFlatView.swift in Sources */,
+				6189144B253F21FD001914A8 /* CellObject.swift in Sources */,
 				6146F306252205D500410573 /* SessionStore.swift in Sources */,
 				61C3418424EC7A2F0065C5D4 /* SceneDelegate.swift in Sources */,
 				6138318F252F58E9006A12D5 /* GetFlatsData.swift in Sources */,
+				6130448F254384CE00807952 /* VRDestination.swift in Sources */,
+				61C91D1025430D8800DF6B85 /* ARViewController.swift in Sources */,
 				610BB2EE2525FE6E00C9A329 /* IpotekaView.swift in Sources */,
 				61432C3624EDC9EE00E9A141 /* StoryView.swift in Sources */,
 				61383185252F5393006A12D5 /* LoaderView.swift in Sources */,
 				618DE305251F1E420045587E /* FirstLaunchView.swift in Sources */,
+				611A5DF925366EED00872513 /* To.swift in Sources */,
 				61C3418624EC7A2F0065C5D4 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -769,8 +825,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.arrrink.an78;
+				PRODUCT_BUNDLE_IDENTIFIER = com.arrrink.an782;
 				PRODUCT_NAME = AN78;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -791,8 +848,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.arrrink.an78;
+				PRODUCT_BUNDLE_IDENTIFIER = com.arrrink.an782;
 				PRODUCT_NAME = AN78;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -960,6 +1018,14 @@
 				minimumVersion = 5.2.2;
 			};
 		};
+		61C91CB52541DB4600DF6B85 /* XCRemoteSwiftPackageReference "Pages" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nachonavarro/Pages";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.5;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -982,6 +1048,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 61A06B572510F54F0039ACD0 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		61C91CB62541DB4600DF6B85 /* Pages */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 61C91CB52541DB4600DF6B85 /* XCRemoteSwiftPackageReference "Pages" */;
+			productName = Pages;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

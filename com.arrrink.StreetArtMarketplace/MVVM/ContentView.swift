@@ -14,11 +14,232 @@ import Firebase
 import RxSwift
 import ASCollectionView_SwiftUI
 import UIKit
+import Alamofire
 import SDWebImageSwiftUI
+import CoreLocation
 
 struct ContentView: View {
    
+    func convertObjects() {
+        
+                       Firebase.Database.database().reference().child("objects").observe(.value, with: { (snap) in
 
+                guard let children = snap.children.allObjects as? [DataSnapshot] else {
+
+                print("((((((")
+                return
+              }
+
+                guard children.count != 0 else {
+                    print("cant 0")
+                    return
+                }
+
+                for j in children {
+
+                    var desc = [String: Any]()
+
+
+                    var type = j.childSnapshot(forPath: "type").value as? String ?? ""
+                    type = type == "Новостройка</li>" ? "Новостройки" : "Апартаменты"
+                    
+                    
+                    // geo
+                    // get geo of objects?
+
+
+
+     let address = j.childSnapshot(forPath: "address").value as? String ?? ""
+
+
+                                                           // coordinates
+
+                    let key : String = "AIzaSyAsGfs4rovz0-6EFUerfwiSA6OMTs2Ox-M"
+                     let postParameters:[String: Any] = [ "address": "\(address)" ,"key":key]
+                                                                   let url : String = "https://maps.googleapis.com/maps/api/geocode/json"
+
+                                                                   AF.request(url, method: .get, parameters: postParameters, encoding: URLEncoding.default, headers: nil).responseJSON { (response) in
+
+
+                                                                       guard let value = response.value as? [String: AnyObject] else {
+                                                                         print("(((((")
+                                                                           return
+                                                                       }
+
+print(value)
+                                                                       guard  let results = value["results"]  as? [[String: AnyObject]] else {
+                                                                         print("((")
+                                                                           return
+                                                                       }
+
+print(results.count)
+                                                                       if results.count > 0 {
+
+             guard let coor = results[0]["geometry"] as? [String: AnyObject]  else {
+                                                                           print("(")
+                                                                           return
+                                                                       }
+
+print(coor)
+                                                                       if  let location = coor["location"] as? [String: AnyObject]  {
+
+
+
+         
+                                                           
+
+         let geo =  GeoPoint(latitude: location["lat"] as! CLLocationDegrees, longitude: location["lng"] as! CLLocationDegrees)
+                                                                        
+           
+                                                                        print("geo",geo)
+                                                                         
+                                                                         
+                                                                         
+                    
+                    
+                    // geo
+
+
+
+                    desc = ["id": j.childSnapshot(forPath: "id").value as? Int ?? 0,
+                            "address": j.childSnapshot(forPath: "address").value as? String ?? "",
+                            "complexName": j.childSnapshot(forPath: "complex").value as? String ?? "",
+                            "deadline": j.childSnapshot(forPath: "deadline").value as? String ?? "",
+                            "developer": j.childSnapshot(forPath: "developer").value as? String ?? "",
+                            
+                            "img": j.childSnapshot(forPath: "img").value as? String ?? "",
+                            "timeToUnderground": j.childSnapshot(forPath: "timeToUnderground").value as? String ?? "",
+                            "type": type,
+                            "typeToUnderground": j.childSnapshot(forPath: "typeToUnderground").value as? String ?? "",
+                            "underground": j.childSnapshot(forPath: "underground").value as? String ?? "",
+                            "geo" : geo
+                        
+                            
+
+                    ]
+                   
+                    DispatchQueue.main.async {
+
+                        Firebase.Firestore.firestore().collection("objects").document("\(j.childSnapshot(forPath: "id").value as? Int ?? 0)").setData(desc) { (er) in
+                            if er != nil {
+                                print(er!.localizedDescription)
+                            }
+                        }
+
+
+                    }
+                                                                       }}}
+                }
+
+
+            })
+    }
+    
+    func convertTaFlatPlans() {
+        
+
+                    Firebase.Database.database().reference().child("taflatplans").observe(.value, with: { (snap) in
+
+                guard let children = snap.children.allObjects as? [DataSnapshot] else {
+
+                print("((((((")
+                return
+              }
+
+                guard children.count != 0 else {
+                    print("cant 0")
+                    return
+                }
+
+                for j in children {
+
+                    var desc = [String: Any]()
+
+
+                    var type = j.childSnapshot(forPath: "type").value as? String ?? ""
+                    type = type == "Новостройка</li>" ? "Новостройки" : "Апартаменты"
+
+
+
+                    
+                    
+                    
+                    
+                    
+                    desc = ["id" : j.childSnapshot(forPath: "id").value as? Int ?? 0,
+                            "deadline" : j.childSnapshot(forPath: "deadline").value as? String ?? "",
+                            
+                            "floor" : j.childSnapshot(forPath: "floor").value as? Int ?? 0 ,
+                            "developer" : j.childSnapshot(forPath: "developer").value as? String ?? "",
+                            "district" : j.childSnapshot(forPath: "district").value as? String ?? "",
+                            "type" :  type,
+                            "img" : j.childSnapshot(forPath: "img").value as? String ?? "",
+                            "kitchenS" : j.childSnapshot(forPath: "kitchenS").value as? Double ?? 0.0,
+                            "complexName" : j.childSnapshot(forPath: "name").value as? String ?? "",
+                            "price" : j.childSnapshot(forPath: "price").value as? Int ?? 0 ,
+                            "totalS" : j.childSnapshot(forPath: "totalS").value as? Double ?? 0.0,
+                            "repair" : j.childSnapshot(forPath: "repair").value as? String ?? "",
+                            "room" : j.childSnapshot(forPath: "room").value as? String ?? "",
+                            "roomType" : j.childSnapshot(forPath: "roomType").value as? String ?? "",
+                            "underground" : j.childSnapshot(forPath: "underground").value as? String ?? ""
+                            
+
+                    ]
+                   
+                    DispatchQueue.main.async {
+
+                        Firebase.Firestore.firestore().collection("taflatplans").document("\(j.childSnapshot(forPath: "id").value as? Int ?? 0)").setData(desc) { (er) in
+                            if er != nil {
+                                print(er!.localizedDescription)
+                            }
+                        }
+
+
+                    }
+
+                }
+
+
+            })
+    }
+    func convertObjectLocations() {
+        
+                          
+                                                                                    //print("g")
+        
+                                                       //                           let anno = MKPointAnnotation()
+                                                                 //                 anno.title = doc.document.data()["complexName"] as? String ?? ""
+                                                                                    
+                //                                                                      anno.coordinate = CLLocationCoordinate2D(latitude: location["lat"] as! CLLocationDegrees, longitude: location["lng"] as! CLLocationDegrees)
+                //
+                //                                                       DispatchQueue.main.async {
+                //
+                //                                                                    self.map.addAnnotation(anno)
+                //                                                                 }
+                  //                                                                    }
+        
+                                                                                  
+        
+                                                                              
+        
+        
+                                                                              //    }
+                                                                                    
+                                                                                    
+                                                            //  }
+        
+                                                             
+        
+              //  }
+        
+        
+        
+                       // }
+        
+      //  }
+        
+        
+    }
     var body: some View {
        
 
@@ -45,7 +266,22 @@ struct ContentView: View {
             print("NOT first launch")
             return AnyView(
                 NavigationStackView{
-                    HomeView()
+                   HomeView()
+                   .onAppear(){
+                   // convertObjects()
+                  //  convertObjects()
+                    
+                  //  convertTaFlatPlans()
+//                    try! Auth.auth().signOut()
+//
+//                                                     UserDefaults.standard.set(false, forKey: "status")
+//
+//                                                     NotificationCenter.default.post(name: NSNotification.Name("statusChange"), object: nil)
+                    
+                    
+                    
+                 
+                    }
                    
                    
 
@@ -73,7 +309,7 @@ struct ContentView_Previews: PreviewProvider {
         @State var show = false
         @State var current2 = 0
         @State var name = ""
-       
+        @State var price : CGFloat = 0.0
         @ObservedObject private var getStoriesImagesURL = getStoriesImages()
         @State var data1 = [PostRealmFB]()
         
@@ -161,7 +397,7 @@ struct ContentView_Previews: PreviewProvider {
                   .shadow(radius: 0)
                     }.onTapGesture {
                         if item.title == "Новостройки" {
-                        self.navigationStack.push(SearchView())
+                            self.navigationStack.push(SearchView(searchmaxPriceFlat: $price).environmentObject(getTaFlatPlansData(startKey: [QueryDocumentSnapshot?](), maxPrice: Double(price))))
                         } else if item.title == "Ипотека" {
                             self.navigationStack.push(IpotekaView())
                         } else {
@@ -286,7 +522,7 @@ struct ContentView_Previews: PreviewProvider {
             Story(id: 1, image: "percent", offset: 0,title: "Ипотека", subtitle: "Калькулятор и оформление"),
             Story(id: 2, image: "invest", offset: 0,title: "Апартаменты", subtitle: "Расчет доходных программ")
     ]
-        @ObservedObject var data = getTaFlatPlansData(startKey: 0, limit: 1)
+        @ObservedObject var data = getTaFlatPlansData(startKey: [QueryDocumentSnapshot?](), maxPrice: 0.0)
         @State var constantHeight : CGFloat = 90.0
             //UIScreen.main.bounds.height / 7.2
         @State var scrolled = 0

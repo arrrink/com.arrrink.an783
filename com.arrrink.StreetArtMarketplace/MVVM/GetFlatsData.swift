@@ -14,127 +14,206 @@ import RealmSwift
 import Firebase
 import PromiseKit
 
+import MapKit
+
 
 class getTaFlatPlansData: ObservableObject {
-
+    var  maxPrice : Double
 
     @Published var data = [taFlatPlans]()
     
-    @Published var dataFromTable = [taFlatTable]()
+    @Published var annoData = [MKPointAnnotation]()
+    
+    @Published var objects = [taObjects]()
+    
+    @Published var tappedObject = taObjects(id: "", address: "", complexName: "", deadline: "", developer: "", geo: GeoPoint(latitude: 0.0, longitude: 0.0), img: "", type: "", underground: "", timeToUnderground: "", typeToUnderground: "")
+    @Published var tappedObjectComplexName = ""
+    @Published var startKey = [QueryDocumentSnapshot?]()
+    
+    @Published var limit = 7
     
     
-    @Published var startKey = 0
     
-    @Published var limit = 1
+    @Published var note = ""
+    @Published var foundCount = 0
 
-    init(startKey: Int, limit: Int) {
+    init(startKey: [QueryDocumentSnapshot?], maxPrice: Double) {
         
         self.startKey = startKey
         
-        self.limit = limit
-    
-        getPromiseFlat(startKey: self.startKey, limit: self.limit)
-//            .then({ data1 -> Promise<Array<taFlatTable>> in
-//                self.data.append(contentsOf: data1)
-//
-//                    print(self.data.count)
-//                return self.loadTableflats(data1)
-//
-//            })
-            .done({ (data2) in
-                self.data.append(contentsOf: data2)
-            })
-            .catch { (er) in
-            
-            print(er)
-        }
+        
+        self.maxPrice = maxPrice
+        
+       
+            getPromiseFlat(startKey: startKey, maxPrice: CGFloat(maxPrice))
+                .done { (data) in
+                    
+                    self.data = data["limitFlats"] as! [taFlatPlans]
+                    self.note = "\(self.foundCount)"
+                   
+                    
+                    
+                    
+                    
+                    self.getPromiseAnno(complexNameArray: data["anno"] as! [String]).done { (annoAndObjData) in
+                        
+                        self.annoData = annoAndObjData["annotations"] as! [MKPointAnnotation]
+                        
+                        self.objects = annoAndObjData["objects"] as! [taObjects]
+                        
+                        
+                        
+                    }.catch { (er) in
+                        print(er)
+                    }
+                }.catch { (er) in
+                    print(er)
+                }
+      
 }
-    func loadTableflats(_ data: [taFlatPlans]) -> Promise<Array<taFlatTable>> {
+    
+//    { data in
+//self.data = data
+//self.note = "\(self.foundCount)"
+//
+//return getPromiseAnno(complexNameArray: data)
+//}.then({ annoData in
+//self.annoData = annoData
+//}).catch { (er) in
+//
+//print(er)
+//}
+    
+    
+    func randomCoordinate() -> Double {
+    return Double(arc4random_uniform(140)) * 0.00003
+            }
+    func getPromiseAnno(complexNameArray : [String]) -> Promise<Dictionary<String,Any>> {
         return Promise {seal in
             
-            let count = 5
-            var data2 = [taFlatTable]()
+            var array = [MKPointAnnotation]()
+            var objects = [taObjects]()
+            // geo
             
-            for i in data {
+            let ref = Firebase.Firestore.firestore().collection("objects")
+            
+            ref.addSnapshotListener { (snap, err) in
                 
+                     if err != nil{
+                         
+                         print((err?.localizedDescription)!)
+                         return
+                     }
                 
-                
-              //  fromTable
                
-                Database.database().reference().child("taflattable").queryOrdered(byChild: "id").queryEqual(toValue: Int(i.id)).observe(.value) { (snapTable) in
-
-
+               
+                
+                for j in complexNameArray {
                    
-
-                   guard let childrenTable = snapTable.children.allObjects as? [DataSnapshot] else {
-                   print("((((((")
-                   return
-                 }
-                   guard childrenTable.count != 0 else {
-                       print("cant 0")
-
-                       return
-                   }
-
-                 //  childrenTable.removeFirst()
-
-                   for j in childrenTable {
-                       let flatNumber = j.childSnapshot(forPath: "flatNumber").value ?? ""
-                       let flatDisrict = j.childSnapshot(forPath: "district").value ?? ""
-                       let flatUnderground = j.childSnapshot(forPath: "underground").value ?? ""
-                       let flatDeveloper = j.childSnapshot(forPath: "developer").value ?? ""
-                       let flatSection = j.childSnapshot(forPath: "section").value ?? ""
-                       let flatTotalS = j.childSnapshot(forPath: "totalS").value ?? ""
-                       let flatKitchenS = j.childSnapshot(forPath: "kitchenS").value ?? 0
-                       let flatRepair = j.childSnapshot(forPath: "repair").value ?? ""
-                       let flatFloor = j.childSnapshot(forPath: "flor").value ?? 0
-
-
-
-
-                    let item = taFlatTable(id: i.id,
-                                                      flatNumber: flatNumber as! String,
-                                                      district: flatDisrict as! String,
-                                                      underground: flatUnderground as! String,
-                                                      developer: flatDeveloper as! String,
-                                                      //complex:,
-                                                      section: flatSection as! String,
-                                                      totalS: flatTotalS as! String,
-                                                      kitchenS: "\(flatKitchenS as! Double)",
-                                                      repair: flatRepair as! String,
-                                                      floor: "\(flatFloor as! Int)")
-                                                      //status: ""
-
-                       //createItem
-
-                       DispatchQueue.main.async {
-                           data2.append(item)
-
-                            if data2.count == count {
-
-                               seal.fulfill(data2)
-                            } else {
-                               print("no", data2.count)
+                    
+                    guard  snap != nil else {
+                        return
+                    }
+                    
+                  let find = snap!.documents.filter{
+                    $0.get("complexName") as? String ?? "" == j
+                    }
+                    
+                    guard find.count == 1 else {
+                        return
+                    }
+                  
+                       
+                        let anno = MKPointAnnotation()
+                        anno.title = j
+                        
+                        
+                        
+                        
+                        
+                    if let coords = find[0].get("geo"),
+                       let address = find[0].get("address") as? String ?? "",
+                       let complexName = find[0].get("complexName") as? String ?? "",
+                       let deadline = find[0].get("deadline") as? String ?? "",
+                       let developer = find[0].get("developer") as? String ?? "",
+                       let id = find[0].get("id") as? Int ?? 0,
+                       let img = find[0].get("img") as? String ?? "",
+                       let timeToUnderground = find[0].get("timeToUnderground") as? String ?? "",
+                       let type = find[0].get("type") as? String ?? "",
+                       let typeToUnderground = find[0].get("typeToUnderground") as? String ?? "",
+                       let underground = find[0].get("underground") as? String ?? ""
+                       {
+                                        let point = coords as! GeoPoint
+                                        let lat = point.latitude
+                                        let lon = point.longitude
+                                        
+                        let object = taObjects(id: String(id), address: address, complexName: complexName, deadline: deadline, developer: developer, geo: point, img: img, type: type, underground: underground, timeToUnderground: timeToUnderground, typeToUnderground: typeToUnderground)
+                        
+                                    
+                       
+                        
+                        //let geo = i.document.get("geo") as! GeoPoint
+                        let location = CLLocation(latitude: lat + self.randomCoordinate(), longitude: lon + self.randomCoordinate())
+                       
+                         
+                        anno.coordinate = location.coordinate
+                        
+                        
+                      
+                        DispatchQueue.main.async {
+                            objects.append(object)
+                            array.append(anno)
+                            if array.count == complexNameArray.count && objects.count == complexNameArray.count{
+                                
+                                
+                                seal.fulfill(["annotations" : array, "objects" : objects])
                             }
-
-                       }
-
-
-
-                   }
-
-               }
-                
-                
-                
-                
-            }
-            
-            seal.fulfill([taFlatTable]())
+    }
+                     }
+                    
+                    
+                    
+                    
+                    
+        
+        }
+        
+    }
         }
     }
     
-    func getPromiseFlat(startKey : Int, limit: Int) -> Promise<Array<taFlatPlans>> {
+   
+    func parse(_ i: DocumentChange) -> taFlatPlans {
+        let id = i.document.get("id") as? Int ?? 0
+      let img = i.document.get("img") as? String ?? ""
+          let price = i.document.get("price") as? Int ?? 0
+          let room = i.document.get("room") as? String ?? ""
+          let type = i.document.get("type") as? String ?? ""
+         
+          let complexName = i.document.get("complexName") as? String ?? ""
+          let deadline = i.document.get("deadline") as? String ?? ""
+          
+          let floor = i.document.get("floor") as? Int ?? 0
+          let developer = i.document.get("developer") as? String ?? ""
+          
+          let district = i.document.get("district") as? String ?? ""
+          
+        let totalS = i.document.get("totalS") as? Double ?? 0.0
+          
+        let kitchenS = i.document.get("kitchenS") as? Double ?? 0.0
+          let repair = i.document.get("repair") as? String ?? ""
+          let roomType = i.document.get("roomType") as? String ?? ""
+          let underground = i.document.get("underground") as? String ?? ""
+
+          
+          
+          
+          
+  
+         return taFlatPlans(id: "\(id)", img: img, complexName: complexName, price: String(price), room: room, deadline: deadline, type: type, floor: String(floor), developer: developer, district: district , totalS: String(totalS), kitchenS: String(kitchenS), repair: repair, roomType: roomType, underground: underground)
+          
+    }
+    func getPromiseFlat(startKey : [QueryDocumentSnapshot?], maxPrice: CGFloat = 0.0) -> Promise<Dictionary<String,Any>> {
         return Promise {seal in
         
 //        }
@@ -143,63 +222,340 @@ class getTaFlatPlansData: ObservableObject {
             
         
         var data1 = [taFlatPlans]()
-        
-            // let count = 5
-        
-            let query2 = Database.database().reference().child("taflatplans").queryOrdered(byChild: "id")
-                if startKey != 0 {
-//            guard query2.queryStarting(atValue: startKey) is DatabaseReference else {
-//                print("((")
-//                return
-//            }
-        }
-        query2.queryStarting(atValue: startKey).queryLimited(toFirst: UInt(limit + 1)).observe(.value) { (snapshot) in
             
-            guard let children = snapshot.children.allObjects as? [DataSnapshot] else {
-            print("((((((")
-            return
-          }
-
-
             
-                                   for i in children {
-
-                                           let flatId = i.childSnapshot(forPath: "id").value ?? 0
-                                                            
-                                           let flatImg = i.childSnapshot(forPath: "img").value ?? ""
-                                           let flatComplexName = i.childSnapshot(forPath: "name").value ?? ""
-                                           let flatPrice = i.childSnapshot(forPath: "price").value ?? ""
-                                           let flatRoom = i.childSnapshot(forPath: "room").value ?? ""
-                                           let flatDeadline = i.childSnapshot(forPath: "deadline").value ?? ""
-
-                                           let flatType = i.childSnapshot(forPath: "type").value ?? ""
-
-                                    let flatTypeParse = flatType as! String == "Новостройка</li>" ? "Новостройки" : "Апартаменты"
-                                    
-                                    
-                                    let item = taFlatPlans(id: "\(flatId as! Int)",
-                                                                   img: flatImg as! String,
-                                                                   complexName: flatComplexName as! String,
-                                                                   price: flatPrice as! String,
-                                                                   room: flatRoom as! String,
-                                                                   deadline: flatDeadline as! String,
-                                                                   type: flatTypeParse)
-
-                                    //createItem
-
-                                    DispatchQueue.main.async {
-                                        data1.append(item)
-
-                                         if data1.count == limit {
-
-                                            seal.fulfill(data1)
-                                         }
-                                    }
+            var array = [String]()
+            
+            
+            if maxPrice != 0.0 {
+                var string = String(Int((maxPrice / 100000).rounded() * 100000)).reversed
+                
+                string = string.separate(every: 3, with: " ")
+                
+                string = string.reversed
+                
               
-        }
-  
-      }
-
+                
+                var query = Firebase.Firestore.firestore().collection("taflatplans").whereField("price", isLessThanOrEqualTo: Int((maxPrice / 100000).rounded() * 100000)).order(by: "price", descending: true)
+                
+                query.addSnapshotListener { (snapFoundCount, err) in
+                    if err != nil{
+                        
+                        print((err?.localizedDescription)!)
+                        return
+                    }
+                    self.foundCount = snapFoundCount?.documentChanges.count ?? 0
+                    print("Found: ", snapFoundCount!.documentChanges.count, " flats")
+                }
+                
+                if startKey.count != 0 {
+                    query = query.start(afterDocument: startKey[0]!)
+                }
+                query
+                    //.limit(to: limit)
+                   .addSnapshotListener { (snap, err) in
+                        if err != nil{
+                            
+                            print((err?.localizedDescription)!)
+                            return
+                        }
+                    
+                    if (snap?.documents.last) != nil {
+                        
+                        if self.limit <= snap!.documentChanges.count{
+                            
+                            self.startKey = [snap?.documents[self.limit + 1]]
+                               
+                        }
+//                        else {
+//                            if data1.count == snap!.documentChanges.count {
+//                                self.startKey = [snap?.documents[snap!.documentChanges.count]]
+//                            }
+//                        }
+                        
+                        
+                    } else {
+                        print("The collection is empty.")
+                        seal.fulfill(["anno": array, "limitFlats" : data1])
+                    }
+                       
+                    
+                    for i in snap!.documentChanges{
+                        
+                        let complexName = i.document.get("complexName") as? String ?? ""
+                        
+                        array.append(complexName)
+                        
+                    }
+                    
+                    
+                    array = Array(Set(array))
+                    
+                    
+                    
+                    
+                        for i in snap!.documentChanges{
+                            
+                          
+                                    DispatchQueue.main.async {
+                                        data1.append(self.parse(i))
+                                        
+                                        if self.limit <= snap!.documentChanges.count{
+                                            
+                                            if data1.count == self.limit {
+                                                seal.fulfill(["anno": array, "limitFlats" : data1])
+                                            }
+                                               
+                                        } else {
+                                            if data1.count == snap!.documentChanges.count {
+                                                seal.fulfill(["anno": array, "limitFlats" : data1])
+                                            }
+                                        }
+                                        }
+                    }
+                        
+                        
+                
+                    }
+            } else {
+                
+                // total search if got maxPrice == 0.0
+                
+                
+                var query = Firebase.Firestore.firestore().collection("taflatplans").order(by: "price", descending: true)
+                
+                query.addSnapshotListener { (snapFoundCount, err) in
+                    if err != nil{
+                        
+                        print((err?.localizedDescription)!)
+                        return
+                    }
+                    self.foundCount = snapFoundCount?.documentChanges.count ?? 0
+                    print("Found: ", snapFoundCount!.documentChanges.count, " flats")
+                }
+                
+                if startKey.count != 0 {
+                    query = query.start(afterDocument: startKey[0]!)
+                }
+                query
+                    //.limit(to: limit)
+                   .addSnapshotListener { (snap, err) in
+                        if err != nil{
+                            
+                            print((err?.localizedDescription)!)
+                            return
+                        }
+                    
+                    if (snap?.documents.last) != nil {
+                        
+                        if self.limit <= snap!.documentChanges.count{
+                            
+                            self.startKey = [snap?.documents[self.limit + 1]]
+                               
+                        }
+//                        else {
+//                            if data1.count == snap!.documentChanges.count {
+//                                self.startKey = [snap?.documents[snap!.documentChanges.count]]
+//                            }
+//                        }
+                        
+                        
+                    } else {
+                        print("The collection is empty.")
+                        seal.fulfill(["anno": array, "limitFlats" : data1])
+                    }
+                       
+                    
+                    for i in snap!.documentChanges{
+                        
+                        let complexName = i.document.get("complexName") as? String ?? ""
+                        
+                        array.append(complexName)
+                        
+                    }
+                    
+                    array = Array(Set(array))
+                   
+                        for i in snap!.documentChanges{
+                            
+                          
+                                    DispatchQueue.main.async {
+                                        data1.append(self.parse(i))
+                                        
+                                        if self.limit <= snap!.documentChanges.count{
+                                            
+                                            if data1.count == self.limit {
+                                                seal.fulfill(["anno": array, "limitFlats" : data1])
+                                            }
+                                               
+                                        } else {
+                                            if data1.count == snap!.documentChanges.count {
+                                                seal.fulfill(["anno": array, "limitFlats" : data1])
+                                            }
+                                        }
+                                        }
+                    }
+                        
+                        
+                
+                    }
+            }
+                
+             
+                
+               
+//
+//            Firebase.Database.database().reference().child("taflatplans")
+//                .observe(.value, with: { (snap) in
+//
+//                                        guard let children = snap.children.allObjects as? [DataSnapshot] else {
+//
+//                                        print("((((((")
+//                                        return
+//                                      }
+//
+//                                        guard children.count != 0 else {
+//                                            print("cant 0")
+//                                            return
+//                                        }
+//
+//                                        for j in children {
+//
+//                                            var desc = [String: Any]()
+//
+//                                            desc = ["id" : j.childSnapshot(forPath: "id").value as? Int ?? 0,
+//                                                    "img" : j.childSnapshot(forPath: "img").value as? String ?? "",
+//                                                    "price" : j.childSnapshot(forPath: "price").value as? String ?? "",
+//                                                    "room" : j.childSnapshot(forPath: "room").value as? String ?? "",
+//                                                    "type" :  j.childSnapshot(forPath: "type").value as? String ?? "",
+//                                                    "name" : j.childSnapshot(forPath: "name").value as? String ?? "",
+//                                                    "deadline" : j.childSnapshot(forPath: "deadline").value as? String ?? ""
+//
+//                                            ]
+//
+//                                            DispatchQueue.main.async {
+//
+//                                                Firebase.Firestore.firestore().collection("taflatplans").document("\(j.childSnapshot(forPath: "id").value as? Int ?? 0)").setData(desc)
+//
+//
+//                                            }
+//                                            print(desc)
+//                                        }
+//
+//            // let count = 5
+//
+//            let query2 = Database.database().reference().child("taflatplans")
+//               // if startKey != 0 {
+////            guard query2.queryStarting(atValue: startKey) is DatabaseReference else {
+////                print("((")
+////                return
+////            }
+//        //}
+//
+////            if maxPrice == 0.0 {
+////            query2.queryOrdered(byChild: "id").queryStarting(atValue: startKey).queryLimited(toFirst: UInt(limit + 1)).observe(.value) { (snapshot) in
+////
+////            guard let children = snapshot.children.allObjects as? [DataSnapshot] else {
+////            print("((((((")
+////            return
+////          }
+////
+////
+////
+////                                   for i in children {
+////
+////                                           let flatId = i.childSnapshot(forPath: "id").value ?? 0
+////
+////                                           let flatImg = i.childSnapshot(forPath: "img").value ?? ""
+////                                           let flatComplexName = i.childSnapshot(forPath: "name").value ?? ""
+////                                           let flatPrice = i.childSnapshot(forPath: "price").value ?? ""
+////                                           let flatRoom = i.childSnapshot(forPath: "room").value ?? ""
+////                                           let flatDeadline = i.childSnapshot(forPath: "deadline").value ?? ""
+////
+////                                           let flatType = i.childSnapshot(forPath: "type").value ?? ""
+////
+////                                    let flatTypeParse = flatType as! String == "Новостройка</li>" ? "Новостройки" : "Апартаменты"
+////
+////
+////                                    let item = taFlatPlans(id: "\(flatId as! Int)",
+////                                                                   img: flatImg as! String,
+////                                                                   complexName: flatComplexName as! String,
+////                                                                   price: flatPrice as! String,
+////                                                                   room: flatRoom as! String,
+////                                                                   deadline: flatDeadline as! String,
+////                                                                   type: flatTypeParse)
+////
+////                                    //createItem
+////
+////                                    DispatchQueue.main.async {
+////                                        data1.append(item)
+////
+////                                         if data1.count == limit {
+////
+////                                            seal.fulfill(data1)
+////                                         }
+////                                    }
+////
+////        }
+////
+////      }
+////            } else {
+//                var string = String(Int(maxPrice)).reversed
+//
+//                string = string.separate(every: 3, with: " ")
+//
+//                string = string.reversed
+//
+//                print("\(string) руб.")
+//
+//
+//                query2.queryOrdered(byChild: "price").queryEnding(atValue: "\(string) руб.").queryLimited(toLast: 8).observe(.value) { (snapshot) in
+//
+//                    guard let children = snapshot.children.allObjects as? [DataSnapshot] else {
+//                    print("((((((")
+//                    return
+//                  }
+//
+//
+//
+//                                           for i in children {
+//
+//                                                   let flatId = i.childSnapshot(forPath: "id").value ?? 0
+//
+//                                                   let flatImg = i.childSnapshot(forPath: "img").value ?? ""
+//                                                   let flatComplexName = i.childSnapshot(forPath: "name").value ?? ""
+//                                                   let flatPrice = i.childSnapshot(forPath: "price").value ?? ""
+//                                                   let flatRoom = i.childSnapshot(forPath: "room").value ?? ""
+//                                                   let flatDeadline = i.childSnapshot(forPath: "deadline").value ?? ""
+//
+//                                                   let flatType = i.childSnapshot(forPath: "type").value ?? ""
+//
+//                                            let flatTypeParse = flatType as! String == "Новостройка</li>" ? "Новостройки" : "Апартаменты"
+//
+//
+//                                            let item = taFlatPlans(id: "\(flatId as! Int)",
+//                                                                           img: flatImg as! String,
+//                                                                           complexName: flatComplexName as! String,
+//                                                                           price: flatPrice as! String,
+//                                                                           room: flatRoom as! String,
+//                                                                           deadline: flatDeadline as! String,
+//                                                                           type: flatTypeParse)
+//
+//                                            //createItem
+//
+//                                            DispatchQueue.main.async {
+//                                                data1.append(item)
+//
+//                                                 if data1.count == 8 {
+//
+//                                                    seal.fulfill(data1)
+//                                                 }
+//                                            }
+//
+//                }
+          
+           //   }
+            
     }
 }
 }

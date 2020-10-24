@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--GLKit View Controller-->
+        <scene sceneID="8Uw-B0-fWX">
+            <objects>
+                <glkViewController storyboardIdentifier="Image360Controller" preferredFramesPerSecond="60" id="gRm-hT-Pgt" customClass="PanoramaViewController" customModule="AN78" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="HSk-re-EuY"/>
+                        <viewControllerLayoutGuide type="bottom" id="1Y7-Ie-AF7"/>
+                    </layoutGuides>
+                    <glkView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" enableSetNeedsDisplay="NO" id="he6-gy-tLP">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <connections>
+                            <outlet property="delegate" destination="gRm-hT-Pgt" id="sCH-Z2-nYL"/>
+                        </connections>
+                    </glkView>
+                </glkViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QNS-52-qPL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-528" y="66"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="aT7-d3-sG9">
+            <objects>
+                <viewController storyboardIdentifier="vr" id="0bm-aa-gKL" customClass="ARViewController" customModule="AN78" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="rZX-UL-OlD"/>
+                        <viewControllerLayoutGuide type="bottom" id="8t7-Yi-crF"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="suG-aT-ZZu">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bAz-aI-qAH" customClass="CTPanoramaView" customModule="CTPanoramaView">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rRA-4T-RiK">
+                                        <rect key="frame" x="186" y="438" width="42" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemPurpleColor"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                        <constraints>
+                            <constraint firstItem="bAz-aI-qAH" firstAttribute="trailing" secondItem="suG-aT-ZZu" secondAttribute="trailing" id="TWd-Oo-BOL"/>
+                            <constraint firstItem="bAz-aI-qAH" firstAttribute="leading" secondItem="suG-aT-ZZu" secondAttribute="leading" id="UTs-HH-cUP"/>
+                            <constraint firstItem="bAz-aI-qAH" firstAttribute="top" secondItem="suG-aT-ZZu" secondAttribute="top" id="rtu-RS-5Z7"/>
+                            <constraint firstAttribute="bottom" secondItem="bAz-aI-qAH" secondAttribute="bottom" id="xUk-x4-Bmd"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="panoramaView" destination="bAz-aI-qAH" id="0Qb-lR-T6P"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ewb-eQ-ZOw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="131.8840579710145" y="46.875"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="AHj-85-Ppy">
+            <objects>
+                <viewController storyboardIdentifier="arr" id="vVh-QG-3fr" customClass="ARViewController" customModule="AN78" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="1YG-f6-mX8"/>
+                        <viewControllerLayoutGuide type="bottom" id="tvR-Y7-ZND"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="e4l-wW-CyK">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3XL-CD-HLw" customClass="CTPanoramaView" customModule="CTPanoramaView">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NLN-Ph-PpF" customClass="CTPanoramaView" customModule="CTPanoramaView">
+                                        <rect key="frame" x="0.0" y="-46" width="414" height="896"/>
+                                        <color key="backgroundColor" systemColor="systemRedColor"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="NLN-Ph-PpF" firstAttribute="leading" secondItem="3XL-CD-HLw" secondAttribute="leading" id="KDV-KY-aMU"/>
+                                    <constraint firstAttribute="trailing" secondItem="3XL-CD-HLw" secondAttribute="trailing" id="Lxt-k6-JoX"/>
+                                    <constraint firstAttribute="leading" secondItem="3XL-CD-HLw" secondAttribute="leading" id="UhF-Cl-zK3"/>
+                                    <constraint firstItem="NLN-Ph-PpF" firstAttribute="top" secondItem="3XL-CD-HLw" secondAttribute="top" constant="-46" id="W5Q-Nc-AVU"/>
+                                    <constraint firstItem="NLN-Ph-PpF" firstAttribute="centerX" secondItem="3XL-CD-HLw" secondAttribute="centerX" id="mAb-Oq-sDb"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MaH-hQ-7MB">
+                                <rect key="frame" x="310" y="54" width="94" height="30"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Touch/Motion">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="motionTypeTapped" destination="vVh-QG-3fr" eventType="touchUpInside" id="0eR-p8-wo3"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fph-41-3bo">
+                                <rect key="frame" x="10" y="54" width="148" height="30"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Spherical / Cylindrical">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="panoramaTypeTapped" destination="vVh-QG-3fr" eventType="touchUpInside" id="2Cc-pm-dAa"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zUM-5t-aag" customClass="CTPieSliceView" customModule="CTPanoramaView">
+                                <rect key="frame" x="364" y="812" width="40" height="40"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="hMA-3E-FWv"/>
+                                    <constraint firstAttribute="width" constant="40" id="qdd-DX-lsD"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="3XL-CD-HLw" firstAttribute="top" secondItem="1YG-f6-mX8" secondAttribute="bottom" id="2KB-vZ-7FY"/>
+                            <constraint firstItem="3XL-CD-HLw" firstAttribute="leading" secondItem="e4l-wW-CyK" secondAttribute="leading" id="3BU-Jo-6OL"/>
+                            <constraint firstItem="fph-41-3bo" firstAttribute="leading" secondItem="e4l-wW-CyK" secondAttribute="leading" constant="10" id="5Es-l1-Wmx"/>
+                            <constraint firstAttribute="trailing" secondItem="MaH-hQ-7MB" secondAttribute="trailing" constant="10" id="5jU-qW-wIe"/>
+                            <constraint firstItem="MaH-hQ-7MB" firstAttribute="top" secondItem="1YG-f6-mX8" secondAttribute="bottom" constant="10" id="6SL-OI-2SZ"/>
+                            <constraint firstItem="NLN-Ph-PpF" firstAttribute="height" secondItem="e4l-wW-CyK" secondAttribute="height" id="ImA-aO-lbN"/>
+                            <constraint firstItem="tvR-Y7-ZND" firstAttribute="top" secondItem="zUM-5t-aag" secondAttribute="bottom" constant="10" id="TLX-bg-q6e"/>
+                            <constraint firstAttribute="trailing" secondItem="zUM-5t-aag" secondAttribute="trailing" constant="10" id="WAB-ho-GXb"/>
+                            <constraint firstAttribute="trailing" secondItem="3XL-CD-HLw" secondAttribute="trailing" id="Xb5-zt-ATl"/>
+                            <constraint firstItem="fph-41-3bo" firstAttribute="top" secondItem="1YG-f6-mX8" secondAttribute="bottom" constant="10" id="bMH-4N-7dz"/>
+                            <constraint firstItem="MaH-hQ-7MB" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="fph-41-3bo" secondAttribute="trailing" constant="10" id="ej0-lf-wkD"/>
+                            <constraint firstItem="NLN-Ph-PpF" firstAttribute="width" secondItem="e4l-wW-CyK" secondAttribute="width" id="evM-e8-5zD"/>
+                            <constraint firstItem="tvR-Y7-ZND" firstAttribute="top" secondItem="3XL-CD-HLw" secondAttribute="bottom" id="pgr-Ff-Rjo"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="compassView" destination="zUM-5t-aag" id="Zhm-Jb-Hn8"/>
+                        <outlet property="panoramaView" destination="NLN-Ph-PpF" id="nrX-FO-Psl"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="L8V-ZU-A35" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1368" y="66"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="agE-fL-anI">
+            <objects>
+                <viewController storyboardIdentifier="ar" id="Ri4-iQ-mdK" customClass="ARViewController" customModule="AN78" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="pfA-1p-RZa"/>
+                        <viewControllerLayoutGuide type="bottom" id="FIk-x6-mAv"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="yH3-0C-3WM">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aDq-cP-fYj">
+                                <rect key="frame" x="310" y="54" width="94" height="30"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Touch/Motion">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="motionTypeTapped" destination="Ri4-iQ-mdK" eventType="touchUpInside" id="94W-4k-M1T"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vP6-xZ-0ue">
+                                <rect key="frame" x="10" y="54" width="148" height="30"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Spherical / Cylindrical">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="panoramaTypeTapped" destination="Ri4-iQ-mdK" eventType="touchUpInside" id="GyD-3E-xYx"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7tk-k5-UBW" customClass="CTPieSliceView" customModule="CTPanoramaView">
+                                <rect key="frame" x="364" y="812" width="40" height="40"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="3Rb-OY-ldy"/>
+                                    <constraint firstAttribute="height" constant="40" id="asQ-hd-Pjp"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleAspectFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TqC-Qb-vz9" customClass="CTPanoramaView" customModule="CTPanoramaView">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="696"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemRedColor"/>
+                        <constraints>
+                            <constraint firstItem="vP6-xZ-0ue" firstAttribute="leading" secondItem="yH3-0C-3WM" secondAttribute="leading" constant="10" id="0UN-5s-PiI"/>
+                            <constraint firstItem="vP6-xZ-0ue" firstAttribute="top" secondItem="pfA-1p-RZa" secondAttribute="bottom" constant="10" id="Dz5-1h-r0P"/>
+                            <constraint firstAttribute="trailing" secondItem="7tk-k5-UBW" secondAttribute="trailing" constant="10" id="Me3-5a-qCR"/>
+                            <constraint firstItem="TqC-Qb-vz9" firstAttribute="top" secondItem="yH3-0C-3WM" secondAttribute="top" id="MxH-fr-Kc1"/>
+                            <constraint firstItem="TqC-Qb-vz9" firstAttribute="leading" secondItem="yH3-0C-3WM" secondAttribute="leading" id="NtD-ev-EN4"/>
+                            <constraint firstItem="aDq-cP-fYj" firstAttribute="top" secondItem="pfA-1p-RZa" secondAttribute="bottom" constant="10" id="Q0j-9D-5aW"/>
+                            <constraint firstItem="aDq-cP-fYj" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vP6-xZ-0ue" secondAttribute="trailing" constant="10" id="ZKq-sI-Sps"/>
+                            <constraint firstAttribute="bottom" secondItem="TqC-Qb-vz9" secondAttribute="bottom" constant="200" id="hPT-7R-XMh"/>
+                            <constraint firstAttribute="trailing" secondItem="TqC-Qb-vz9" secondAttribute="trailing" id="kqi-3L-2R5"/>
+                            <constraint firstItem="FIk-x6-mAv" firstAttribute="top" secondItem="7tk-k5-UBW" secondAttribute="bottom" constant="10" id="p19-A1-fID"/>
+                            <constraint firstAttribute="trailing" secondItem="aDq-cP-fYj" secondAttribute="trailing" constant="10" id="wTs-T2-fRQ"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="compassView" destination="7tk-k5-UBW" id="hPU-AR-2ml"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1qp-ab-2OD" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="924.63768115942037" y="-102.45535714285714"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="4Hq-gd-HU6">
+            <objects>
+                <viewController storyboardIdentifier="arrr" id="hSn-KE-ndj" customClass="ARViewController" customModule="AN78" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="oCK-tG-MMD"/>
+                        <viewControllerLayoutGuide type="bottom" id="FP3-2A-QP5"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ih7-YN-sQh">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="crg-d4-J4D" customClass="CTPanoramaView" customModule="CTPanoramaView">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="crg-d4-J4D" firstAttribute="top" secondItem="ih7-YN-sQh" secondAttribute="top" id="Gzd-xh-txi"/>
+                            <constraint firstAttribute="trailing" secondItem="crg-d4-J4D" secondAttribute="trailing" id="VE7-Gf-NCK"/>
+                            <constraint firstAttribute="bottom" secondItem="crg-d4-J4D" secondAttribute="bottom" id="pxo-zv-wPR"/>
+                            <constraint firstItem="crg-d4-J4D" firstAttribute="leading" secondItem="ih7-YN-sQh" secondAttribute="leading" id="tHu-QK-ofg"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="vr" destination="crg-d4-J4D" id="COh-FM-LYH"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bkC-l0-rBu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1694.2028985507247" y="245.75892857142856"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemOrangeColor">
+            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemPurpleColor">
+            <color red="0.68627450980392157" green="0.32156862745098042" blue="0.87058823529411766" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
