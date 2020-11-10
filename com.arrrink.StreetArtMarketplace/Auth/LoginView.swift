@@ -15,9 +15,13 @@ import Combine
 
 
 struct EnterPhoneNumberView : View {
-    
+    @EnvironmentObject var getFlats: getTaFlatPlansData
+
     @Binding var detailView : taFlatPlans
     @Binding var modalController : Bool
+    @Binding var status : Bool
+
+    
     @State var ccode = ""
       @State var no = ""
       @State var show = false
@@ -26,7 +30,8 @@ struct EnterPhoneNumberView : View {
       @State var ID = ""
     @State private var number: String = ""
     @State private var isEditing = false
-      
+
+    
       var body : some View{
         NavigationView{
             ScrollView(.vertical, showsIndicators: false) {
@@ -44,11 +49,12 @@ struct EnterPhoneNumberView : View {
               
               VStack{
  
-               
-                FormattedTextField(
-                                    "",
-                                    value: $number, maskForm: "[0] ([000]) [000] [00] [00]"
-                ).padding(.horizontal, 35)
+                TextField(" 7", text: self.$number)
+//                FormattedTextField(
+//                                    "",
+//                                    value: $number, maskForm: "[0] ([000]) [000] [00] [00]"
+//                )
+                .padding(.horizontal, 35)
                 .overlay(
                     
                     HStack {
@@ -56,18 +62,7 @@ struct EnterPhoneNumberView : View {
                         Text("+").frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                                                     .padding(.leading, 18)
                         
-                        if isEditing {
-                            Button(action: {
-                                self.number = ""
-                                self.isEditing = false
-                                
-                            }) {
-                                Image(systemName: "multiply.circle.fill")
-                                    .foregroundColor(.gray)
-                                    .padding(.trailing, 1)
-                                    
-                            }
-                        }
+                       Spacer()
                     }
                 )
                 .onTapGesture {
@@ -80,8 +75,8 @@ struct EnterPhoneNumberView : View {
                 .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                 
               } .padding(.vertical, 15)
-  
-                NavigationLink(destination: LoginCodeView(detailView: $detailView, modalController: $modalController, show: $show, ID: $ID, number: number), isActive: $show) {
+               
+                NavigationLink(destination: LoginCodeView(detailView: $detailView, isActive: $modalController, currentModal : $show, ID: $ID, status: $status, number: number).environmentObject(getFlats), isActive: $show) {
                   
                   
                   Button(action: {
@@ -97,35 +92,19 @@ struct EnterPhoneNumberView : View {
 //                    print("1 ", result.formattedText.string)
                     
                    print(self.number.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: ""))
-                      
+                    
                     PhoneAuthProvider.provider().verifyPhoneNumber("+"+self.number.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: ""), uiDelegate: nil) { (ID, err) in
                           
                           if err != nil{
                             print(err.debugDescription)
                             self.msg = "Попробуйте еще раз"
                             
-                            
-                            // errors type
-                            
-//                            if let errCode = FirestoreErrorCode(rawValue: err!._code){
-//
-//                                        switch errCode {
-//                                        case .:
-//                                                        print("invalid email")
-//                                                    case .ErrorCodeEmailAlreadyInUse:
-//                                                        print("in use")
-//                                                    default:
-//                                                        print("Create User Error: \(error!)")
-//                                                }
-//                                            }
-                            
-                            
+
                               self.alert.toggle()
                               return
                           }
                           
                           self.ID = ID!
-                        
                           self.show.toggle()
                       }
                       
@@ -142,44 +121,57 @@ struct EnterPhoneNumberView : View {
               .navigationBarTitle("")
               .navigationBarHidden(true)
               .navigationBarBackButtonHidden(true)
-            }
-            }.padding()//.dismissKeyboardOnTap()
+            }.padding(.vertical)
+            }.padding(.horizontal)
+            .dismissKeyboardOnTap()
+            .navigationBarTitle("")
+            .navigationBarHidden(true)
+            .navigationBarBackButtonHidden(true)
           .alert(isPresented: $alert) {
                   
               Alert(title: Text("Что-то пошло не так 🤷🏼‍♀️"), message: Text(self.msg), dismissButton: .default(Text("Ок")))
           }
-      }
+      } .navigationBarHidden(true)
+        .navigationBarTitle("")
+        .navigationBarBackButtonHidden(true)
       }
   }
   
   struct LoginCodeView : View {
+    @EnvironmentObject var getFlats: getTaFlatPlansData
+
     @Binding var detailView : taFlatPlans
-    @Binding var modalController : Bool
+   
    //   @Environment(\.presentationMode) var presentation
       @State var code = ""
-      @Binding var show : Bool
+      @State var show = false
+    
+    @Binding var isActive : Bool
+    @Binding var currentModal : Bool
+    
       @Binding var ID : String
+    @Binding var status : Bool
       @State var msg = ""
       @State var alert = false
       @EnvironmentObject var navigationStack: NavigationStack
     var number : String
-    @State private var isActive = false
-      var body : some View{
+    @Environment(\.presentationMode) var presentation
+    var body : some View{
             
-      //  NavigationView {
+       // NavigationView {
         
-       return AnyView( NavigationStackView {
+      // return AnyView(
         ScrollView(.vertical, showsIndicators: false) {
             ZStack(alignment: .topLeading) {
               
             //  GeometryReader{_ in
                   
-                VStack(alignment: .leading,spacing: 20) {
+                VStack(alignment: .leading,spacing: 10) {
                       
                     HStack(spacing: 20) {
                     Button(action: {
                         
-                        self.show.toggle()
+                        self.currentModal.toggle()
                         
                     }) {
                         
@@ -205,48 +197,60 @@ struct EnterPhoneNumberView : View {
                         
                         Spacer()
                         
-                    }.padding(.top, 15)
-                     // TextField("Код", text: self.$code)
-                    FormattedTextField(
-                                        "0 0 0 0 0 0",
-                                        value: $code, maskForm: "[0] [0] [0] [0] [0] [0]"
-                    )
+                    }//.padding(.top, 15)
+                      TextField("Код", text: self.$code)
+//                    FormattedTextField(
+//                                        "0 0 0 0 0 0",
+//                                        value: $code, maskForm: "[0] [0] [0] [0] [0] [0]"
+//                    )
                               .padding()
                         .font(.largeTitle).multilineTextAlignment(.center)
                         
                               .clipShape(RoundedRectangle(cornerRadius: 10))
-                              .padding(.top, 15)
+                              //.padding(.top, 15)
                         .keyboardType(.numberPad)
                       
                         
-                   // PushView(destination: HomeView(), isActive: $isActive) {
-                    NavigationLink(destination: DetailFlatView(data: detailView), isActive: $show) {
+                    
+                    NavigationLink(destination: DetailFlatView(data: $detailView, isShow: $show).environmentObject(getFlats) , isActive : $show) {
                       Button(action: {
                         
                        
                           
                         let credential =  PhoneAuthProvider.provider().credential(withVerificationID: self.ID, verificationCode: self.code.replacingOccurrences(of: " ", with: ""))
+                        
+                        
                         print(self.code.replacingOccurrences(of: " ", with: ""))
                           
                           Auth.auth().signIn(with: credential) { (res, err) in
                               if err != nil{
                                   
-                                  self.msg = (err?.localizedDescription)!
+                                self.msg = "Попробуйте еще раз"
                                   self.alert.toggle()
                                   return
                               } else {
-                              
+                                
                               UserDefaults.standard.set(true, forKey: "status")
-                              
+                                
                               NotificationCenter.default.post(name: NSNotification.Name("statusChange"), object: nil)
                                 
-                                 self.show.toggle()
+                                status = UserDefaults.standard.value(forKey: "status") as? Bool ?? false
+                                print("status",status)
+                                if !detailView.id.isEmpty {
+                                    self.show.toggle()
+                                    
+                                } else {
+                                     self.isActive.toggle()
+                                }
+                                
+                                
+                                print(Auth.auth().currentUser?.phoneNumber)
                                // self.navigationStack.push(OrderView(data: detailView))
                                 // self.modalController.toggle()
                               }
                           }
                      //   self.presentation.wrappedValue.dismiss()
-                       
+                      
                       }) {
                           
                           Text("Отправить").fontWeight(.black).frame(width: UIScreen.main.bounds.width - 30,height: 50)
@@ -261,23 +265,26 @@ struct EnterPhoneNumberView : View {
                     
                   }
                     
+                    
                   
                       
                   }
-                  
+                .padding()
               //}
               
               
               
           }
-          .padding()
+          
           .alert(isPresented: $alert) {
                   
-              Alert(title: Text("Error"), message: Text(self.msg), dismissButton: .default(Text("Ok")))
+              Alert(title: Text("Что-то пошло не так 🤷🏼‍♀️"), message: Text(self.msg), dismissButton: .default(Text("Ок")))
           }
        }.dismissKeyboardOnTap()
         
-       })
+     .navigationBarTitle("")
+        .navigationBarHidden(true)
+        .navigationBarBackButtonHidden(true)
       }
   }
 

@@ -45,16 +45,16 @@ struct VRDestination: View {
                 }
 
             Spacer()
-                VStack {
-              //  GeometryReader{ geo in
-                    HStack(spacing: 0){
-                                      
-                                      TabButton(selected: $tab, title: "Ваниль" )
-                                      
-                                      TabButton(selected: $tab, title: "Шоколад")
-                                  }
-                    .background(Capsule().fill(Color.black.opacity(0.35)))
-                    .padding(.bottom, 10)
+               VStack {
+//              //  GeometryReader{ geo in
+//                    HStack(spacing: 0){
+//
+//                                      TabButton(selected: $tab, title: "Ваниль" )
+//
+//                                      TabButton(selected: $tab, title: "Шоколад")
+//                                  }
+//                    .background(Capsule().fill(Color.white.opacity(0.35)))
+//                    .padding(.bottom, 10)
                     
                     ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
@@ -78,7 +78,7 @@ struct VRDestination: View {
                         } label: {
                             VStack {
                                
-                                Text("Ванная").padding().foregroundColor(Color("ColorMain"))
+                                Text("Гостинная").padding().foregroundColor(Color("ColorMain"))
                             } .background(Color.white).cornerRadius(23).padding(.leading,10)
                         }
                             
@@ -90,7 +90,7 @@ struct VRDestination: View {
                             } label: {
                                 VStack {
                                    
-                                    Text("Комната").padding().foregroundColor(Color("ColorMain"))
+                                    Text("Свободная планировка").padding().foregroundColor(Color("ColorMain"))
                                 } .background(Color.white).cornerRadius(23).padding(.leading,10)
                         
                    
@@ -106,7 +106,7 @@ struct VRDestination: View {
                         } label: {
                             VStack {
                                
-                                Text("Гостиная").padding().foregroundColor(Color("ColorMain"))
+                                Text("Столовая").padding().foregroundColor(Color("ColorMain"))
                             } .background(Color.white).cornerRadius(23).padding(.leading,10)
                     }
                         // 5
@@ -117,13 +117,13 @@ struct VRDestination: View {
                         } label: {
                             VStack {
                                
-                                Text("Спальня").padding().foregroundColor(Color("ColorMain"))
+                                Text("Столовая").padding().foregroundColor(Color("ColorMain"))
                             } .background(Color.white).cornerRadius(23).padding(.leading,10)
                     
                
                         }.padding(.trailing)
                 }
-                }.padding(.bottom, 5)
+                }.padding(.bottom, 15)
            // }
                 }
                 

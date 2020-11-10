@@ -165,10 +165,10 @@
             </objects>
             <point key="canvasLocation" x="-1368" y="66"/>
         </scene>
-        <!--View Controller-->
+        <!--Pinch View Controller-->
         <scene sceneID="agE-fL-anI">
             <objects>
-                <viewController storyboardIdentifier="ar" id="Ri4-iQ-mdK" customClass="ARViewController" customModule="AN78" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="pinch" id="Ri4-iQ-mdK" customClass="PinchViewController" customModule="AN78" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="pfA-1p-RZa"/>
                         <viewControllerLayoutGuide type="bottom" id="FIk-x6-mAv"/>
@@ -176,68 +176,8 @@
                     <view key="view" contentMode="scaleToFill" id="yH3-0C-3WM">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aDq-cP-fYj">
-                                <rect key="frame" x="310" y="54" width="94" height="30"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="Touch/Motion">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="5"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="motionTypeTapped" destination="Ri4-iQ-mdK" eventType="touchUpInside" id="94W-4k-M1T"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vP6-xZ-0ue">
-                                <rect key="frame" x="10" y="54" width="148" height="30"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="Spherical / Cylindrical">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="5"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="panoramaTypeTapped" destination="Ri4-iQ-mdK" eventType="touchUpInside" id="GyD-3E-xYx"/>
-                                </connections>
-                            </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7tk-k5-UBW" customClass="CTPieSliceView" customModule="CTPanoramaView">
-                                <rect key="frame" x="364" y="812" width="40" height="40"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="40" id="3Rb-OY-ldy"/>
-                                    <constraint firstAttribute="height" constant="40" id="asQ-hd-Pjp"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleAspectFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TqC-Qb-vz9" customClass="CTPanoramaView" customModule="CTPanoramaView">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="696"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </view>
-                        </subviews>
                         <color key="backgroundColor" systemColor="systemRedColor"/>
-                        <constraints>
-                            <constraint firstItem="vP6-xZ-0ue" firstAttribute="leading" secondItem="yH3-0C-3WM" secondAttribute="leading" constant="10" id="0UN-5s-PiI"/>
-                            <constraint firstItem="vP6-xZ-0ue" firstAttribute="top" secondItem="pfA-1p-RZa" secondAttribute="bottom" constant="10" id="Dz5-1h-r0P"/>
-                            <constraint firstAttribute="trailing" secondItem="7tk-k5-UBW" secondAttribute="trailing" constant="10" id="Me3-5a-qCR"/>
-                            <constraint firstItem="TqC-Qb-vz9" firstAttribute="top" secondItem="yH3-0C-3WM" secondAttribute="top" id="MxH-fr-Kc1"/>
-                            <constraint firstItem="TqC-Qb-vz9" firstAttribute="leading" secondItem="yH3-0C-3WM" secondAttribute="leading" id="NtD-ev-EN4"/>
-                            <constraint firstItem="aDq-cP-fYj" firstAttribute="top" secondItem="pfA-1p-RZa" secondAttribute="bottom" constant="10" id="Q0j-9D-5aW"/>
-                            <constraint firstItem="aDq-cP-fYj" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vP6-xZ-0ue" secondAttribute="trailing" constant="10" id="ZKq-sI-Sps"/>
-                            <constraint firstAttribute="bottom" secondItem="TqC-Qb-vz9" secondAttribute="bottom" constant="200" id="hPT-7R-XMh"/>
-                            <constraint firstAttribute="trailing" secondItem="TqC-Qb-vz9" secondAttribute="trailing" id="kqi-3L-2R5"/>
-                            <constraint firstItem="FIk-x6-mAv" firstAttribute="top" secondItem="7tk-k5-UBW" secondAttribute="bottom" constant="10" id="p19-A1-fID"/>
-                            <constraint firstAttribute="trailing" secondItem="aDq-cP-fYj" secondAttribute="trailing" constant="10" id="wTs-T2-fRQ"/>
-                        </constraints>
                     </view>
-                    <connections>
-                        <outlet property="compassView" destination="7tk-k5-UBW" id="hPU-AR-2ml"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1qp-ab-2OD" sceneMemberID="firstResponder"/>
             </objects>

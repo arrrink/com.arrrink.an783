@@ -14,12 +14,25 @@ import GoogleMaps
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-//    override init() {
-//        super.init()
-//        FirebaseApp.configure()
-//    }
+
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+       
+       // UINavigationController.init().interactivePopGestureRecognizer?.delegate = nil
+      //  UINavigationController.init().interactivePopGestureRecognizer?.isEnabled = true
+      //  let appearance = UINavigationBarAppearance()
+        
+       // appearance.configureWithOpaqueBackground()
+       
+    //    UINavigationBar.appearance().showsLargeContentViewer = false
+       // UINavigationBar.appearance().standardAppearance = appearance
+      //  UINavigationBar.appearance().compactAppearance = appearance
+//        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "Ubuntu", size: 27), NSAttributedString.Key.foregroundColor:UIColor.white]
+//        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "Ubuntu-Light", size: 15), NSAttributedString.Key.foregroundColor:UIColor.white], for: .highlighted)
+       // UINavigationBar.appearance().backgroundColor = .clear
+     //   UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        UINavigationBar.appearance().tintColor = .red
+       // UINavigationBarAppearance.init(barAppearance: UIBarAppearance())
         FirebaseApp.configure()
         GMSServices.provideAPIKey("AIzaSyAsGfs4rovz0-6EFUerfwiSA6OMTs2Ox-M")
         return true

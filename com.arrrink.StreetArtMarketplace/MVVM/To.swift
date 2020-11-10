@@ -489,8 +489,8 @@ class To: ObservableObject, Identifiable {
                                     dataBank[index].err = "Ипотека не может быть выдана по двум документам"
                                     print(i.name," ",i.err)
                                 } else {
-                                    if creditDuration * 30 <= i.maxYearCreditDuration.rounded() {
-                                        if creditDuration * 30 >= i.minYearCreditDuration.rounded() {
+                                    if (creditDuration * 30).rounded() <= i.maxYearCreditDuration {
+                                        if (creditDuration * 30).rounded() >= i.minYearCreditDuration {
                                             
                                             
                                             
@@ -683,6 +683,458 @@ class To: ObservableObject, Identifiable {
                 let string = j.childSnapshot(forPath: "price").value as? String ?? ""
                 DispatchQueue.main.async {
                     self.maxPrice = string.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "руб.", with: "")
+                }
+            }
+        }
+        
+        
+    }
+
+}
+
+
+class FromToSearch: ObservableObject, Identifiable {
+    let id = UUID()
+    let publisher = PassthroughSubject<[CGFloat], Never>()
+    let publisher2 = PassthroughSubject<[CGFloat], Never>()
+    let publisher3 = PassthroughSubject<[CGFloat], Never>()
+    let publisher4 = PassthroughSubject<[CGFloat], Never>()
+    let publisher5 = PassthroughSubject<[CGFloat], Never>()
+  //  let publisherPercent = PassthroughSubject<[CGFloat], Never>()
+    
+    
+
+    
+    @Published var maxPrice  = 30000000
+ 
+    var flatPrice: [CGFloat] {
+        willSet {
+            
+            if newValue != flatPrice {
+            objectWillChange.send()
+               
+            }
+        }
+        didSet {
+            if oldValue != flatPrice {
+            publisher.send(flatPrice)
+               
+            }
+            }
+    }
+    
+    @Published var totalSfrom: CGFloat = 0
+    @Published var totalSto: CGFloat =  0.95
+    
+//    var totalS: [CGFloat] {
+//        willSet {
+//            if newValue != totalS {
+//            objectWillChange.send()
+//
+//            }
+//        }
+//        didSet {
+//            if oldValue != totalS {
+//            publisher2.send(totalS)
+//            }
+//        }
+//    }
+   
+    var timeToMetro: [CGFloat] {
+            
+            willSet {
+                
+                if newValue != timeToMetro {
+                objectWillChange.send()
+                }
+            }
+            didSet {
+                if oldValue != timeToMetro {
+                publisher3.send(timeToMetro)
+                }
+            }
+    }
+    var kitchenS: [CGFloat] {
+        willSet {
+            
+            if newValue != kitchenS {
+                
+                
+            objectWillChange.send()
+                
+           }
+        }
+        didSet {
+            if oldValue != kitchenS {
+            publisher4.send(kitchenS)
+            }
+        }
+    }
+    var floor: [CGFloat] {
+        willSet {
+           
+            if newValue != floor {
+            objectWillChange.send()
+                
+            }
+        }
+        didSet {
+            if oldValue != floor {
+            publisher5.send(floor)
+            }
+        }
+    }
+
+     
+    @Published var datas = [dataType]()
+    @Published var tags = [tagSearch]()
+    @Published var ifApart = "default"
+    @Published var repair = ["Без отделки", "Подчистовая", "Чистовая", "С ремонтом", "С мебелью"]
+    @Published var type = ["Студии" , "1-к.кв", "2Е-к.кв", "2-к.кв", "3Е-к.кв", "3-к.кв", "4Е-к.кв", "4-к.кв", "5Е-к.кв", "5-к.кв", "6-к.кв", "7-к.кв", "Таунхаусы", "Коттеджи", "Своб. план."]
+    @Published var deadline = ["Сдан",
+    "4 кв. 2020",
+    "1 кв. 2021",
+    "2 кв. 2021",
+    "3 кв. 2021",
+    "4 кв. 2021",
+    "1 кв. 2022",
+    "2 кв. 2022",
+    "3 кв. 2022",
+    "4 кв. 2022",
+    "1 кв. 2023",
+    "2 кв. 2023",
+    "3 кв. 2023",
+    "4 кв. 2023",
+    "1 кв. 2024",
+    "4 кв. 2024",
+    "4 кв. 2025"
+]
+    init(flatPrice: [CGFloat], timeToMetro: [CGFloat], kitchenS: [CGFloat], floor: [CGFloat]) {
+        
+        self.flatPrice = flatPrice
+       // self.totalS = totalS
+        self.timeToMetro = timeToMetro
+        self.kitchenS = kitchenS
+        self.floor = floor
+      
+        getMaxPrice()
+        
+      //  findPercent()
+        
+        
+        
+        // init
+        print("init parse data for search")
+        
+        let db = Firestore.firestore()
+        
+        db.collection("objects").getDocuments { (snap, err) in
+            
+            if err != nil{
+                
+                print((err?.localizedDescription)!)
+                return
+            }
+            
+            for i in snap!.documents{
+                
+               // let id = i.documentID
+                let name = i.get("complexName") as! String
+                let developer = i.get("developer") as! String
+                
+                self.datas.append(dataType(id: UUID().uuidString, name: name, type: .complexName))
+                
+                if self.datas.filter({$0.type == .developer && $0.name == developer }).count == 0 {
+                
+                
+                self.datas.append(dataType(id: UUID().uuidString, name: developer, type: .developer))
+             }
+            }
+        }
+        
+        let undegroundArray = ["Девяткино", "Гражданский проспект"]
+        
+        for i in undegroundArray {
+            self.datas.append(dataType(id: UUID().uuidString, name: i, type: .underground))
+        }
+       
+    }
+    
+    func getYearString(to: CGFloat) -> String {
+        let string = String(format: "%.0f", Double(to))
+        
+        if Int(string) == 1 || Int(string) == 21 || Int(string) == 31 || Int(string) == 41 {
+            return " года"
+        } else if (Int(string) ?? 1 > 1) && (Int(string) ?? 1 < 5) || (Int(string) == 22) || (Int(string) == 23)
+                    || (Int(string) == 24) ||
+        (Int(string) == 32) || (Int(string) == 33)
+                    || (Int(string) == 34) ||
+        (Int(string) == 42) || (Int(string) == 43)
+                    || (Int(string) == 44)
+        {
+            return " лет"
+        } else {
+            return " лет"
+        }
+  
+    }
+    func getMonthString(to: CGFloat) -> String {
+        let string = String(format: "%.0f", Double(to))
+        
+        if Int(string) == 1 {
+            return " месяца"
+        } else if (Int(string) ?? 1 > 1) && (Int(string) ?? 1 < 5) {
+            return " месяцев"
+        } else {
+            return " месяцев"
+        }
+  
+    }
+//    func findPercent() {
+//
+//        var index = 0
+//        let price = flatPrice * (maxPrice == "" ? 22.0 : CGFloat(Double(maxPrice) ?? 22.0))
+//
+//        for i in dataBank {
+//
+//        let filter = dataBank.filter{ $0.img == i.img }
+//        guard filter.count == 1 else {return}
+//        index = filter[0].id
+//
+////            guard (price - price * value2) > i.minSumOfCredit else { err = "Минимальная сумма кредита должна быть не менее \(Int(i.minSumOfCredit) / 1000) 000 рублей"
+////                print(i.name," ",err)
+////                return }
+//
+//            if (price - price * value2).rounded() >= i.minSumOfCredit {
+//
+////                guard (price - price * value2) < i.maxSumOfCredit else { err = "Максимальная сумма кредита должна быть не более \(Int(i.maxSumOfCredit) / 1000000) 000 000 рублей"
+////                    print(i.name," ",err)
+////                    return }
+//
+//                if (price - price * value2).rounded() <= i.maxSumOfCredit {
+//
+//
+////                    guard value2 < i.maxPV else { err = "Первоначальный взнос больше максимально допустимых \(Int(i.maxPV * 100))%"
+////                        print(i.name," ",err)
+////                        return }
+//
+//
+//                    if value2 <= i.maxPV {
+//                        if (ifRF != "Являюсь налоговым резидентом РФ") && i.ifNotFromRussia == false{
+//                            dataBank[i.id].totalPercent = 0.0
+//
+//                            dataBank[index].err = "Ипотека не выдаётся налоговым нерезидентам РФ"
+//                            print(i.name," ",i.err)
+//                        } else {
+//                            if (checkMoneyType == "Выписка из ПФР") && i.ifcheckMoneyTypePFR == false {
+//
+//                                dataBank[i.id].totalPercent = 0.0
+//
+//                                dataBank[index].err = "Не принимает подтверждение дохода из ПФР"
+//                                print(i.name," ",i.err)
+//                            } else {
+//
+//                                if (checkMoneyType == "По двум документам") && i.if2docs == false {
+//
+//                                    dataBank[i.id].totalPercent = 0.0
+//
+//                                    dataBank[index].err = "Ипотека не может быть выдана по двум документам"
+//                                    print(i.name," ",i.err)
+//                                } else {
+//                                    if (creditDuration * 30).rounded() <= i.maxYearCreditDuration {
+//                                        if (creditDuration * 30).rounded() >= i.minYearCreditDuration {
+//
+//
+//
+//
+//
+//                                            if checkSpecialType != "default" {
+//
+//
+//                                                for j in i.specialIpotekaTypes {
+//
+//                                                    if checkSpecialType == j.typeName {
+//                                                        if value2 >= j.minPV {
+//                                                            dataBank[i.id].totalPercent = Double(j.percent)
+//
+//
+//
+//                                                        } else {
+//                                                            dataBank[i.id].totalPercent = 0.0
+//                                                            dataBank[index].err = "Первоначальный взнос по данной программе меньше минимально допустимых \(Int(j.minPV * 100))%"
+//                                                            print(i.name," ",i.err)
+//                                                        }
+//                                                        break
+//                                                    } else {
+//
+//                                                        dataBank[i.id].totalPercent = 0.0
+//                                                        dataBank[index].err = "По данной программе нет возможности подать заявку в этот банк"
+//                                                        print(i.name," ",i.err)
+//                                                    }
+//
+//
+//
+//                                                }
+//
+//
+//                                            } else {
+//
+//                                                for j in i.workTypes {
+//
+//                                                    if workType == j.typeName {
+//                                                     //   if minCurrentWorkDurationSlider >= Double(j.minCurrentWorkDuration) {
+//                                                            if  value2 >= j.minPV {
+//
+//
+//
+//                                                                for k in i.checkMoneyTypes {
+//                                                                    if checkMoneyType == k.typeName {
+//
+//                                                                        if checkMoneyType == "По двум документам" {
+//                                                                            if workType != "Найм" {
+//                                                                            if k.if2docsIfBusiness == true {
+//
+//                                                                                if k.minPVIf2docs < value2{
+//                                                                                    dataBank[i.id].totalPercent = Double(k.percent)
+//                                                                                } else {
+//                                                                                    dataBank[i.id].totalPercent = 0.0
+//
+//                                                                                    dataBank[index].err = "Первоначальный взнос меньше минимально допустимых \(Int(k.minPVIf2docs * 100))%"
+//                                                                                    print(i.name," ",i.err)
+//                                                                                }
+//
+//                                                                            } else {
+//                                                                                dataBank[i.id].totalPercent = 0.0
+//
+//                                                                                dataBank[index].err = "Ипотека не выдаётся по двум документам владельцам бизнеса"
+//                                                                                print(i.name," ",i.err)
+//                                                                            }
+//                                                                            } else {
+//                                                                                dataBank[i.id].totalPercent = Double(k.percent)
+//                                                                            }
+//
+//                                                                        } else {
+//                                                                            dataBank[i.id].totalPercent = Double(k.percent)
+//                                                                        }
+//
+//                                                                        break
+//                                                                    }
+//                                                                }
+//
+//
+//
+//
+//
+//                                                            } else {
+//                                                                dataBank[i.id].totalPercent = 0.0
+//
+//                                                                dataBank[index].err = "Первоначальный взнос меньше минимально допустимых \(Int(j.minPV * 100))%"
+//                                                                print(i.name," ",i.err)
+//                                                            }
+//
+//
+//
+//                                                    }
+//
+//                                                }
+//
+//
+//                                            }
+//
+//
+//
+//
+//                                        } else {
+//
+//                                            dataBank[i.id].totalPercent = 0.0
+//
+//                                            if Int(i.minYearCreditDuration) == 1 {
+//                                                dataBank[index].err = "Минимальный срок ипотеки может быть не менее \(Int(i.minYearCreditDuration)) года"
+//                                            } else {
+//                                                dataBank[index].err = "Минимальный срок ипотеки может быть не менее \(Int(i.minYearCreditDuration)) лет"
+//                                            }
+//
+//
+//
+//
+//
+//                                            print(i.name," ",i.err, " ", creditDuration * 30)
+//                                        }
+//
+//                                    } else {
+//
+//                                        dataBank[i.id].totalPercent = 0.0
+//
+//                                        dataBank[index].err = "Максимальный срок ипотеки может быть не более \(Int(i.maxYearCreditDuration)) лет"
+//                                        print(i.name," ",i.err)
+//                                    }
+//
+//                                }
+//
+//
+//
+//                            }
+//                        }
+//
+//                    } else {
+//
+//                        dataBank[i.id].totalPercent = 0.0
+//
+//                        dataBank[index].err = "Первоначальный взнос больше максимально допустимых \(Int(i.maxPV * 100))%"
+//                        print(i.name," ",i.err)
+//                    }
+//                } else {
+//
+//                    dataBank[i.id].totalPercent = 0.0
+//
+//                    dataBank[index].err = "Максимальная сумма кредита должна быть не более \(Int(i.maxSumOfCredit) / 1000000) 000 000 рублей"
+//                    print(i.name," ",i.err)
+//                }
+//
+//
+//
+//            } else {
+//
+//                dataBank[i.id].totalPercent = 0.0
+//
+//                dataBank[index].err = "Минимальная сумма кредита должна быть не менее \(Int(i.minSumOfCredit) / 1000) 000 рублей"
+//                print(i.name," ",i.err)
+//            }
+//
+//        }
+//    }
+    
+    func pow(value: CGFloat, count: Int) -> CGFloat {
+        
+        var answer : CGFloat = 1
+        var counter = 1
+        
+        while counter <= count {
+            answer *= value
+            counter += 1
+        }
+        return answer
+    }
+    
+    func getMaxPrice() {
+        let db = Database.database().reference()
+        
+            db.child("taflatplans").queryOrdered(byChild: "price").queryLimited(toLast: 1).observe(.value) { (snap) in
+            guard let children = snap.children.allObjects as? [DataSnapshot] else {
+            print("((((((")
+            return
+          }
+               
+            guard children.count != 0 else {
+                print("cant 0")
+                return
+            }
+
+            for j in children {
+                
+                let string = j.childSnapshot(forPath: "price").value as? Int ?? 0
+                DispatchQueue.main.async {
+                    self.maxPrice = string
                 }
             }
         }

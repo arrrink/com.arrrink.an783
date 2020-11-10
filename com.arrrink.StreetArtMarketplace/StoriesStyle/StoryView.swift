@@ -11,198 +11,179 @@ import NavigationStack
 import RealmSwift
 import Firebase
 import Combine
+import SDWebImageSwiftUI
 
 struct StoryView: View {
     @EnvironmentObject  var navigationStack: NavigationStack
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @State var show : Bool
+    @Environment(\.presentationMode) var presentationMode
+    
     @State private var isActive = false
-    @Binding var current2 : Int
-    @Binding var name : String
-     
+    var item : PostRealmFB
+    
+    @State var onPause = false
+    @State var secs : CGFloat = 0
+    @State var round : CGFloat = 0
+    @State var width : CGFloat = 100
     var body: some View {
         
          GeometryReader { geometryProxy in
                                                
-                                           ZStack{
-                                            
-                                               Color.black.edgesIgnoringSafeArea(.all).frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-                                               
-                                                   .frame(
-                                                              width: geometryProxy.size.width,
-                                                              height: geometryProxy.size.height,
-                                                              alignment: .topLeading
-                                                          )
+                                          
                                                
                                                ZStack(alignment: .topLeading) {
                                                    
                                                    GeometryReader{_ in
                                                        
-                                                   // VStack(alignment: .center){
-                                                        LoadStoryImage(imageID: "\(self.current2)")
-                                                            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height, alignment: .center)
+                                                    VStack(spacing: 15){
+                                                    HStack{
+                                                        Spacer()
+                                                        WebImage(url: URL(string: item.imglink)).resizable().scaledToFit()
+                                                            
                                                     
+                                                        Spacer()
+                                                       } .padding(.top, 55)
+                                                    //.frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height, alignment: .center)
                                                         
-                                                     //  }
+                                                        Text(item.text)
+                                                            .font(.title)
+                                                        .fontWeight(.heavy)
+                                                            .lineLimit(4)
+                                                            .minimumScaleFactor(0.5)
+                                                            .padding().multilineTextAlignment(.leading).frame(width: UIScreen.main.bounds.width).padding(.horizontal)
+                                                    }
+                                                    
                                                    }
-                                                   
+                                                if !self.isLongPress {
                                                    VStack(spacing: 15){
-                                                       
-                                                       Loader(show: self.show)
+                                                    
+                                                    Loader(width: $width).padding(.horizontal)
                                                        
                                                        HStack(spacing: 15){
          
                                                            
-                                                        Text(self.name)
-                                                               .foregroundColor(.white)
+                                                        Text(item.name)
+                                                            
+                                                            .fontWeight(.heavy)
+                                                               
                                                            
                                                            Spacer()
                                                            
                                                        }
                                                        .padding(.leading)
                                                    }
+                                               
                                                    .padding(.top)
+                                                }
+                                               }
+                                               .onReceive(self.time) { (i) in
+                                                  
+                                 
+                                                  if !self.isLongPress {
+                                                   
+                                                  self.secs += 0.02
+                                                  self.round = (self.secs * 10).rounded() / 10
+                                                  
+                                                  if self.secs <= 3 {//4 seconds.....
+                                                       
+                                                       let screenWidth = UIScreen.main.bounds.width
+                                                       
+                                                      self.width = screenWidth * (self.secs / 3)
+                                                     
+                                                     
+                                                      if self.round == 3.0 {
+                                                        self.presentationMode.wrappedValue.dismiss()
+                                                        
+                                                      }
+                                                      
+                                                   }
+                                                   else {
+                                                        
+                                                    self.presentationMode.wrappedValue.dismiss()
+                                                      
+                                                   }
+                                                  
+                                                  }
+                                       
                                                }
             
                                            
                                            .transition(.move(edge: .trailing))
                                            .onTapGesture {
                                                self.presentationMode.wrappedValue.dismiss()
-                                              // self.show.toggle()
-                                           // self.navigationStack.push(TabView())
-                                            }
-                                               .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local)
-                                                .onChanged { _ in }
-                                                .onEnded { _ in
-                                                 //   self.show.toggle()
-                                               // self.navigationStack.push(TabView())
-                                                    
-                                                }
-                                            )
+                                           }
+                                               .gesture(plusLongPress)
+                                               
+                                            
                                            
-                                           }.edgesIgnoringSafeArea(.all)
+                                           .edgesIgnoringSafeArea(.all)
             
             
         
         }
+    }
+     var time = Timer.publish(every: 0.02, on: .main, in: .common).autoconnect()
+    @GestureState var isLongPress = false
+    var plusLongPress: some Gesture {
+        LongPressGesture(minimumDuration: 0.1).sequenced(before:
+              DragGesture(minimumDistance: 0, coordinateSpace:
+              .local)).updating($isLongPress) { value, state, transaction in
+                
+                switch value {
+                    case .second(true, nil):
+                        state = true
+                       
+                    default:
+                        break
+                }
+            }
     }
 }
 
 
 struct Loader : View {
-    
-    @EnvironmentObject private var navigationStack: NavigationStack
-@Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-     @State var width : CGFloat = 100
-     @State var show : Bool
-    var time = Timer.publish(every: 0.02, on: .main, in: .common).autoconnect()
-    @State var secs : CGFloat = 0
-    @State var round : CGFloat = 0
-    
+    @Binding var width : CGFloat
+     
+  
      var body : some View{
          
          ZStack(alignment: .leading){
              
              Rectangle()
-                 .fill(Color.white.opacity(0.6))
+                .fill(Color.secondary.opacity(0.6))
                  .frame(height: 3)
+                .clipShape(Capsule())
              
              Rectangle()
-                 .fill(Color.white)
+                .fill(Color.secondary)
                  .frame(width: self.width, height: 3)
+                .clipShape(Capsule())
             
             }
          
-         .onReceive(self.time) { (i) in
-             
-            self.secs += 0.02
-            self.round = (self.secs * 10).rounded() / 10
-            
-            if self.secs <= 3 {//4 seconds.....
-                 
-                 let screenWidth = UIScreen.main.bounds.width
-                 
-                self.width = screenWidth * (self.secs / 3)
-               
-               
-                if self.round == 3.0 {
-                    self.presentationMode.wrappedValue.dismiss()
-                  //  self.navigationStack.push(TabView())
-                }
-                
-             }
-             else {
-                  
-                //   self.show = false
-                
-             }
-            
-        
- 
-         }
+         
         
      }
  }
 
-class getStoriesImages : ObservableObject {
-
-var didChange = PassthroughSubject<getStoriesImages, Never>()
-
-var data = [String](){
-
-    didSet{
-        didChange.send(self)
-    }
-}
-
-init(){
-    
-    let ref = Firestore.firestore().collection("stories").addSnapshotListener { (snap, err) in
-        if err != nil {
-            print(err?.localizedDescription ?? "")
-        }
-        
-        
-    
-   
-        for i in 0..<(snap?.count ?? 1) {
-              
-    let storageRef = Storage.storage().reference(withPath: "stories/\(i).jpg")
-    
-
-                   storageRef.downloadURL { (storyURL, error) in
-                          if error != nil {
-                              print("ERROR load stories image from Storage",(error?.localizedDescription)!)
-                              return
-                   }
-                      guard let storyURL = storyURL else { return }
-                    
-                    DispatchQueue.main.async {
-                        self.data.append("\(storyURL)")
-                         
-                    }
-
-                    
-                    
-              }
-}
-}
-
-    }
-}
 
 class PostRealmFB : Object, Identifiable {
     var id: String = UUID().uuidString
     var name : String = ""
+    var text : String = ""
+    var imglink : String = ""
+    var createdAt : Timestamp = Timestamp(date: Date())
     @objc dynamic var seen : Bool = false // Realm
     @objc dynamic var idSeen : String = "" // Realm
 
     var loading : Bool = false
-    convenience init(id: String, name: String, seen: Bool = false, idSeen: String = "") {
+    convenience init(id: String, name: String, text : String, imglink: String, createdAt: Timestamp, seen: Bool = false, idSeen: String = "") {
         self.init() //Please note this says 'self' and not 'super'
         self.seen = seen
         self.id = id
         self.name = name
+        self.text = text
+        self.createdAt = createdAt
+        self.imglink = imglink
         self.idSeen = idSeen
     }
     

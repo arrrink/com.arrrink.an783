@@ -18,50 +18,70 @@ import MapKit
 
 
 class getTaFlatPlansData: ObservableObject {
-    var  maxPrice : Double
+    var  query : Query
 
     @Published var data = [taFlatPlans]()
+    @Published var dataFilter = [taFlatPlans]()
+    @Published var showCurrentLocation = false
+    @Published var annoData = [CustomAnnotation]()
     
-    @Published var annoData = [MKPointAnnotation]()
+    @Published var annoDataFilter = [CustomAnnotation]()
+    
+    @Published var tappedComplexName = CustomAnnotation(coordinate: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), imageName: "", title: "")
     
     @Published var objects = [taObjects]()
+    
+    @Published var needUpdateMap = false
+    
+    @Published var needSetRegion = false
     
     @Published var tappedObject = taObjects(id: "", address: "", complexName: "", deadline: "", developer: "", geo: GeoPoint(latitude: 0.0, longitude: 0.0), img: "", type: "", underground: "", timeToUnderground: "", typeToUnderground: "")
     @Published var tappedObjectComplexName = ""
     @Published var startKey = [QueryDocumentSnapshot?]()
     
-    @Published var limit = 7
+    @Published var limit = 80
     
     
     
     @Published var note = ""
     @Published var foundCount = 0
-
-    init(startKey: [QueryDocumentSnapshot?], maxPrice: Double) {
+    
+    @Published var filterFlatsOndetailView = [[taFlatPlans]]()
+    
+    init(query: Query) {
         
-        self.startKey = startKey
+        self.query = query
         
         
-        self.maxPrice = maxPrice
+       // self.maxPrice = maxPrice
         
        
-            getPromiseFlat(startKey: startKey, maxPrice: CGFloat(maxPrice))
+        getPromiseFlat(query: query)
                 .done { (data) in
                     
                     self.data = data["limitFlats"] as! [taFlatPlans]
+                    self.dataFilter = self.data
                     self.note = "\(self.foundCount)"
                    
-                    
+                    if self.dataFilter.count == 0  {
+                        self.note = "Не найдено"
+                        
+                        
+                    } else {
+                            self.note = "\(self.dataFilter.count)"
+                    }
                     
                     
                     
                     self.getPromiseAnno(complexNameArray: data["anno"] as! [String]).done { (annoAndObjData) in
                         
-                        self.annoData = annoAndObjData["annotations"] as! [MKPointAnnotation]
+                        self.annoData = annoAndObjData["annotations"] as! [CustomAnnotation]
+                        
+                        self.annoDataFilter = annoAndObjData["annotations"] as! [CustomAnnotation]
                         
                         self.objects = annoAndObjData["objects"] as! [taObjects]
-                        
-                        
+                        self.needUpdateMap = true
+                        print(self.annoDataFilter)
                         
                     }.catch { (er) in
                         print(er)
@@ -72,17 +92,7 @@ class getTaFlatPlansData: ObservableObject {
       
 }
     
-//    { data in
-//self.data = data
-//self.note = "\(self.foundCount)"
-//
-//return getPromiseAnno(complexNameArray: data)
-//}.then({ annoData in
-//self.annoData = annoData
-//}).catch { (er) in
-//
-//print(er)
-//}
+
     
     
     func randomCoordinate() -> Double {
@@ -91,7 +101,7 @@ class getTaFlatPlansData: ObservableObject {
     func getPromiseAnno(complexNameArray : [String]) -> Promise<Dictionary<String,Any>> {
         return Promise {seal in
             
-            var array = [MKPointAnnotation]()
+            var array = [CustomAnnotation]()
             var objects = [taObjects]()
             // geo
             
@@ -124,10 +134,9 @@ class getTaFlatPlansData: ObservableObject {
                     }
                   
                        
-                        let anno = MKPointAnnotation()
-                        anno.title = j
-                        
-                        
+                   
+                    
+                    
                         
                         
                         
@@ -155,8 +164,9 @@ class getTaFlatPlansData: ObservableObject {
                         //let geo = i.document.get("geo") as! GeoPoint
                         let location = CLLocation(latitude: lat + self.randomCoordinate(), longitude: lon + self.randomCoordinate())
                        
-                         
-                        anno.coordinate = location.coordinate
+                        let anno = CustomAnnotation(coordinate: location.coordinate, imageName: img, title: j)
+                        
+                        
                         
                         
                       
@@ -213,7 +223,7 @@ class getTaFlatPlansData: ObservableObject {
          return taFlatPlans(id: "\(id)", img: img, complexName: complexName, price: String(price), room: room, deadline: deadline, type: type, floor: String(floor), developer: developer, district: district , totalS: String(totalS), kitchenS: String(kitchenS), repair: repair, roomType: roomType, underground: underground)
           
     }
-    func getPromiseFlat(startKey : [QueryDocumentSnapshot?], maxPrice: CGFloat = 0.0) -> Promise<Dictionary<String,Any>> {
+    func getPromiseFlat(query: Query) -> Promise<Dictionary<String,Any>> {
         return Promise {seal in
         
 //        }
@@ -227,30 +237,36 @@ class getTaFlatPlansData: ObservableObject {
             var array = [String]()
             
             
-            if maxPrice != 0.0 {
-                var string = String(Int((maxPrice / 100000).rounded() * 100000)).reversed
+//
+//                var string = String(Int((maxPrice / 100000).rounded() * 100000)).reversed
+//
+//                string = string.separate(every: 3, with: " ")
+//
+//                string = string.reversed
+           // var query = Firebase.Firestore.firestore().collection("taflatplans")
                 
-                string = string.separate(every: 3, with: " ")
+//            if maxPrice != 0.0 {
+//                query = query.whereField("price", isLessThanOrEqualTo: Int((maxPrice / 100000).rounded() * 100000)).order(by: "price", descending: true) as! CollectionReference
+//            } else {
+//                query = query.order(by: "price", descending: true) as! CollectionReference
+//            }
+//
+              //  var query = Firebase.Firestore.firestore().collection("taflatplans").whereField("totalS", isLessThanOrEqualTo: 40).order(by: "totalS", descending: true)
                 
-                string = string.reversed
                 
-              
-                
-                var query = Firebase.Firestore.firestore().collection("taflatplans").whereField("price", isLessThanOrEqualTo: Int((maxPrice / 100000).rounded() * 100000)).order(by: "price", descending: true)
-                
-                query.addSnapshotListener { (snapFoundCount, err) in
-                    if err != nil{
-                        
-                        print((err?.localizedDescription)!)
-                        return
-                    }
-                    self.foundCount = snapFoundCount?.documentChanges.count ?? 0
-                    print("Found: ", snapFoundCount!.documentChanges.count, " flats")
-                }
-                
-                if startKey.count != 0 {
-                    query = query.start(afterDocument: startKey[0]!)
-                }
+//                query.addSnapshotListener { (snapFoundCount, err) in
+//                    if err != nil{
+//
+//                        print((err?.localizedDescription)!)
+//                        return
+//                    }
+//                    self.foundCount = snapFoundCount?.documentChanges.count ?? 0
+//                    print("Found: ", snapFoundCount!.documentChanges.count, " flats")
+//                }
+//
+//                if startKey.count != 0 {
+//                    query = query.start(afterDocument: startKey[0]!)
+//                }
                 query
                     //.limit(to: limit)
                    .addSnapshotListener { (snap, err) in
@@ -259,6 +275,9 @@ class getTaFlatPlansData: ObservableObject {
                             print((err?.localizedDescription)!)
                             return
                         }
+                    
+                    self.foundCount = snap?.documentChanges.count ?? 0
+                    print("Found: ", snap!.documentChanges.count, " flats")
                     
                     if (snap?.documents.last) != nil {
                         
@@ -300,106 +319,108 @@ class getTaFlatPlansData: ObservableObject {
                                     DispatchQueue.main.async {
                                         data1.append(self.parse(i))
                                         
-                                        if self.limit <= snap!.documentChanges.count{
+                                       // if self.limit <= snap!.documentChanges.count{
                                             
-                                            if data1.count == self.limit {
-                                                seal.fulfill(["anno": array, "limitFlats" : data1])
-                                            }
-                                               
-                                        } else {
                                             if data1.count == snap!.documentChanges.count {
                                                 seal.fulfill(["anno": array, "limitFlats" : data1])
                                             }
+                                               
+//                                        } else {
+//                                            if data1.count == snap!.documentChanges.count {
+//                                                seal.fulfill(["anno": array, "limitFlats" : data1])
+//                                            }
+//                                        }
                                         }
-                                        }
-                    }
-                        
-                        
-                
-                    }
-            } else {
-                
-                // total search if got maxPrice == 0.0
-                
-                
-                var query = Firebase.Firestore.firestore().collection("taflatplans").order(by: "price", descending: true)
-                
-                query.addSnapshotListener { (snapFoundCount, err) in
-                    if err != nil{
-                        
-                        print((err?.localizedDescription)!)
-                        return
-                    }
-                    self.foundCount = snapFoundCount?.documentChanges.count ?? 0
-                    print("Found: ", snapFoundCount!.documentChanges.count, " flats")
-                }
-                
-                if startKey.count != 0 {
-                    query = query.start(afterDocument: startKey[0]!)
-                }
-                query
-                    //.limit(to: limit)
-                   .addSnapshotListener { (snap, err) in
-                        if err != nil{
-                            
-                            print((err?.localizedDescription)!)
-                            return
                         }
                     
-                    if (snap?.documents.last) != nil {
+                   }
                         
-                        if self.limit <= snap!.documentChanges.count{
-                            
-                            self.startKey = [snap?.documents[self.limit + 1]]
-                               
-                        }
-//                        else {
-//                            if data1.count == snap!.documentChanges.count {
-//                                self.startKey = [snap?.documents[snap!.documentChanges.count]]
-//                            }
+                        
+                
+                  //  }
+//            } else {
+//
+//                // total search if got maxPrice == 0.0
+//
+//
+//                var query = Firebase.Firestore.firestore().collection("taflatplans").order(by: "price", descending: true)
+//
+//                query.addSnapshotListener { (snapFoundCount, err) in
+//                    if err != nil{
+//
+//                        print((err?.localizedDescription)!)
+//                        return
+//                    }
+//                    self.foundCount = snapFoundCount?.documentChanges.count ?? 0
+//                    print("Found: ", snapFoundCount!.documentChanges.count, " flats")
+//                }
+//
+//                if startKey.count != 0 {
+//                    query = query.start(afterDocument: startKey[0]!)
+//                }
+//                query
+//                    //.limit(to: limit)
+//                   .addSnapshotListener { (snap, err) in
+//                        if err != nil{
+//
+//                            print((err?.localizedDescription)!)
+//                            return
 //                        }
-                        
-                        
-                    } else {
-                        print("The collection is empty.")
-                        seal.fulfill(["anno": array, "limitFlats" : data1])
-                    }
-                       
-                    
-                    for i in snap!.documentChanges{
-                        
-                        let complexName = i.document.get("complexName") as? String ?? ""
-                        
-                        array.append(complexName)
-                        
-                    }
-                    
-                    array = Array(Set(array))
-                   
-                        for i in snap!.documentChanges{
-                            
-                          
-                                    DispatchQueue.main.async {
-                                        data1.append(self.parse(i))
-                                        
-                                        if self.limit <= snap!.documentChanges.count{
-                                            
-                                            if data1.count == self.limit {
-                                                seal.fulfill(["anno": array, "limitFlats" : data1])
-                                            }
-                                               
-                                        } else {
-                                            if data1.count == snap!.documentChanges.count {
-                                                seal.fulfill(["anno": array, "limitFlats" : data1])
-                                            }
-                                        }
-                                        }
-                    }
-                        
-                        
-                
-                    }
-            }
+//
+//                    if (snap?.documents.last) != nil {
+//
+//                        if self.limit <= snap!.documentChanges.count{
+//
+//                            self.startKey = [snap?.documents[self.limit + 1]]
+//
+//                        }
+////                        else {
+////                            if data1.count == snap!.documentChanges.count {
+////                                self.startKey = [snap?.documents[snap!.documentChanges.count]]
+////                            }
+////                        }
+//
+//
+//                    } else {
+//                        print("The collection is empty.")
+//                        seal.fulfill(["anno": array, "limitFlats" : data1])
+//                    }
+//
+//
+//                    for i in snap!.documentChanges{
+//
+//                        let complexName = i.document.get("complexName") as? String ?? ""
+//
+//                        array.append(complexName)
+//
+//                    }
+//
+//                    array = Array(Set(array))
+//
+//                        for i in snap!.documentChanges{
+//
+//
+//                                    DispatchQueue.main.async {
+//                                        data1.append(self.parse(i))
+//
+//                                        if self.limit <= snap!.documentChanges.count{
+//
+//                                            if data1.count == self.limit {
+//                                                seal.fulfill(["anno": array, "limitFlats" : data1])
+//                                            }
+//
+//                                        } else {
+//                                            if data1.count == snap!.documentChanges.count {
+//                                                seal.fulfill(["anno": array, "limitFlats" : data1])
+//                                            }
+//                                        }
+//                                        }
+//                    }
+//
+//
+//
+//                    }
+//            }
                 
              
                 

@@ -15,10 +15,10 @@ import Firebase
 
 import GoogleMaps
 import GooglePlaces
-import MapKitGoogleStyler
+
 import PromiseKit
 import SwiftUIMapView
-import Contacts
+
 
 struct MapView : UIViewRepresentable {
 
@@ -28,12 +28,11 @@ struct MapView : UIViewRepresentable {
     @Binding var showObjectDetails : Bool
     
     @EnvironmentObject var getObjects : getTaFlatPlansData
+  
+    @Binding var complexNameArray: [CustomAnnotation]
     
-    
-    
-    @Binding var complexNameArray: [MKPointAnnotation]
-    
-    
+    @Binding var tappedComplexName: CustomAnnotation
+
     let map = MKMapView()
     
     func makeCoordinator() -> MapView.Coordinator {
@@ -45,7 +44,7 @@ struct MapView : UIViewRepresentable {
      func makeUIView(context: UIViewRepresentableContext<MapView>) -> MKMapView {
         manager.delegate = context.coordinator
         let center = CLLocation(latitude: 59.939095, longitude: 30.315868).coordinate
-        let region = MKCoordinateRegion(center: center, latitudinalMeters: 2000, longitudinalMeters: 2000)
+        let region = MKCoordinateRegion(center: center, latitudinalMeters: 3000, longitudinalMeters: 3000)
        
         map.region = region
         manager.requestWhenInUseAuthorization()
@@ -54,35 +53,17 @@ struct MapView : UIViewRepresentable {
         
         map.register(ClusterView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
         map.register(CustomAnnotationView.self,
-                                forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
+                               forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
         
         map.showsUserLocation = true
        
             map.translatesAutoresizingMaskIntoConstraints = false
 
-       
+        map.userLocation.title = ""
     
         map.delegate = context.coordinator
     
-        // MARK: map custom style
-        
-        // We first need to have the path of the overlay configuration JSON
-//        guard let overlayFileURLString = Bundle.main.path(forResource: UITraitCollection.current.userInterfaceStyle == .dark ? "darkoverlay" : "overlay", ofType: "json") else {
-//                print("not f")
-//                       return map
-//               }
-//               let overlayFileURL = URL(fileURLWithPath: overlayFileURLString)
-//
-//               // After that, you can create the tile overlay using MapKitGoogleStyler
-//               guard let tileOverlay = try? MapKitGoogleStyler.buildOverlay(with: overlayFileURL) else {
-//                print("not build")
-//                   return map
-//               }
-//
-               // And finally add it to your MKMapView
-       // map.addOverlay(tileOverlay)
-        
-        
+ 
           
 
         return map
@@ -91,12 +72,30 @@ struct MapView : UIViewRepresentable {
    
     func updateUIView(_ uiView: MKMapView, context: UIViewRepresentableContext<MapView>) {
         
+        if tappedComplexName.title != nil && getObjects.needSetRegion {
+            
+            uiView.region = MKCoordinateRegion(center: tappedComplexName.coordinate, span: uiView.region.span )
+            
+            getObjects.needSetRegion.toggle()
+            
+            
+            
+        }
+        if getObjects.showCurrentLocation {
+           
+            guard manager.location != nil else {
+                getObjects.showCurrentLocation.toggle()
+                return
+            }
+            
+            let region = MKCoordinateRegion(center: manager.location!.coordinate, span: uiView.region.span)
+            
+            uiView.setRegion(region, animated: false)
+            getObjects.showCurrentLocation.toggle()
+        }
+        if getObjects.needUpdateMap {
         uiView.removeAnnotations(uiView.annotations)
         
-        
-       
-         
-           
             DispatchQueue.main.async {
                 
                 
@@ -105,8 +104,8 @@ struct MapView : UIViewRepresentable {
 
         
         }
-        
-       
+            getObjects.needUpdateMap.toggle()
+        }
         
         
           
@@ -124,16 +123,49 @@ struct MapView : UIViewRepresentable {
             
             parent = parent1
             
+            
+            
+            // MARK: map custom style
+            
+//           //  We first need to have the path of the overlay configuration JSON
+//            guard let overlayFileURLString = Bundle.main.path(forResource: UITraitCollection.current.userInterfaceStyle == .dark ? "darkoverlay" : "overlay", ofType: "json") else {
+//                    print("not f")
+//                           return
+//                   }
+//                   let overlayFileURL = URL(fileURLWithPath: overlayFileURLString)
+//
+//                   // After that, you can create the tile overlay using MapKitGoogleStyler
+//                   guard let tileOverlay = try? MapKitGoogleStyler.buildOverlay(with: overlayFileURL) else {
+//                    print("not build")
+//                       return
+//                   }
+//
+//    //                And finally add it to your MKMapView
+//            parent.map.addOverlay(tileOverlay)
+//
+//
            
+     
         }
         
         func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
             
+            
+        
+            
+            
             guard view.annotation != nil else {
                 return
             }
-            guard !view.annotation!.isKind(of: MKUserLocation.self) else {
-                // Make a fast exit if the annotation is the `MKUserLocation`, as it's not an annotation view we wish to customize.
+            guard !view.annotation!.isKind(of: MKUserLocation.self)
+
+            else {
+               
+                return
+            }
+            guard !view.annotation!.isKind(of: MKClusterAnnotation.self)
+            else {
+                
                 return
             }
             
@@ -141,6 +173,11 @@ struct MapView : UIViewRepresentable {
             if let title = view.annotation?.title! {
                 self.parent.getObjects.tappedObjectComplexName = title
                 
+                if view.annotation?.coordinate != nil {
+                    let center = view.annotation?.coordinate
+
+                    mapView.setRegion(MKCoordinateRegion(center: center!, span: self.parent.map.region.span ), animated: true)
+                }
                 self.parent.showObjectDetails = true
                 
                 
@@ -156,8 +193,11 @@ struct MapView : UIViewRepresentable {
                
             }
             
+            self.parent.map.deselectAnnotation(view.annotation, animated: true)
+            
             
         }
+     
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
                 
                 if let tileOverlay = overlay as? MKTileOverlay {
@@ -177,12 +217,21 @@ struct MapView : UIViewRepresentable {
         
         func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
             
-            let location = locations.last
+            let location = locations.last?.coordinate ?? self.parent.lastLocation
            
          
                 if self.isFirst {
-                    let region = MKCoordinateRegion(center: location!.coordinate, latitudinalMeters: 2000, longitudinalMeters: 2000)
+                    
+                    if location.latitude > 59.117790 && location.longitude > 28.088136
+                        && location.longitude < 35.937759 && location.latitude < 61.124369 {
+                    
+                    let region = MKCoordinateRegion(center: location, latitudinalMeters: 2000, longitudinalMeters: 2000)
                                    self.parent.map.region = region
+                    } else {
+                       let region = MKCoordinateRegion(center: self.parent.lastLocation, latitudinalMeters: 2000, longitudinalMeters: 2000)
+                                       self.parent.map.region = region
+                    }
+                    
                     self.isFirst.toggle()
                 }
         }
@@ -204,15 +253,21 @@ struct MapView : UIViewRepresentable {
         var annotationView: MKAnnotationView?
         
         
-        
+       
       if let annotation = annotation as? CustomAnnotation {
+        
             annotationView = setupCustomAnnotationView(for: annotation, on: mapView)
-            annotationView?.displayPriority = .required
+         //   annotationView?.displayPriority = .required
+      
         } else if let annotation = annotation as? MKClusterAnnotation {
             annotationView?.displayPriority = .required
-        annotation.subtitle = nil
+           
+           
+                
         }
-
+        
+        
+       
 
         
         return annotationView

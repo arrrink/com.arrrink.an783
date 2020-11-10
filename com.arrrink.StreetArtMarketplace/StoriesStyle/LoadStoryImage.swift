@@ -19,7 +19,7 @@ struct LoadStoryImage: View {
     @State var image:UIImage = UIImage()
     
     init(imageID: String) {
-        imageLoader = StoryImageLoader(urlString: "stories/\(imageID).jpg")
+        imageLoader = StoryImageLoader(urlString: "stories/\(imageID).png")
     }
 
     var body: some View {
@@ -100,7 +100,7 @@ struct LoadIsSeenCircleView: View {
             .trim(from: 0, to: 1)
 
                 .stroke(grad, style: StrokeStyle(lineWidth: 2))
-            .frame(width: 98, height: 98)
+            .frame(width: 63, height: 63)
             
             .onReceive(self.circleLoader.$didChange) { data in
            // self.image = UIImage(data: data) ?? UIImage()
@@ -146,10 +146,10 @@ class LoadIsSeenCircleViewLoader: ObservableObject {
                 
                 let result = realm.objects(PostRealmFB.self)
 
-                guard result.filter("idSeen = '\(Int(urlString)!)'").count != 0 else {
+                guard result.filter("idSeen = '\(urlString)'").count != 0 else {
                     return
                 }
-                self.data = ((result.filter("idSeen = '\(Int(urlString)!)'").first?.seen) != nil)
+                self.data = ((result.filter("idSeen = '\(urlString)'").first?.seen) != nil)
                 
                
                 

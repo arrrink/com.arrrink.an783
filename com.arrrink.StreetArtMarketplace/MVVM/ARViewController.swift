@@ -13,6 +13,10 @@ import SwiftUI
 
 import CTPanoramaView
 import Combine
+
+
+
+// ar
 class SendRoomTypeToVRView {
     static var r = ""
     
@@ -21,8 +25,52 @@ class SendRoomTypeToVRView {
     
 
 }
+
+final class PinchViewController: UIViewController {
+   // var data : I
+    //var index = 1
+    
+   
+   
+   // @IBOutlet weak var vr: CTPanoramaView!
+    
+   // @IBOutlet weak var compassView: CTPieSliceView!
+       
+
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            view.clipsToBounds = true
+            view.backgroundColor  = .green
+//            vr.controlMethod = .motion
+//            vr.panoramaType = .spherical
+           // NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)), name: Notification.Name("NotificationIdentifier"), object: nil)
+            
+            SendRoomTypeToVRView().kitchen.send("kitchen")
+            print(SendRoomTypeToVRView.r, "roomtypeUICOntr")
+
+
+           // loadSphericalImage()
+        }
     
     
+}
+
+
+extension PinchViewController: UIViewControllerRepresentable {
+    
+        
+    public func makeUIViewController(context: UIViewControllerRepresentableContext<PinchViewController>) -> PinchViewController {
+        // Get a ref to a view controller using its Interface Builder Storyboard ID
+        let storyboard = UIStoryboard(name: "main", bundle: nil)  // Get ref to the storyboard
+        return storyboard.instantiateViewController(withIdentifier: "pinch") as! PinchViewController
+    }
+    
+    // Required by the protocol but not needed in this demo
+    func updateUIViewController(
+        _ uiViewController: PinchViewController,
+        context: UIViewControllerRepresentableContext<PinchViewController>) { }
+    
+}
     
 final class ARViewController: UIViewController {
    // var data : I
@@ -39,25 +87,15 @@ final class ARViewController: UIViewController {
             super.viewDidLoad()
             view.clipsToBounds = true
             
-            
+            vr.controlMethod = .motion
+            vr.panoramaType = .spherical
             NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)), name: Notification.Name("NotificationIdentifier"), object: nil)
             
             SendRoomTypeToVRView().kitchen.send("kitchen")
             print(SendRoomTypeToVRView.r, "roomtypeUICOntr")
-//            let frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-//
-//            view.frame = frame
-//            view.backgroundColor = UIColor.black
-//            view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-//            view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-//            view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-//            view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-//
-//            view.translatesAutoresizingMaskIntoConstraints = false
-//            view.layoutIfNeeded()
+
 
             loadSphericalImage()
-          //  panoramaView.compass = compassView
         }
     @objc func methodOfReceivedNotification(notification: Notification) {
         
@@ -128,10 +166,7 @@ extension ARViewController: UIViewControllerRepresentable {
         _ uiViewController: ARViewController,
         context: UIViewControllerRepresentableContext<ARViewController>) { }
     
-    func getData() -> String {
-        print("hih")
-        return "hahfppggpp"
-    }
+    
     func nextRepair() {
         if let myImage = UIImage(named: "\(index)")
         {
@@ -139,7 +174,7 @@ extension ARViewController: UIViewControllerRepresentable {
                 
                 vr.image =  myImage
             }
-            index = index == 3 ? 0 : index + 1
+            index = index == 6 ? 0 : index + 1
         }
     }
     func test() {

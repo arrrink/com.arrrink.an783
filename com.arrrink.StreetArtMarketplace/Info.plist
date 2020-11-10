@@ -2,12 +2,19 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSCameraUsageDescription</key>
-	<string>Разрешите</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>voip</string>
+	</array>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Новостройки78</string>
+	<string>АН78</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -27,7 +34,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.349776745538-de89jhkg3dgh1jle044quoqrels38juq</string>
+				<string>com.googleusercontent.apps.349776745538-k4a1ben4hsciuo5eoq5a7k6gf3v6gfm8</string>
 			</array>
 		</dict>
 	</array>
@@ -40,6 +47,8 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Разрешите</string>
 	<key>NSLocationUsageDescription</key>
 	<string></string>
 	<key>NSLocationWhenInUseUsageDescription</key>

@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftUI
+import NavigationStack
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -24,12 +25,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             
           
         let content = ContentView()
+        
            
             if let windowScene = scene as? UIWindowScene {
                   let window = UIWindow(windowScene: windowScene)
                   
                        window.rootViewController = UIHostingController(rootView: content)
-                   
+                //MARK: Disable selection.
+                
+                            UITableView.appearance().allowsSelection = false
+                            UITableViewCell.appearance().selectionStyle = .none
+                window.rootViewController?.navigationController?.setNavigationBarHidden(true, animated: true)
+                //UINavigationController
+                UINavigationController.init().isToolbarHidden = true
+                UINavigationController.init().setToolbarHidden(true, animated: false)
+                
+                window.rootViewController?.navigationItem.hidesBackButton = true
+                window.rootViewController?.navigationController?.isNavigationBarHidden = true
+                UINavigationBar.appearance().isHidden = true
                     self.window = window
                     window.makeKeyAndVisible()
             
