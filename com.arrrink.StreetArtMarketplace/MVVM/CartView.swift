@@ -18,14 +18,18 @@ struct CartView : View {
     @State var playLottie = true
     @State var show = false
     @State var showDetailFlatView = false
-    @State var data = taFlatPlans(id: "", img: "", complexName: "", price: "", room: "", deadline: "", type: "", floor: "", developer: "", district: "", totalS: "", kitchenS: "", repair: "", roomType: "", underground: "")
+    @State var data = taFlatPlans(id: "", img: "", complexName: "", price: "", room: "", deadline: "", type: "", floor: "", developer: "", district: "", totalS: "", kitchenS: "", repair: "", roomType: "", underground: "", cession: "", section: "", flatNumber: "", toUnderground: "")
     @State var isNeedbtnBack = false
     @EnvironmentObject private var navigationStack: NavigationStack
     
     @EnvironmentObject var getFlats : getTaFlatPlansData
     @EnvironmentObject var getStoriesDataAndAdminNumber : getStoriesData
     @Binding var modalController  : Bool
-    
+    func dateFormat(_ d : Date) -> String {
+        let dateFormatterPrint = DateFormatter()
+        dateFormatterPrint.dateFormat = "E d MMM"
+        return dateFormatterPrint.string(from: d)
+    }
     var logout : some View {
         Button(action: {
             print(Auth.auth().currentUser?.phoneNumber)
@@ -120,9 +124,9 @@ struct CartView : View {
                                 VStack(alignment: .leading){
                                 
                                
-                                Text(i.id)
-                                Text("\(i.createdAt.dateValue())")
-                                Text("\(i.design)")
+                                    Text("Бронь №" + i.id + " от " + dateFormat(i.createdAt.dateValue())).fontWeight(.light)
+                                    
+                                   
                                 //Text("\(i.repair)")
                             
                         }
@@ -230,7 +234,7 @@ struct DetailFlatViewLazy : View {
     @State private var rect2 = CGRect()
     @State private var rect3 = CGRect()
     @State private var rectToCellObj = CGRect()
-    @State var item = taFlatPlans(id: "", img: "", complexName: "", price: "", room: "", deadline: "", type: "", floor: "", developer: "", district: "", totalS: "", kitchenS: "", repair: "", roomType: "", underground: "")
+    @State var item = taFlatPlans(id: "", img: "", complexName: "", price: "", room: "", deadline: "", type: "", floor: "", developer: "", district: "", totalS: "", kitchenS: "", repair: "", roomType: "", underground: "", cession: "", section: "", flatNumber: "", toUnderground: "")
     
     @State var obj = taObjects(id: "", address: "", complexName: "", deadline: "", developer: "", geo: GeoPoint(latitude: 0.0, longitude: 0.0), img: "", type: "", underground: "", timeToUnderground: "", typeToUnderground: "")
    
@@ -293,13 +297,13 @@ struct DetailFlatViewLazy : View {
            
             
             Text(repair)
-                .font(.subheadline)
-                //.fontWeight(.black)
+                //.font(.subheadline)
+                .fontWeight(.light)
                 .foregroundColor(.gray)
                 .padding(.horizontal)
             Text(item.deadline)
-                .font(.subheadline)
-               // .fontWeight(.black)
+               // .font(.subheadline)
+                .fontWeight(.light)
                 .foregroundColor(.gray)
                 .padding(.horizontal)
                 
@@ -309,7 +313,9 @@ struct DetailFlatViewLazy : View {
                     FlatOptions(value: String(item.floor), optionName: "Этаж")
                     FlatOptions(value: roomTypeShort, optionName: "Тип")
                     FlatOptions(value: String(item.totalS), optionName: "S общая")
-                   // FlatOptions(value: String(data.kitchenS), optionName: "S кухни")
+                    FlatOptions(value: String(item.kitchenS), optionName: "S кухни")
+                    FlatOptions(value: String(item.section), optionName: "Корпус")
+                    FlatOptions(value: String(item.flatNumber), optionName: "Номер")
                 }.padding(.horizontal)
             }
            
@@ -321,27 +327,36 @@ struct DetailFlatViewLazy : View {
     @State private var showShareSheet = false
     @State public var sharedItems : [Any] = []
     
-   
-   
+   @State var isPinching = false
+    var overlay : some View {
+        Image("logomain")
+            .resizable()
+            .renderingMode(.template)
+            .foregroundColor(Color("ColorMain"))
+            .rotationEffect(Angle(degrees: -15.0))
+            .opacity(0.2)
+            .aspectRatio(contentMode: .fit)
+            .scaledToFit()
+    }
     var flatImgCell : some View {
             
             HStack {
                Spacer()
             WebImage(url: URL(string: item.img)).resizable()
 
+               
                 .overlay(
-                                    Image("logomain")
-                                        .resizable()
-                                        .renderingMode(.template)
-                                        .foregroundColor(Color("ColorMain"))
-                                        .rotationEffect(Angle(degrees: -15.0))
-                                        .opacity(0.2)
-                                        .aspectRatio(contentMode: .fit)
-                                        .scaledToFit()
+                    ZStack {
+                   
+                        overlay
+                        
+                        PinchZoom(scale: $scale, anchor: $anchor, offset: $offset, isPinching: $isPinching)
+                        Color.init( isPinching ? .white : .clear)
+                                
+                        }
 
 
-                            )
-              //  .pinchToZoom()
+            )
 
     .scaledToFit()
     .padding()
@@ -443,23 +458,43 @@ struct DetailFlatViewLazy : View {
 
 
 
-          //  if item.type == "Новостройки" {
 
+            HStack {
+            ZStack{
+            Text(item.type)
+            .font(.footnote)
+            .foregroundColor(.white)
+                .fontWeight(.heavy)
+               
+                .padding(.horizontal, 3)
+                .padding(.vertical, 3)
+               // .font(.system(.body, design: .rounded))
+            } .background(Color("ColorMain").opacity(0.8).cornerRadius(3)
+                           
+                            //.shadow(color: Color.black.opacity(0.15), radius: 5, x: 5, y: 5)
+                            //.shadow(color: Color.black.opacity(0.1), radius: 5, x: -5, y: -5)
+            )
+            
+                if item.cession != "default" {
                 ZStack{
-                Text(item.type)
+                Text(item.cession)
                 .font(.footnote)
                 .foregroundColor(.white)
                     .fontWeight(.heavy)
-
+                   
                     .padding(.horizontal, 3)
                     .padding(.vertical, 3)
                    // .font(.system(.body, design: .rounded))
                 } .background(Color("ColorMain").opacity(0.8).cornerRadius(3)
-
+                               
                                 //.shadow(color: Color.black.opacity(0.15), radius: 5, x: 5, y: 5)
                                 //.shadow(color: Color.black.opacity(0.1), radius: 5, x: -5, y: -5)
                 )
-                .padding(.horizontal)
+                }
+                
+            
+                
+        }.padding(.horizontal)
 
 
            // }
@@ -470,6 +505,9 @@ struct DetailFlatViewLazy : View {
 
        }
     }
+    @State var scale: CGFloat = 1.0
+    @State var anchor: UnitPoint = .center
+    @State var offset: CGSize = .zero
     @State var index: Int = 0
 @State var width = UIScreen.main.bounds.width
        var body: some View {
@@ -510,6 +548,13 @@ struct DetailFlatViewLazy : View {
               
                 bottom.background(Color.init(.systemBackground))
                 
+                
+                if booking.design != "default" {
+                    
+                    Text("Дополнительно").fontWeight(.light).padding(.horizontal).foregroundColor(.secondary)
+                    Text(booking.design).fontWeight(.light).foregroundColor(.secondary).padding([.horizontal, .bottom])
+                        .padding(.top, 10)
+                }
 //                if booking.repair || booking.design != "default" {
 //                    Text("Дополнительно").fontWeight(.light).padding(.horizontal)
 //                }
@@ -530,6 +575,30 @@ struct DetailFlatViewLazy : View {
                 Color.init(.systemBackground)
             }
         )
+        
+        .overlay(
+            VStack {
+                if isPinching   {
+                        HStack {
+                            WebImage(url: URL(string: item.img))
+                            .resizable()
+                            .scaledToFit()
+                            
+                            
+                        }.overlay(overlay).padding()
+                        .background(Color.white.cornerRadius(4))
+                                                                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+                        
+                    .scaleEffect(scale, anchor: anchor)
+                    .offset(offset)
+                    .animation(isPinching ? .none : .spring())
+//                    } else {
+//                    Color.clear
+               }
+            }
+        )
+        
+        
         .navigationBarTitle("")
             .navigationBarHidden(true)
             .navigationBarBackButtonHidden(true)

@@ -40,7 +40,6 @@ final class PinchViewController: UIViewController {
         override func viewDidLoad() {
             super.viewDidLoad()
             view.clipsToBounds = true
-            view.backgroundColor  = .green
 //            vr.controlMethod = .motion
 //            vr.panoramaType = .spherical
            // NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)), name: Notification.Name("NotificationIdentifier"), object: nil)
@@ -100,35 +99,17 @@ final class ARViewController: UIViewController {
     @objc func methodOfReceivedNotification(notification: Notification) {
         
         if let string = notification.userInfo?["current"] as? String {
-             print(string)
             if UIImage(named: string) != nil {
                  
-                print("next")
-                nextRepair()
+                
+                    if vr != nil {
+                        
+                        vr.image =  UIImage(named: string)
+                    }
+                                   
               }
           }
     }
-    
-        @IBAction func panoramaTypeTapped() {
-            if vr.panoramaType == .spherical {
-                loadCylindricalImage()
-            } else {
-                loadSphericalImage()
-            }
-        }
-
-    @IBAction func nextButton(_ sender: Any) {
-        nextRepair()
-        test()
-    }
-    @IBAction func motionTypeTapped() {
-            if vr.controlMethod == .touch {
-                vr.controlMethod = .motion
-            } else {
-                vr.controlMethod = .touch
-            }
-        }
-   
 
         func loadSphericalImage() {
             if let myImage = UIImage(named: "0")
@@ -143,9 +124,7 @@ final class ARViewController: UIViewController {
            
         }
 
-        func loadCylindricalImage() {
-            vr.image = UIImage(named: "repair")
-        }
+      
 
         override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
             return .all
@@ -166,20 +145,5 @@ extension ARViewController: UIViewControllerRepresentable {
         _ uiViewController: ARViewController,
         context: UIViewControllerRepresentableContext<ARViewController>) { }
     
-    
-    func nextRepair() {
-        if let myImage = UIImage(named: "\(index)")
-        {
-            if vr != nil {
-                
-                vr.image =  myImage
-            }
-            index = index == 6 ? 0 : index + 1
-        }
-    }
-    func test() {
-        
-        print("intrrrr")
-        nextRepair()
-    }
+   
 }

@@ -60,7 +60,7 @@ struct SearchView: View {
                 } .background(Color.white).cornerRadius(23).padding(.leading,10)
             }
         }
-    @ObservedObject var data = FromToSearch(flatPrice: [0.0,0.95], timeToMetro: [0.0,0.95], kitchenS: [0.0,0.95], floor: [0.0,0.95])
+    @ObservedObject var data = FromToSearch(flatPrice: [0.0,0.78], totalS: [0.0, 0.78], kitchenS: [0.0,0.78], floor: [0.0,0.78])
 
     
     @State var height = UIScreen.main.bounds.height
@@ -72,7 +72,7 @@ struct SearchView: View {
             
             ZStack(alignment: .topLeading) {
             
-                MapView(manager: self.$manager, alert: self.$alert, showObjectDetails: self.$showObjectDetails, complexNameArray: $getFlats.annoDataFilter, tappedComplexName : $getFlats.tappedComplexName).environmentObject(getFlats)
+                MapView(manager: self.$manager, alert: self.$alert, showObjectDetails: self.$showObjectDetails, complexNameArray: $getFlats.annoData, tappedComplexName : $getFlats.tappedComplexName).environmentObject(getFlats)
                     
                    
                
@@ -284,7 +284,7 @@ struct BottomSheet : View {
                 }
             }.padding([.bottom, .horizontal])
            
-            if self.getFlats.dataFilter.count == 0 {
+            if self.getFlats.data.count == 0 {
                 VStack{
                     Spacer()
                     VStack {
@@ -301,34 +301,38 @@ struct BottomSheet : View {
             } else {
                
 
-                ASCollectionView(section: ASCollectionViewSection(id: 0, data: self.getFlats.dataFilter, dataID: \.self, onCellEvent: onCellEvent, contentBuilder: { (item, _)  in
+                ASCollectionView(section: ASCollectionViewSection(id: 0, data: self.getFlats.data, dataID: \.self
+                                                                  , onCellEvent: onCellEvent
+                                                                  , contentBuilder: { (item, _)  in
+                                                                   
                     CellView(data: item, status: $status, ASRemoteLoad : true).environmentObject(getFlats).environmentObject(navigationStack)
+                                                                    
                 }))
                 
                 
                 
-//                .onReachedBoundary({ (i) in
-//                                   if i == .bottom {
-//                                   // print(getFlats.data.count % getFlats.limit == 0, "from onReachedBoundary")
-//                                    guard getFlats.data.count % getFlats.limit == 0 else {
-//                                        return
-//                                    }
-//                                    getFlats.getPromiseFlat(startKey: getFlats.startKey, maxPrice: searchmaxPriceFlat)
-//                                                            .done({ (data1) in
-//                                                                
-//                                                               let flats = data1["limitFlats"] as! [taFlatPlans]
-//                                                                
-//                                                                getFlats.data.append(contentsOf: flats)
-//                                                               
-//                                    
-//                                                            }).catch { (er) in
-//                                    
-//                                                            print(er)
-//                                                        }
-//               
-//                                   }
-//               
-//                               })
+                .onReachedBoundary({ (i) in
+                                   if i == .bottom {
+
+                                    guard getFlats.data.count % 10 == 0 else {
+                                        return
+                                    }
+                                    getFlats.getPromiseFlat()
+                                                            .done({ (data1) in
+                                                                
+                                                               let flats = data1
+                                                                
+                                                                getFlats.data.append(contentsOf: flats)
+                                                               
+                                    
+                                                            }).catch { (er) in
+                                    
+                                                            print(er)
+                                                        }
+               
+                                   }
+               
+                               })
                 .layout(scrollDirection: .vertical) {
                     .grid(
                         layoutMode: .adaptive(withMinItemSize: 165),
@@ -344,38 +348,12 @@ struct BottomSheet : View {
                         endRefreshing()
                     }
                 }
-//                ASCollectionView(data: self.getFlats.data, dataID: \.self) { item, i in
-//
-//
-//
-//                    CellView(data: item)
-//
-//
-//                }
-//                .onReachedBoundary({ (i) in
-//                    if i == .bottom {
-//                        print(searchmaxPriceFlat, "from onReachedBoundary")
-//                        getFlats.getPromiseFlat(startKey: getFlats.startKey, maxPrice: searchmaxPriceFlat)
-//                        .done({ (data1) in
-//                            print(data1.count)
-//                            getFlats.data.append(contentsOf: data1)
-//
-//                        }).catch { (er) in
-//
-//                        print(er)
-//                    }
-//
-//                    }
-//
-//                })
-                
+
                  
               
             }
                 
-            //}
-       // }
-
+     
         }
         
         .background(RoundedCorners(color:Color.white, tl: 35, tr: 35, bl: 0, br: 0)
@@ -393,38 +371,11 @@ struct BottomSheet : View {
                let status = UserDefaults.standard.value(forKey: "status") as? Bool ?? false
 
                 self.status = status
-                print(self.status)
             }
         }
     }
-   // func onCellEvent(_ event: CellEvent<taFlatPlans>)
-//    {
-//        switch event
-//        {
-//        case  .onAppear(_):
-//
-//            print(getFlats.data.count % getFlats.limit == 0, "from onReachedBoundary")
-//            guard getFlats.data.count % getFlats.limit == 0 else {
-//                return
-//            }
-//                                    getFlats.getPromiseFlat(startKey: getFlats.startKey, maxPrice: searchmaxPriceFlat)
-//                                    .done({ (data1) in
-//                                        print(data1.count)
-//                                        getFlats.data.append(contentsOf: data1)
-//
-//                                    }).catch { (er) in
-//
-//                                    print(er)
-//                                }
-//
-//        case .onDisappear(_):
-//            break
-//        case  .prefetchForData(_): break
-//
-//        case  .cancelPrefetchForData(_): break
-//
-//        }
-//    }
+   
+    
 }
 
 
@@ -438,13 +389,16 @@ struct BottomSheet : View {
 func textFieldAlertView(userID: String, data: FlatOrder)->UIAlertController{
     
     
-    var string =  data.orderDesign != "default" ? " с дизайн проектом по тарифу \(data.orderDesign)" : ""
-    if data.orderDesign != "default" {
-        
-    string = string + String(data.orderRepair ? " с отделкой" : " без отделки")
-    } else {
-    
-    string = string + String(data.orderRepair ? " с отделкой" : "")
+    var string = ""
+    switch data.orderDesign {
+    case "Дизайн проект":
+        string = " с дизайн проектом"
+    case "Отделка":
+        string = " с отделкой"
+    case "Отделка под ключ":
+        string = " с отделкой под ключ"
+    default:
+        break
     }
     
     
@@ -471,7 +425,7 @@ func textFieldAlertView(userID: String, data: FlatOrder)->UIAlertController{
 //            }
 //        }
             
-        db.collection("cart").document(userID).collection("flats").document(data.id).setData(["createdAt" : Timestamp(date: Date()) ,"repair": data.orderRepair,  "design" : data.orderDesign]) { (err)  in
+        db.collection("cart").document(userID).collection("flats").document(data.id).setData(["createdAt" : Timestamp(date: Date()),  "design" : data.orderDesign]) { (err)  in
             
             if err != nil{
                 
@@ -498,7 +452,7 @@ class getCartData : ObservableObject{
     init() {
         
         let db = Firestore.firestore()
-        print("init")
+
         db.collection("cart").document(Auth.auth().currentUser?.phoneNumber ?? "default").collection("flats").addSnapshotListener { (snap, err) in
             
             if err != nil{
@@ -523,28 +477,15 @@ class getCartData : ObservableObject{
                    
                     let flatID = i.document.documentID
                     let createdAt = i.document.get("createdAt") as! Timestamp
-                    let repair = i.document.get("repair") as! Bool
+
                     let design = i.document.get("design") as! String
 
-                    self.datas.append(cart(id: flatID, createdAt: createdAt, repair: repair, design: design))
+                    self.datas.append(cart(id: flatID, createdAt: createdAt, design: design))
                     
                     self.datas = self.datas.sorted(by: { $0.createdAt.dateValue().compare($1.createdAt.dateValue()) == .orderedDescending })
                     
                 }
                 
-//                if i.type == .modified{
-//
-//                    let id = i.document.documentID
-//                    let quantity = i.document.get("quantity") as! NSNumber
-//                    print(i, id)
-//                    for j in 0..<self.datas.count{
-//
-//                        if self.datas[j].id == id{
-//
-//                            self.datas[j].quantity = quantity
-//                        }
-//                    }
-//                }
             }
         }
     }
@@ -555,7 +496,6 @@ struct cart : Identifiable {
     
     var id : String
     var createdAt : Timestamp
-    var repair : Bool
     var design : String
 }
 

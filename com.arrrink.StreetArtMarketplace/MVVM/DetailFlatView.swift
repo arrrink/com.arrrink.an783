@@ -28,7 +28,6 @@ struct DetailFlatView : View {
     @State private var rect3 = CGRect()
     @State private var rectToCellObj = CGRect()
 
-    @Binding var isShow : Bool
     
   
     var roomTypeShort : String {
@@ -58,14 +57,14 @@ struct DetailFlatView : View {
             
             Text(repair)
                 .font(.subheadline)
-                //.fontWeight(.black)
+                .fontWeight(.light)
                 .foregroundColor(.gray)
                 .padding(.horizontal)
             Text(data.deadline)
                 .font(.subheadline)
-               // .fontWeight(.black)
+                .fontWeight(.light)
                 .foregroundColor(.gray)
-                .padding([.horizontal, .bottom])
+                .padding([.horizontal])
                 
             
             ScrollView(.horizontal, showsIndicators: false) {
@@ -73,8 +72,11 @@ struct DetailFlatView : View {
                     FlatOptions(value: String(data.floor), optionName: "Этаж")
                     FlatOptions(value: roomTypeShort, optionName: "Тип")
                     FlatOptions(value: String(data.totalS), optionName: "S общая")
-                   // FlatOptions(value: String(data.kitchenS), optionName: "S кухни")
-                }.padding(.horizontal)
+                    FlatOptions(value: String(data.kitchenS), optionName: "S кухни")
+                    FlatOptions(value: String(data.section), optionName: "Корпус")
+                    FlatOptions(value: String(data.flatNumber), optionName: "Номер")
+                    
+                }.padding([.horizontal, .top])
             }
            
             .padding(.bottom)
@@ -84,10 +86,22 @@ struct DetailFlatView : View {
   
     @State private var showShareSheet = false
     @State public var sharedItems : [Any] = []
-    
+    @State var scale: CGFloat = 1.0
+    @State var anchor: UnitPoint = .center
+    @State var offset: CGSize = .zero
+    @State var isPinching = false
    
         //let findObject = getFlats.objects.filter{$0.complexName == data.complexName}
-   
+    var overlay : some View {
+        Image("logomain")
+            .resizable()
+            .renderingMode(.template)
+            .foregroundColor(Color("ColorMain"))
+            .rotationEffect(Angle(degrees: -15.0))
+            .opacity(0.2)
+            .aspectRatio(contentMode: .fit)
+            .scaledToFit()
+    }
     var flatImgCell : some View {
             
             HStack {
@@ -95,17 +109,20 @@ struct DetailFlatView : View {
             WebImage(url: URL(string: data.img)).resizable()
 
                 .overlay(
-                                    Image("logomain")
-                                        .resizable()
-                                        .renderingMode(.template)
-                                        .foregroundColor(Color("ColorMain"))
-                                        .rotationEffect(Angle(degrees: -15.0))
-                                        .opacity(0.2)
-                                        .aspectRatio(contentMode: .fit)
-                                        .scaledToFit()
+                    ZStack {
+                   
+                        overlay
+                        
+                        PinchZoom(scale: $scale, anchor: $anchor, offset: $offset, isPinching: $isPinching)
+                        Color.init( isPinching ? .white : .clear)
+                                
+                        }
 
 
-                            )
+            )
+               
+                    
+                
                // .pinchToZoom()
 
     .scaledToFit()
@@ -129,8 +146,16 @@ struct DetailFlatView : View {
 
     var objImgCell : some View {
         
-        NavigationLink(destination: CellObject(data: $getFlats.tappedObject ).environmentObject(getFlats)
-                       , isActive: $showObjFromDetail) {
+//        NavigationLink(destination: CellObject(data: $getFlats.tappedObject )
+//                        .environmentObject(getTaFlatPlansData(query: Firebase.Firestore.firestore().collection("taflatplans").whereField("complexName", isEqualTo: data.complexName).order(by: "price", descending: false)
+//
+//        ))
+//                       , isActive: $showObjFromDetail) {
+            
+            PushView(destination: CellObject(data: $getFlats.tappedObject )
+                        .environmentObject(getTaFlatPlansData(query: getFlats.query.whereField("complexName", isEqualTo: data.complexName)
+                                                              //, ifDetailObj : true
+                        )), isActive: $showObjFromDetail) {
         
             
         
@@ -207,8 +232,7 @@ struct DetailFlatView : View {
             
             
             
-            if data.type == "Новостройки" {
-                
+                HStack {
                 ZStack{
                 Text(data.type)
                 .font(.footnote)
@@ -223,10 +247,27 @@ struct DetailFlatView : View {
                                 //.shadow(color: Color.black.opacity(0.15), radius: 5, x: 5, y: 5)
                                 //.shadow(color: Color.black.opacity(0.1), radius: 5, x: -5, y: -5)
                 )
-                .padding(.horizontal)
+                
+                    if data.cession != "default" {
+                    ZStack{
+                    Text(data.cession)
+                    .font(.footnote)
+                    .foregroundColor(.white)
+                        .fontWeight(.heavy)
+                       
+                        .padding(.horizontal, 3)
+                        .padding(.vertical, 3)
+                       // .font(.system(.body, design: .rounded))
+                    } .background(Color("ColorMain").opacity(0.8).cornerRadius(3)
+                                   
+                                    //.shadow(color: Color.black.opacity(0.15), radius: 5, x: 5, y: 5)
+                                    //.shadow(color: Color.black.opacity(0.1), radius: 5, x: -5, y: -5)
+                    )
+                    }
+                    
                 
                     
-            }
+            }.padding(.horizontal)
             
             
             
@@ -237,7 +278,7 @@ struct DetailFlatView : View {
     @State var index: Int = 0
 @State var width = UIScreen.main.bounds.width
        var body: some View {
-        
+        NavigationStackView{
                 ScrollView(.vertical, showsIndicators: false) {
                     
                     VStack(alignment: .leading, spacing : 0) {
@@ -284,6 +325,27 @@ struct DetailFlatView : View {
                     
                      
                 }
+                .overlay(
+                    VStack {
+                        if isPinching   {
+                                HStack {
+                                    WebImage(url: URL(string: data.img))
+                                    .resizable()
+                                    .scaledToFit()
+                                    
+                                    
+                                }.overlay(overlay).padding()
+                                .background(Color.white.cornerRadius(4))
+                                                                        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+                                
+                            .scaleEffect(scale, anchor: anchor)
+                            .offset(offset)
+                            .animation(isPinching ? .none : .spring())
+    //                    } else {
+    //                    Color.clear
+                       }
+                    }
+                )
                
                 .navigationBarTitle("")
                     .navigationBarHidden(true)
@@ -300,7 +362,7 @@ struct DetailFlatView : View {
                      }
                 
                 )
-       
+       }
         
        }
     @State var showRepairAR = false
@@ -317,74 +379,16 @@ struct DetailFlatView : View {
             return r
         }
     }
-    var repairPrice : Int {
-        let r = data.repair
-        if r == "Без отделки" {
-            return  5000
-        } else if r == "Подчистовая" {
-            return 3000
-        } else {
-            
-            return 0
-        }
-    }
+   
  
     var options : some View {
         
-        VStack(alignment: .leading) {
-       
-            if data.repair == "Без отделки" || data.repair == "Подчистовая" {
-               
-                    
-                HStack(alignment: .top, spacing: 5) {
-                    VStack(alignment: .leading, spacing: 10) {
-                        
-                        Text("Заказать отделку")
-                            //.font(.title)
-                            .fontWeight(.black)
-                            .fixedSize(horizontal: false, vertical: true)
-                        
-                        Text(String(repairPrice) + " руб. за м²")
-                            .font(.subheadline)
-                           // .fontWeight(.black)
-                            .foregroundColor(.gray)
-                        
-                        if isOrderRepair {
-                            withAnimation {
-                                
-
-                             Text(countRepairPrice(repairPrice))
-                                .font(.subheadline)
-                               // .fontWeight(.black)
-                                .foregroundColor(.gray)
-                            }
-
-                        }
-                    }
-                    
-                    Spacer()
-                    CustomToggle(isActive: $isOrderRepair)
-                }.padding(.horizontal)
-//                                    Toggle(isOn: $isOrderRepair)
-//                                    { Text("Заказать отделку")
-//                                        .font(.title)
-//                                        .fontWeight(.black)
-//
-//                                    }
-//
-//                                        .padding(.horizontal)
-                                
-                
-//                .onReceive(Just(isOrderRepair)) { value in
-//                                    print(value)
-//                                }
-            }
-            
-            //design
-            Text("Заказать дизайн проект")
+        VStack(alignment: .leading, spacing : 15) {
+  
+            Text("Дополнительно")
               //  .font(.title)
-                .fontWeight(.black)
-                
+                .fontWeight(.light)
+                .foregroundColor(.secondary)
                 .padding(.horizontal)
                
         
@@ -395,7 +399,7 @@ struct DetailFlatView : View {
                                 
                                 
                                 
-                                Text("Выбор тарифа")
+                                Text("Выбор опции")
                                     .font(.subheadline)
                                     .fontWeight(.bold)
                                     .foregroundColor(.white)
@@ -405,58 +409,59 @@ struct DetailFlatView : View {
                                 
                                 ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 15){
-                                    TabButtonForSpecialType(selected: $orderDesignPlan, title: "Концепция")
+                                    TabButtonForSpecialType(selected: $orderDesignPlan, title: "Дизайн проект")
                                     
-                                    TabButtonForSpecialType(selected: $orderDesignPlan, title: "Оптимальный")
+                                    TabButtonForSpecialType(selected: $orderDesignPlan, title: "Отделка")
                                    
-                                    TabButtonForSpecialType(selected: $orderDesignPlan, title: "Полный дизайн проект")
+                                    TabButtonForSpecialType(selected: $orderDesignPlan, title: "Отделка под ключ")
                                     
                                    
                                     
                                 }.padding(.horizontal, 25)
+                                .padding(.top)
                                     
                                 }
                                 
-                                if orderDesignPlan == "Концепция" {
+                                if orderDesignPlan == "Дизайн проект" {
                                     
                                     withAnimation {
                                         VStack(alignment: .leading) {
-                                        Text("600 руб. за м²")
+                                        Text("1500 руб. за м²")
                                                     //.font(.title)
                                                                            .fontWeight(.bold)
                                                                            .foregroundColor(.white)
                                                                            .padding(.horizontal,30)
-                                        Text("Планировки, коллажи, основные чертежи")
+                                        Text("Обмерный план, планировочные решения, рабочая докуменация, 3D визуализация, подбор отделочных материалов и мебели")
                                             .font(.subheadline)
                                                                        //    .fontWeight(.bold)
                                                                            .foregroundColor(.white)
                                                                            .padding(.horizontal,30)
                                     }
                                     }
-                                } else if orderDesignPlan == "Оптимальный" {
+                                } else if orderDesignPlan == "Отделка" {
                                     withAnimation {
                                         VStack(alignment: .leading) {
-                                        Text("1100 руб. за м²")
+                                        Text("9000 руб. за м²")
                                                            //                .font(.title)
                                                                            .fontWeight(.bold)
                                                                            .foregroundColor(.white)
                                                                            .padding(.horizontal,30)
-                                        Text("Подбор отделочных материалов")
+                                        Text("Полный дизайн проект, черновые и чистовые работы без отделочных материалов")
                                             .font(.subheadline)
                                                               //             .fontWeight(.bold)
                                                                            .foregroundColor(.white)
                                                                            .padding(.horizontal,30)
                                     }
                                     }
-                                } else if orderDesignPlan == "Полный дизайн проект" {
+                                } else if orderDesignPlan == "Отделка под ключ" {
                                     withAnimation {
                                         VStack(alignment: .leading) {
-                                        Text("1500 руб. за м²")
+                                        Text("20000 руб. за м²")
                                                            //                .font(.title)
                                                                            .fontWeight(.bold)
                                                                            .foregroundColor(.white)
                                                                            .padding(.horizontal,30)
-                                        Text("Подбор мебели, 3D визуализация")
+                                        Text("Дизайн-проект на выбор из трех отделочных решений с полным комплектом сантехники и отделочных материалов\nВы выбираете цвет стен, тип напольного покрытия, ряд основных и дополнительных опций")
                                             .font(.subheadline)
                                            // .fontWeight(.heavy)
                                                                            .foregroundColor(.white)
@@ -471,7 +476,7 @@ struct DetailFlatView : View {
 //                                    .padding(.top,10)
                                 
                                 
-                                NavigationLink(destination: VRDestination(showRepairAR: $showRepairAR), isActive: $showRepairAR) {
+                                PushView(destination: VRDestination(showRepairAR: $showRepairAR), isActive: $showRepairAR) {
                               
                                 HStack{
                                     
@@ -486,7 +491,7 @@ struct DetailFlatView : View {
                             }
                             }
                             .padding(.vertical)
-                            .padding(.bottom, 25)
+                            .padding(.bottom)
                             // image name same as color name....
                             .background(RoundedCorners(color: Color("ColorMain"), tl: 15, tr: 15, bl: 15, br: 15).padding(.horizontal).shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5))
                            
@@ -559,6 +564,8 @@ struct DetailFlatView : View {
                                         .fontWeight(.black)
                                         .fixedSize(horizontal: true, vertical: false)
                                         .padding(.horizontal)
+                                    
+                                    
                                         
                                     }.sheet(isPresented: $showShareSheet) {
                                         ShareSheet(activityItems: self.sharedItems)
@@ -613,7 +620,7 @@ struct DetailFlatView : View {
                                 
                                 
                                 Button {
-                                    UIApplication.shared.windows.last?.rootViewController?.present(textFieldAlertView(userID: Auth.auth().currentUser?.phoneNumber ?? "default", data : FlatOrder(id: data.id, orderRepair: isOrderRepair, orderDesign: orderDesignPlan)), animated: true, completion: nil)
+                                    UIApplication.shared.windows.last?.rootViewController?.present(textFieldAlertView(userID: Auth.auth().currentUser?.phoneNumber ?? "default", data : FlatOrder(id: data.id, orderDesign: orderDesignPlan)), animated: true, completion: nil)
                                    // textFieldAlertView(id: "g")
 //                                    Firebase.Firestore.firestore().collection("objects").document("\(j.childSnapshot(forPath: "id").value as? Int ?? 0)").setData(desc)
                                 } label: {
@@ -699,8 +706,8 @@ extension DetailFlatView {
         
          let v = roomTypeShort
 
-        print(v,"fpppg")
-        return v
+
+    return v
        
     }
     func openWhatsapp(){

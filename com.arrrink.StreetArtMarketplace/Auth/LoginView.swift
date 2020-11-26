@@ -41,7 +41,7 @@ struct EnterPhoneNumberView : View {
                
                 
               
-              Text("Чтобы войти или стать \n клиентом Агентства недвижимости 78")
+              Text("Мы отправим Вам СМС-код для входа")
                   .font(.body)
                 .fontWeight(.light)
                 .padding(.top, 12)
@@ -146,9 +146,10 @@ struct EnterPhoneNumberView : View {
       @State var code = ""
       @State var show = false
     
+    
     @Binding var isActive : Bool
     @Binding var currentModal : Bool
-    
+    var time = Timer.publish(every: 0.2, on: .main, in: .common).autoconnect()
       @Binding var ID : String
     @Binding var status : Bool
       @State var msg = ""
@@ -156,13 +157,28 @@ struct EnterPhoneNumberView : View {
       @EnvironmentObject var navigationStack: NavigationStack
     var number : String
     @Environment(\.presentationMode) var presentation
+    
+    func getCodeAtIndex(index: Int)->String{
+            
+            if code.count > index{
+                
+                let start = code.startIndex
+                
+                let current = code.index(start, offsetBy: index)
+                
+                return String(code[current])
+            }
+            
+            return ""
+        }
+    @State var once = false
     var body : some View{
             
-       // NavigationView {
+        NavigationView {
         
       // return AnyView(
-        ScrollView(.vertical, showsIndicators: false) {
-            ZStack(alignment: .topLeading) {
+       // ScrollView(.vertical, showsIndicators: false) {
+            ZStack(alignment: .bottomLeading) {
               
             //  GeometryReader{_ in
                   
@@ -191,29 +207,50 @@ struct EnterPhoneNumberView : View {
                     } .padding(.top, 15)
                     HStack {
                         Spacer()
-                        Text("+\(number)").font(.title)
+                        Text("+\(number)")
+                            .font(.title)
                             .foregroundColor(.primary)
                           .multilineTextAlignment(.center)
                         
                         Spacer()
                         
                     }//.padding(.top, 15)
-                      TextField("Код", text: self.$code)
+                    TextField("", text: self.$code).padding(.bottom)
+                        .font(.largeTitle)
+                        .placeHolder(
+                            
+                            VStack{
+                                HStack{
+                                    
+                                    Spacer()
+                                    ForEach(0..<6, id : \.self) { _ in
+                                    Capsule()
+                                        .fill(Color.gray.opacity(0.5))
+                                        .frame(width:20 ,height: 4)
+                                    }
+                                    Spacer()
+                                }.padding(.top, 37)
+                                
+                            }
+                            
+                            , show: code.isEmpty)
 //                    FormattedTextField(
 //                                        "0 0 0 0 0 0",
 //                                        value: $code, maskForm: "[0] [0] [0] [0] [0] [0]"
 //                    )
-                              .padding()
-                        .font(.largeTitle).multilineTextAlignment(.center)
+                        //      .padding()
+                        .multilineTextAlignment(.center)
                         
-                              .clipShape(RoundedRectangle(cornerRadius: 10))
-                              //.padding(.top, 15)
+                          //    .clipShape(RoundedRectangle(cornerRadius: 10))
+                              .padding(.top, 15)
                         .keyboardType(.numberPad)
                       
-                        
+                       
                     
-                    NavigationLink(destination: DetailFlatView(data: $detailView, isShow: $show).environmentObject(getFlats) , isActive : $show) {
-                      Button(action: {
+                    NavigationLink(destination: DetailFlatView(data: $detailView).environmentObject(getFlats) , isActive : $show) {
+                      
+                        
+                        Button(action: {
                         
                        
                           
@@ -237,6 +274,7 @@ struct EnterPhoneNumberView : View {
                                 status = UserDefaults.standard.value(forKey: "status") as? Bool ?? false
                                 print("status",status)
                                 if !detailView.id.isEmpty {
+
                                     self.show.toggle()
                                     
                                 } else {
@@ -262,25 +300,71 @@ struct EnterPhoneNumberView : View {
                       .navigationBarHidden(true)
                       .navigationBarBackButtonHidden(true)
                       .padding(.vertical, 15)
+                      .onReceive(self.time) { (_) in
+                        
+                        
+                        if code.count == 5 {
+                            once = false
+                        }
+                          if code.count == 6 && !once {
+                              
+                            once.toggle()
+                              
+                              let credential =  PhoneAuthProvider.provider().credential(withVerificationID: self.ID, verificationCode: self.code.replacingOccurrences(of: " ", with: ""))
+                              
+                              
+                              print(self.code.replacingOccurrences(of: " ", with: ""))
+                                
+                                Auth.auth().signIn(with: credential) { (res, err) in
+                                    if err != nil{
+                                        
+                                      self.msg = "Попробуйте еще раз"
+                                        self.alert.toggle()
+                                        return
+                                    } else {
+                                      
+                                    UserDefaults.standard.set(true, forKey: "status")
+                                      
+                                    NotificationCenter.default.post(name: NSNotification.Name("statusChange"), object: nil)
+                                      
+                                      status = UserDefaults.standard.value(forKey: "status") as? Bool ?? false
+                                      print("status",status)
+                                        if !detailView.id.isEmpty {
+                                            self.show.toggle()
+                                            
+                                        } else {
+                                             self.isActive.toggle()
+                                        }
+                                      
+                                      
+                                      print(Auth.auth().currentUser?.phoneNumber)
+                                     // self.navigationStack.push(OrderView(data: detailView))
+                                      // self.modalController.toggle()
+                                    }
+                                }
+                           //   self.presentation.wrappedValue.dismiss()
+                            
+                            }
+                      }
+                    
                     
                   }
                     
-                    
-                  
-                      
+                   Spacer()
                   }
                 .padding()
               //}
               
               
               
-          }
+            }
           
           .alert(isPresented: $alert) {
                   
               Alert(title: Text("Что-то пошло не так 🤷🏼‍♀️"), message: Text(self.msg), dismissButton: .default(Text("Ок")))
           }
-       }.dismissKeyboardOnTap()
+       }
+            .dismissKeyboardOnTap()
         
      .navigationBarTitle("")
         .navigationBarHidden(true)
@@ -384,3 +468,5 @@ public struct DismissKeyboardOnTap: ViewModifier {
             .first?.endEditing(true)
     }
 }
+
+

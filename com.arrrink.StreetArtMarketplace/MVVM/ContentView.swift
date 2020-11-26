@@ -18,202 +18,29 @@ import Alamofire
 import SDWebImageSwiftUI
 import CoreLocation
 
+import HTMLEntities
 
 
-
+//
+//
+//struct Model : Decodable {
+//    var content : Rendered
+//
+//    struct Rendered: Decodable {
+//        var rendered: String
+//       }
+//
+//}
 
 struct ContentView: View {
-   
-    func convertObjects() {
-        
-                       Firebase.Database.database().reference().child("objects").observe(.value, with: { (snap) in
 
-                guard let children = snap.children.allObjects as? [DataSnapshot] else {
-
-                print("((((((")
-                return
-              }
-
-                guard children.count != 0 else {
-                    print("cant 0")
-                    return
-                }
-
-                for j in children {
-
-                    var desc = [String: Any]()
-
-
-                    var type = j.childSnapshot(forPath: "type").value as? String ?? ""
-                    type = type == "Новостройки</li>" ? "Новостройки" : "Апартаменты"
-                    
-                    
-                    // geo
-                    // get geo of objects?
-
-
-
-     let address = j.childSnapshot(forPath: "address").value as? String ?? ""
-
-
-                                                           // coordinates
-
-                    let key : String = "AIzaSyAsGfs4rovz0-6EFUerfwiSA6OMTs2Ox-M"
-                     let postParameters:[String: Any] = [ "address": "\(address)" ,"key":key]
-                                                                   let url : String = "https://maps.googleapis.com/maps/api/geocode/json"
-
-                                                                   AF.request(url, method: .get, parameters: postParameters, encoding: URLEncoding.default, headers: nil).responseJSON { (response) in
-
-
-                                                                       guard let value = response.value as? [String: AnyObject] else {
-                                                                         print("(((((")
-                                                                           return
-                                                                       }
-
-print(value)
-                                                                       guard  let results = value["results"]  as? [[String: AnyObject]] else {
-                                                                         print("((")
-                                                                           return
-                                                                       }
-
-print(results.count)
-                                                                       if results.count > 0 {
-
-             guard let coor = results[0]["geometry"] as? [String: AnyObject]  else {
-                                                                           print("(")
-                                                                           return
-                                                                       }
-
-print(coor)
-                                                                       if  let location = coor["location"] as? [String: AnyObject]  {
-
-
-
-         
-                                                           
-
-         let geo =  GeoPoint(latitude: location["lat"] as! CLLocationDegrees, longitude: location["lng"] as! CLLocationDegrees)
-                                                                        
-           
-                                                                        print("geo",geo)
-                                                                         
-                                                                         
-                                                                         
-                    
-                    
-                    // geo
-
-
-
-                    desc = ["id": j.childSnapshot(forPath: "id").value as? Int ?? 0,
-                            "address": j.childSnapshot(forPath: "address").value as? String ?? "",
-                            "complexName": j.childSnapshot(forPath: "complex").value as? String ?? "",
-                            "deadline": j.childSnapshot(forPath: "deadline").value as? String ?? "",
-                            "developer": j.childSnapshot(forPath: "developer").value as? String ?? "",
-                            
-                            "img": j.childSnapshot(forPath: "img").value as? String ?? "",
-                            "timeToUnderground": j.childSnapshot(forPath: "timeToUnderground").value as? String ?? "",
-                            "type": type,
-                            "typeToUnderground": j.childSnapshot(forPath: "typeToUnderground").value as? String ?? "",
-                            "underground": j.childSnapshot(forPath: "underground").value as? String ?? "",
-                            "geo" : geo
-                        
-                            
-
-                    ]
-                   
-                    DispatchQueue.main.async {
-
-                        Firebase.Firestore.firestore().collection("objects").document("\(j.childSnapshot(forPath: "id").value as? Int ?? 0)").setData(desc) { (er) in
-                            if er != nil {
-                                print(er!.localizedDescription)
-                            }
-                        }
-
-
-                    }
-                                                                       }}}
-                }
-
-
-            })
-    }
-    
-    func convertTaFlatPlans() {
-        
-
-                    Firebase.Database.database().reference().child("taflatplans").observe(.value, with: { (snap) in
-
-                guard let children = snap.children.allObjects as? [DataSnapshot] else {
-
-                print("((((((")
-                return
-              }
-
-                guard children.count != 0 else {
-                    print("cant 0")
-                    return
-                }
-
-                for j in children {
-
-                    var desc = [String: Any]()
-
-
-                    var type = j.childSnapshot(forPath: "type").value as? String ?? ""
-                    type = type == "Новостройка</li>" ? "Новостройки" : "Апартаменты"
-
-var room = j.childSnapshot(forPath: "room").value as? String ?? ""
-                    room = room.replacingOccurrences(of: " м ²", with: "м²")
-                    
-                    
-                    
-                    
-                    
-                    desc = ["id" : j.childSnapshot(forPath: "id").value as? Int ?? 0,
-                            "deadline" : j.childSnapshot(forPath: "deadline").value as? String ?? "",
-                            
-                            "floor" : j.childSnapshot(forPath: "floor").value as? Int ?? 0 ,
-                            "developer" : j.childSnapshot(forPath: "developer").value as? String ?? "",
-                            "district" : j.childSnapshot(forPath: "district").value as? String ?? "",
-                            "type" :  type,
-                            "img" : j.childSnapshot(forPath: "img").value as? String ?? "",
-                            "kitchenS" : j.childSnapshot(forPath: "kitchenS").value as? Double ?? 0.0,
-                            "complexName" : j.childSnapshot(forPath: "name").value as? String ?? "",
-                            "price" : j.childSnapshot(forPath: "price").value as? Int ?? 0 ,
-                            "totalS" : j.childSnapshot(forPath: "totalS").value as? Double ?? 0.0,
-                            "repair" : j.childSnapshot(forPath: "repair").value as? String ?? "",
-                            "room" : room,
-                            "roomType" : j.childSnapshot(forPath: "roomType").value as? String ?? "",
-                            "underground" : j.childSnapshot(forPath: "underground").value as? String ?? ""
-                            
-
-                    ]
-                   
-                    DispatchQueue.main.async {
-
-                        Firebase.Firestore.firestore().collection("taflatplans").document("\(j.childSnapshot(forPath: "id").value as? Int ?? 0)").setData(desc) { (er) in
-                            if er != nil {
-                                print(er!.localizedDescription)
-                            }
-                        }
-
-
-                    }
-
-                }
-
-
-            })
-    }
-   
+       
     
     @State var getStoriesData = [PostRealmFB]()
     @State var adminNumber = ""
     var body: some View {
         
-       
-
+     
         let isFirstLaunch = !UserDefaults.standard.bool(forKey: "first_start_key")
         if isFirstLaunch {
         UserDefaults.standard.set(true, forKey: "first_start_key")
@@ -230,11 +57,8 @@ var room = j.childSnapshot(forPath: "room").value as? String ?? ""
                        
                     } else {
                         
-                        HomeView( adminNumber: $adminNumber).onAppear() {
-                           // checkAdminAcc()
-                            //getStories()
-                           // print("g")
-                        }
+                        HomeView( adminNumber: $adminNumber)
+
                             
                     }
                         
@@ -243,46 +67,18 @@ var room = j.childSnapshot(forPath: "room").value as? String ?? ""
                 .edgesIgnoringSafeArea(.all)
 
                 )
-        
-        //           } else {
-           
-                
-//            return AnyView(
-//                NavigationStackView{
-//
-//
-//                }
-//
-//                   .onAppear(){
-                  //  convertObjects()
-                  //  convertObjects()
-                    
-                  //  convertTaFlatPlans()
-                   
-                    
-//                    try! Auth.auth().signOut()
-//
-//                                                     UserDefaults.standard.set(false, forKey: "status")
-//
-//                                                     NotificationCenter.default.post(name: NSNotification.Name("statusChange"), object: nil)
-                    
-                    
-                    
-                 
-//                    }
-//
-//
-//
-//
-//            )
-//        }
-
+      
 
 
     }
     
 
              
+}
+extension Data {
+    func hex(separator:String = "") -> String {
+        return (self.map { String(format: "%02X", $0) }).joined(separator: separator)
+    }
 }
 struct newImagesArray  : Identifiable, Equatable {
     static func == (lhs: newImagesArray, rhs: newImagesArray) -> Bool {
@@ -332,15 +128,20 @@ class getStoriesData : ObservableObject {
                 guard let snap = querySnapshot else {return}
                 if err != nil {
                     print((err?.localizedDescription)!)
+                    self.getNews()
                     return
                 }
                 var arr = [PostRealmFB]()
                 
                 if snap.documents.count == 0 {
-                    let story = PostRealmFB(id: UUID().uuidString, name: "", text: "", imglink: "", createdAt: Timestamp(date: Date()))
+                    if Auth.auth().currentUser?.phoneNumber == self.adminNumber {
+                        let story = PostRealmFB(id: UUID().uuidString, name: "", text: "", imglink: "https://psv4.userapi.com/c856236/u124809376/docs/d3/4f220dd33162/launch.png?extra=gM00K0L4Mi-GdUA2R882BlnULKJxtqwlT6Oq1vjrWGJUPANpY2e4C1kLtKlOYdABoP46rFMwhKf-AllYA8406yVQqZrDkgBPrEX4F5Zpumo7cn4SEipFT9SF2-6Ernho6h7_-gaoijvWUktBvc-gZvMpDLI", createdAt: Timestamp(date: Date()), storyType: .fill)
                     
                        
                         self.data.append(story)
+                        
+                    }
+                    self.getNews()
                 }
                 snap.documentChanges.forEach { (doc) in
                     
@@ -355,41 +156,15 @@ class getStoriesData : ObservableObject {
                         let text = doc.document.get("text") as? String ?? ""
                         
                         let createdAt = doc.document.get("createdAt") as? Timestamp ?? Timestamp(date: Date())
-
                         
-                       
-
-                        let storageRef = Storage.storage().reference(withPath: "stories/\(id).png")
+                        let link = doc.document.get("link") as? String ?? ""
+                        
+                        let type = doc.document.get("storyType") as? String ?? ""
                         
 
-                                       storageRef.downloadURL { (storyURL, error) in
-                                              if error != nil {
-                                                  print("ERROR load stories image from Storage",(error?.localizedDescription)!)
-                                               
-                                                let story = PostRealmFB(id: id, name: name, text: text, imglink: "https://psv4.userapi.com/c856236/u124809376/docs/d3/4732953005fd/launch.png?extra=5hYHCKKcPYJLIkiPNp6EcJlEkOoZtcxFabXpiG8HNXq7qqtAr1cagLw3LQna30oOliUeSjjWmBbDl5oOfHrlkugsKu0I_59mtYbK6aUoqEmRa7SOpkvvU96QZAG1rzE-dZrZDYDt5aBcc5MpWiy1p2yGkBY", createdAt: createdAt)
-                                                DispatchQueue.main.async {
-                                                   
-                                                        arr.append(story)
-                                                    
-                                                    
-                                                    
-                                                    if snap.documents.count == arr.count {
-                                                        
-                                                      arr = arr.sorted(by: { $0.createdAt.dateValue().compare($1.createdAt.dateValue()) == .orderedDescending })
-                                                        if Auth.auth().currentUser?.phoneNumber == self.adminNumber {
-                                                        arr.insert(PostRealmFB(id: UUID().uuidString, name: "", text: "", imglink: "", createdAt: Timestamp(date: Date())), at: 0)
-                                                        }
-                                                        self.data = arr
-                                                        self.getNews()
-                                                    }
-                                                    
-                                                }
-                                                
-                                                
-                                                  return
-                                       }
-                                          guard let storyURL = storyURL else { return }
-                                        let story = PostRealmFB(id: id, name: name, text: text, imglink: storyURL.absoluteString, createdAt: createdAt)
+
+                                        
+                        let story = PostRealmFB(id: id, name: name, text: text, imglink: link, createdAt: createdAt, storyType: type == "fill" ? .fill : .fit )
                                         DispatchQueue.main.async {
                                            
                                                 arr.append(story)
@@ -399,15 +174,15 @@ class getStoriesData : ObservableObject {
                                             if snap.documents.count == arr.count {
                                                 
                                               arr = arr.sorted(by: { $0.createdAt.dateValue().compare($1.createdAt.dateValue()) == .orderedDescending })
+
                                                 if Auth.auth().currentUser?.phoneNumber == self.adminNumber {
-                                                arr.insert(PostRealmFB(id: UUID().uuidString, name: "", text: "", imglink: "", createdAt: Timestamp(date: Date())), at: 0)
+                                                    arr.insert(PostRealmFB(id: UUID().uuidString, name: "", text: "", imglink: "https://psv4.userapi.com/c856236/u124809376/docs/d3/4f220dd33162/launch.png?extra=gM00K0L4Mi-GdUA2R882BlnULKJxtqwlT6Oq1vjrWGJUPANpY2e4C1kLtKlOYdABoP46rFMwhKf-AllYA8406yVQqZrDkgBPrEX4F5Zpumo7cn4SEipFT9SF2-6Ernho6h7_-gaoijvWUktBvc-gZvMpDLI", createdAt: Timestamp(date: Date()), storyType: .fill), at: 0)
                                                 }
                                                 self.data = arr
                                                 self.getNews()
                                             }
                                             
-                                        }
-
+                                    
                                   }
                     default:
                         print("default")
@@ -461,69 +236,50 @@ class getStoriesData : ObservableObject {
                 print((err?.localizedDescription)!)
                 return
             }
-            var arr = [News]()
+           // var arr = [News]()
             
-            for doc in (snap?.documents)! {
+            for doc in (snap?.documentChanges)! {
+                
+                if doc.type == .added {
                
                 
-                let name = doc.data()["name"] as? String ?? ""
-                let id = doc.documentID
-                let text = doc.data()["text"] as? String ?? ""
+                    let name = doc.document.get("name") as? String ?? ""
+                let id = doc.document.documentID
+                let text = doc.document.get("text") as? String ?? ""
                 
-                let createdAt = doc.data()["createdAt"] as? Timestamp ?? Timestamp(date: Date())
+                let createdAt = doc.document.get("createdAt") as? Timestamp ?? Timestamp(date: Date())
 
-                
-                
-
-                Storage.storage().reference(withPath: "news/\(id).png").downloadURL { (newURL, er) in
-                    if er != nil {
-                        print("ERROR get news files from Storage",(err?.localizedDescription))
-                        
-                        
-                        
-                        
-                        let new = News(id: id, createdAt: createdAt, name: name, text: text, image: "https://psv4.userapi.com/c856236/u124809376/docs/d3/4732953005fd/launch.png?extra=5hYHCKKcPYJLIkiPNp6EcJlEkOoZtcxFabXpiG8HNXq7qqtAr1cagLw3LQna30oOliUeSjjWmBbDl5oOfHrlkugsKu0I_59mtYbK6aUoqEmRa7SOpkvvU96QZAG1rzE-dZrZDYDt5aBcc5MpWiy1p2yGkBY", loadMoreText: false)
-                        
-                        DispatchQueue.main.async {
-                            
-                            self.dataNews.append(new)
-                            
-                            
-                            
-                            if (snap?.documents.count)! == arr.count {
-                                arr = self.dataNews.sorted(by: { $0.createdAt.dateValue().compare($1.createdAt.dateValue()) == .orderedDescending })
-                                  
-                                  self.dataNews = arr
-                          
-                      }
-                    }
-                    } else {
-                        
-                        guard let newURL = newURL else { return }
-                        
-                        let new = News(id: id, createdAt: createdAt, name: name, text: text, image: "\(newURL)", loadMoreText: false)
-                        
-                        DispatchQueue.main.async {
-                            
-                            self.dataNews.append(new)
-                            
-                            
-                            
-                            if (snap?.documents.count)! == arr.count {
-                                arr = self.dataNews.sorted(by: { $0.createdAt.dateValue().compare($1.createdAt.dateValue()) == .orderedDescending })
-                                  
-                                  self.dataNews = arr
-                          
-                      }
-                    }
-                       
-                        
-                    
-                        
-            }
-                    
-            }
+                    let link = doc.document.get("link") as? String ?? ""
+                let newType =  doc.document.get("newType") as? String ?? ""
             
+                let new = News(id: id, createdAt: createdAt, name: name, text: text, image: link, loadMoreText: false, type: newType == "Фото" ? .photo : .video)
+                    
+                        DispatchQueue.main.async {
+                            
+                            self.dataNews.append(new)
+                            
+                    }
+             
+                } else if doc.type == .modified {
+                let name = doc.document.get("name") as? String ?? ""
+                let id = doc.document.documentID
+                let text = doc.document.get("text") as? String ?? ""
+                
+                let createdAt = doc.document.get("createdAt") as? Timestamp ?? Timestamp(date: Date())
+
+                let link = doc.document.get("link") as? String ?? ""
+                let newType =  doc.document.get("newType") as? String ?? ""
+            
+                let new = News(id: id, createdAt: createdAt, name: name, text: text, image: link, loadMoreText: false, type: newType == "Фото" ? .photo : .video)
+                    
+                    if let index = self.dataNews.firstIndex(where: { (i) -> Bool in
+                        return i.id == new.id
+                    }) {
+                        self.dataNews[index] = new
+
+                    }
+                    
+                }
         }
     
     
@@ -531,7 +287,9 @@ class getStoriesData : ObservableObject {
 }
     }
 }
-
+enum NewsType {
+    case video, photo
+}
 struct News : Identifiable, Equatable {
     static func == (lhs: News, rhs: News) -> Bool {
         return lhs.id == rhs.id && lhs.id == rhs.id
@@ -542,6 +300,7 @@ struct News : Identifiable, Equatable {
     var text : String
     var image : String
     var loadMoreText : Bool
+    var type : NewsType
 }
     // MARK: Main Home View
 
@@ -577,7 +336,7 @@ struct HomeView: View {
         @State var showSearch = false
         
         @State var safeAreaTop = UIApplication.shared.windows.first?.safeAreaInsets.top ?? 30
-        @ObservedObject var getFlats = getTaFlatPlansData(query: Firebase.Firestore.firestore().collection("taflatplans").order(by: "price", descending: true))
+    @ObservedObject var getFlats = getTaFlatPlansData(query: Firebase.Firestore.firestore().collection("taflatplans").order(by: "price", descending: false))
         @State var isSearchViewActive = false
          var stories = [
           Story(id: 0, image: "map", offset: 0,title: "Новостройки", subtitle: "Перейти к поиску"),
@@ -585,7 +344,7 @@ struct HomeView: View {
             Story(id: 2, image: "invest", offset: 0,title: "Апартаменты", subtitle: "Расчет доходных программ")
     ]
        
-        @ObservedObject var data = getTaFlatPlansData(query: Firebase.Firestore.firestore().collection("taflatplans").order(by: "price", descending: true))
+   // @ObservedObject var data = getTaFlatPlansData(query: Firebase.Firestore.firestore().collection("taflatplans").order(by: "price", descending: true))
         @State var constantHeight : CGFloat = 75.0
             //UIScreen.main.bounds.height / 7.2
         @State var scrolled = 0
@@ -702,15 +461,15 @@ struct HomeView: View {
                                }
                             
                                .onTapGesture {
-                                print(item.title)
+
                                 if item.title == "Новостройки" {
                                     self.navigationStack.push(SearchView().environmentObject(getFlats).environmentObject(navigationStack))
                                     getFlats.needUpdateMap = true
                                 } else if item.title == "Ипотека" {
                                     
-                                    self.navigationStack.push(IpotekaView().environmentObject(getFlats))
+                                    self.navigationStack.push(IpotekaView())
                                 } else {
-                                    self.navigationStack.push(IpotekaView().environmentObject(getFlats))
+                                    self.navigationStack.push(ApartView())
                                 }
                                }
                               
@@ -731,7 +490,7 @@ struct HomeView: View {
         }
         
         var body: some View {
-            NavigationStackView {
+           // NavigationStackView {
             ASTableView {
                 ASTableViewSection(id: 0)
                 {
@@ -766,27 +525,32 @@ struct HomeView: View {
                     storiesScroll
                         .background(Color.init(.systemBackground))
                     Divider().background(Color.init(.systemBackground))
+                    
+                    
                 }
                 .cacheCells()
                 
                 
                 newsList
+                .cacheCells()
                 
                 
             }
             .separatorsEnabled(false)
             .scrollIndicatorEnabled(false)
             
-            .background(
-                VStack {
-                    
-                Color("ColorMain")
-                Color.init(.systemBackground)
-
-               }
-            )
             
-        }
+                
+//            .background(
+//                VStack {
+//
+//                Color("ColorMain")
+//                Color.init(.systemBackground)
+//
+//               }
+//            )
+            
+       // }
             .background(
                 VStack {
                     
@@ -797,22 +561,26 @@ struct HomeView: View {
             )
             .overlay(
                 VStack {
-                    if isPinching  {
-                        ZStack {
-                        Color.init(.systemBackground)
+                    if isPinching && self.currentImg != ""  {
+//                        ZStack {
+//                        Color.init(.systemBackground)
                             HStack {
                             WebImage(url: URL(string: currentImg))
                                 .resizable()
                                 .scaledToFit()
+                                //.position(locationPinch)
+                                .scaleEffect(scalePinch)
+                                //.scaleEffect(scalePinch, a)
+                                .offset(offsetPinch)
+                                .animation(isPinching ? .none : .spring())
                                 
-
                             }
                                                                     .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
                             
-                        }
-                    } else {
-                    Color.clear
-                    }
+                       // }
+//                    } else {
+//                    Color.clear
+                   }
                 }
             )
             .sheet(isPresented: self.$showSheet) {
@@ -836,10 +604,31 @@ StoryView(item: currentItem)
              
             
             @State var show = false
-        @State var currentItem = PostRealmFB(id: "", name: "", text: "", imglink: "", createdAt: Timestamp(date: Date()))
-    @State var isPinching: Bool = false
+    @State var currentItem = PostRealmFB(id: "", name: "", text: "", imglink: "", createdAt: Timestamp(date: Date()), storyType: .fill)
+    
+    
     @GestureState var isLongPress = false
-        
+    
+    @GestureState var isPinchingGesture = false
+    
+    var pinch : some Gesture {
+        DragGesture(minimumDistance: 0, coordinateSpace: .global).sequenced(before: MagnificationGesture(minimumScaleDelta: 0).updating($isPinchingGesture, body: { (v, s, t) in
+            s = true
+
+        })
+                    
+                    .onChanged { val in
+            if "" == self.currentImg {
+                self.currentImg = "item.image"
+
+            }
+
+        }.onEnded { val in
+
+            self.currentImg = ""
+
+        })
+    }
     var plusLongPress: some Gesture {
         LongPressGesture(minimumDuration: 0.1).sequenced(before:
               DragGesture(minimumDistance: 0, coordinateSpace:
@@ -854,47 +643,171 @@ StoryView(item: currentItem)
                 }
             }
     }
+    
     @State var scale: CGFloat = 1.0
-    @State var anchor: UnitPoint = .center
     @State var offset: CGSize = .zero
-    @State var currentImg = ""
+    @State var currentImg : String = ""
+       
+
+    func onCellEventNews(_ event: CellEvent<News>)
+    {
+        switch event
+        {
+        case let .onAppear(item):
+            
+            
+            ASRemoteImageManager.shared.load(URL(string: item.image)!)
+            
+        case let .onDisappear(item):
+            ASRemoteImageManager.shared.cancelLoad(for: URL(string: item.image)!)
+           
+
+        case let .prefetchForData(data):
+            for item in data
+            {
+
+                ASRemoteImageManager.shared.load(URL(string: item.image)!)
+            }
+        case let .cancelPrefetchForData(data):
+            for item in data
+            {
+
+                ASRemoteImageManager.shared.cancelLoad(for: URL(string: item.image)! )
+            }
+        }
+    }
+    func onCellEventStories(_ event: CellEvent<PostRealmFB>)
+    {
+        switch event
+        {
+        case let .onAppear(item):
+            
+            
+            ASRemoteImageManager.shared.load((URL(string: item.imglink)  ?? URL(string: "https://psv4.userapi.com/c856236/u124809376/docs/d3/4732953005fd/launch.png?extra=5hYHCKKcPYJLIkiPNp6EcJlEkOoZtcxFabXpiG8HNXq7qqtAr1cagLw3LQna30oOliUeSjjWmBbDl5oOfHrlkugsKu0I_59mtYbK6aUoqEmRa7SOpkvvU96QZAG1rzE-dZrZDYDt5aBcc5MpWiy1p2yGkBY"))!)
+            
+        case let .onDisappear(item):
+            ASRemoteImageManager.shared.cancelLoad(for: (URL(string: item.imglink)  ?? URL(string: "https://psv4.userapi.com/c856236/u124809376/docs/d3/4732953005fd/launch.png?extra=5hYHCKKcPYJLIkiPNp6EcJlEkOoZtcxFabXpiG8HNXq7qqtAr1cagLw3LQna30oOliUeSjjWmBbDl5oOfHrlkugsKu0I_59mtYbK6aUoqEmRa7SOpkvvU96QZAG1rzE-dZrZDYDt5aBcc5MpWiy1p2yGkBY"))!)
+           
+
+        case let .prefetchForData(data):
+            for item in data
+            {
+
+                ASRemoteImageManager.shared.load((URL(string: item.imglink)  ?? URL(string: "https://psv4.userapi.com/c856236/u124809376/docs/d3/4732953005fd/launch.png?extra=5hYHCKKcPYJLIkiPNp6EcJlEkOoZtcxFabXpiG8HNXq7qqtAr1cagLw3LQna30oOliUeSjjWmBbDl5oOfHrlkugsKu0I_59mtYbK6aUoqEmRa7SOpkvvU96QZAG1rzE-dZrZDYDt5aBcc5MpWiy1p2yGkBY"))!)
+            }
+        case let .cancelPrefetchForData(data):
+            for item in data
+            {
+
+                ASRemoteImageManager.shared.cancelLoad(for: (URL(string: item.imglink)  ?? URL(string: "https://psv4.userapi.com/c856236/u124809376/docs/d3/4732953005fd/launch.png?extra=5hYHCKKcPYJLIkiPNp6EcJlEkOoZtcxFabXpiG8HNXq7qqtAr1cagLw3LQna30oOliUeSjjWmBbDl5oOfHrlkugsKu0I_59mtYbK6aUoqEmRa7SOpkvvU96QZAG1rzE-dZrZDYDt5aBcc5MpWiy1p2yGkBY"))!)
+            }
+        }
+    }
+   
+    @State var isPinching: Bool = false {
+        
+        didSet {
+            if !oldValue {
+            self.currentImg = ""
+                
+            }
+        }
+    }
+    @GestureState private var offsetPinch: CGSize = .zero
+    @GestureState var scalePinch: CGFloat = 1.0
+    @State var startLocationPinch: CGPoint = .zero
+    @State var anchor: UnitPoint = .center
+    
         var newsList :  ASTableViewSection<Int> {
+
                     ASTableViewSection(
                         id: 2,
-                        data: getStoriesDataAndAdminNumber.dataNews)
+                        data: getStoriesDataAndAdminNumber.dataNews.sorted(by: { $0.createdAt.dateValue().compare($1.createdAt.dateValue()) == .orderedDescending })   , onCellEvent: onCellEventNews)
                     { item, _ in
                         
                         
                         VStack(alignment: .leading, spacing: 0) {
                             HStack {
-                            WebImage(url: URL(string: item.image))
-                                .resizable()
-                                .scaledToFit()
-                                .pinchToZoom(scale: $scale, anchor: $anchor, offset: $offset, isPinching: $isPinching, currentImg: $currentImg, imgString: item.image)
+                                
+                               
+//                            WebImage(url: URL(string: item.image))
+//                                .resizable()
+//                                .scaledToFit()
+                                if item.type == .photo {
+                                ASRemoteImageView(URL(string: item.image)!, false, contentMode: .fit)
+                                
+                                .overlay(
+                                    ZStack {
+                                       // PinchZoom(scale: $scale, anchor: $anchor, offset: $offset, isPinching: $isPinching)
+                                            
+                                        if self.currentImg == item.image {
+                                             Color.init( isPinching ? .systemBackground : .clear)
+                                            
+                                            }
+                                        
+                                    }
+                                ).gesture(MagnificationGesture(minimumScaleDelta: 0).updating($scalePinch, body: { (v, s, t) in
+                                    s = v
+                                    
+                                }).onEnded({ (v) in
+                                    isPinching = false
+                                    self.currentImg = ""
+                                    
+                                })
+                                .onChanged({ (g) in
+                                    isPinching = true
+                                    
+                                    if "" == self.currentImg {
+                                                                        self.currentImg = item.image
+                                                                        
+                                                                  }
+                                })
+                            
+                               
+                                            )
 
-                            }.onLongPressGesture(minimumDuration: 0) {
-                                currentImg = item.image
-                                NotificationCenter.default.post(name: Notification.Name("currentImgPinch"), object: nil, userInfo: ["currentImgPinch": "\(currentImg)"])
+                                } else {
+                                    WebView(url: item.image, colorScheme: colorScheme == .dark ? .dark : .light)
+                                        .background(Color.red)
+                                        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+                                }
+//
+                            
+
+                                
+
                             }
-
-                            //                            NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: nil, userInfo: ["current": "\(currentRoom)"])
+                            //.gesture( )
+                                                        
+                            
                                                                     .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
                             
-                            VStack(alignment: .leading, spacing: 0) {
+                                VStack(alignment: .leading, spacing: 0) {
                                 Text(item.name).fontWeight(.semibold)
                             .padding(.horizontal)
                              
                                 
                         if !item.loadMoreText {
                         Text(item.text.replacingOccurrences(of: "\\n", with: "\n"))
+                            .fontWeight(.light)
+                            .font(.callout)
                             .frame(height: 80)
                             
                             .truncationMode(.tail)
                             .padding(.horizontal)
+                            .onTapGesture {
+                            
+                            if let index = getStoriesDataAndAdminNumber.dataNews.firstIndex(of: item) {
+                                getStoriesDataAndAdminNumber.dataNews[index].loadMoreText = true
+                            }
+                        }
                                 
                             HStack {
                                 Spacer()
-                                Text("ещё").foregroundColor(.secondary)
+                                Text("ещё")
+                                    .fontWeight(.light)
+                                    .font(.callout)
+                                    .foregroundColor(.secondary)
                                     .padding(.horizontal)
                                     .onTapGesture {
                                     
@@ -904,11 +817,15 @@ StoryView(item: currentItem)
                                 }
                         }
                         } else {
+                            withAnimation(.spring()) {
                             Text(item.text.replacingOccurrences(of: "\\n", with: "\n"))
                                // .frame(height: 60)
+                                .font(.callout)
+                                .fontWeight(.light)
                                 
                                 //.truncationMode(.tail)
                                 .padding(.horizontal)
+                            }
                         }
                             }.padding(.vertical)
                             Divider()
@@ -930,7 +847,7 @@ StoryView(item: currentItem)
             ASCollectionView(section:
                                 
                                 
-                                ASCollectionViewSection(id: 0, data: getStoriesDataAndAdminNumber.data, contentBuilder: { (item, i)  in
+                                ASCollectionViewSection(id: 0, data: getStoriesDataAndAdminNumber.data, onCellEvent: onCellEventStories, contentBuilder: { (item, i)  in
                 
                 VStack {
                     
@@ -965,9 +882,15 @@ StoryView(item: currentItem)
 
                     ZStack{
                         HStack {
-                            WebImage(url: URL(string: item.imglink)).resizable().aspectRatio(contentMode: .fill).background(Color.white)
+                            ASRemoteImageView((URL(string: item.imglink) ?? URL(string: "https://psv4.userapi.com/c856236/u124809376/docs/d3/4f220dd33162/launch.png?extra=gM00K0L4Mi-GdUA2R882BlnULKJxtqwlT6Oq1vjrWGJUPANpY2e4C1kLtKlOYdABoP46rFMwhKf-AllYA8406yVQqZrDkgBPrEX4F5Zpumo7cn4SEipFT9SF2-6Ernho6h7_-gaoijvWUktBvc-gZvMpDLI"))!, false, contentMode: .fill)
+                                .aspectRatio(contentMode: .fill)
+                                .background(Color.white)
+                                
+                            
+                           // WebImage(url: URL(string: item.imglink)).resizable().aspectRatio(contentMode: .fill).background(Color.white)
                         } .frame(width: 60, height: 60)
                                .clipShape(Circle())
+                        
 
                         LoadIsSeenCircleView(imageID: item.id)
 
@@ -975,6 +898,8 @@ StoryView(item: currentItem)
                     }
 
                             Text(item.name).font(.footnote).fontWeight(.light)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.7)
                     }
                     .onTapGesture {
 
@@ -1002,15 +927,14 @@ StoryView(item: currentItem)
                 try realm.write({
 
                     realm.add(newdata)
-                    print(newdata.idSeen, "success")
+
                 })
 
 
             } catch {
                 print("isSeen to Realm error", error.localizedDescription)
             }
-                        print(item.imglink)
-                        print(item.id)
+                        
 
         }
                     }
@@ -1042,7 +966,6 @@ struct MyButtonStyle: ButtonStyle {
   }
 
 }
-
 
 
 

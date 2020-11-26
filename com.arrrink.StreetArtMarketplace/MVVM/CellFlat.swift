@@ -46,7 +46,7 @@ struct CellView : View {
             if ASRemoteLoad {
                 
             
-            ASRemoteImageView(URL(string: data.img)!)
+                ASRemoteImageView(URL(string: data.img)!, true, contentMode: .fit)
                 .frame(height: 150).padding([.top, .horizontal])
             } else {
                 VStack{
@@ -79,8 +79,8 @@ struct CellView : View {
                             .font(.system(.callout, design: .rounded))
                             .fixedSize(horizontal: false, vertical: true)
                         
-                        if data.type == "Новостройки" {
-                            
+                       
+                        
                             ZStack{
                             Text(data.type)
                            // .font(.footnote)
@@ -96,7 +96,7 @@ struct CellView : View {
                             )
                             
                                 
-                        }
+                        
                         
                         Text(price).foregroundColor(.black)
                             .font(.system(.footnote, design: .rounded))
@@ -134,7 +134,7 @@ struct CellView : View {
        // .cornerRadius(15)
         .onTapGesture {
             
-           let findAnno = getFlats.annoDataFilter.filter{$0.title == data.complexName}
+           let findAnno = getFlats.annoData.filter{$0.title == data.complexName}
            
             if findAnno.count != 0 {
                 
@@ -149,15 +149,15 @@ struct CellView : View {
         .sheet(isPresented: self.$modalController) {
             
             if status{
-                NavigationView {
+              //  NavigationView {
 
-                DetailFlatView(data: $data, isShow : self.$modalController).environmentObject(getFlats)
-                }
+                DetailFlatView(data: $data).environmentObject(getFlats)
+                //}
                           }
                           else{
                               
-//                            @State var boolvar = false
-//                            EnterPhoneNumberView(modalController: $boolvar)
+
+                            
                             EnterPhoneNumberView(detailView: $data, modalController: $modalController, status: $status).environmentObject(getFlats)
                               
                           }

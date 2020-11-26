@@ -287,15 +287,29 @@ extension ASCache: Codable where Key: Codable, Value: Codable
 
 struct ASRemoteImageView: View
 {
-    init(_ url: URL)
+    init(_ url: URL, _ ifNeedOverlayFrame: Bool, contentMode : ContentMode)
     {
         self.url = url
+        self.ifNeedOverlayFrame = ifNeedOverlayFrame
+        self.contentMode = contentMode
         imageLoader = ASRemoteImageManager.shared.imageLoader(for: url)
     }
-
+    let ifNeedOverlayFrame: Bool
+    let contentMode: ContentMode
     let url: URL
     @ObservedObject var imageLoader: ASRemoteImageLoader
+    var overlay : some View {
+        Image("logomain")
+            .resizable()
+            .renderingMode(.template)
+            .foregroundColor(Color("ColorMain"))
+            .rotationEffect(Angle(degrees: -15.0))
+            .opacity(0.2)
+            .aspectRatio(contentMode: .fit)
+            .scaledToFit()
 
+
+    }
     var content: some View
     {
         ZStack
@@ -304,24 +318,38 @@ struct ASRemoteImageView: View
            // Image(systemName: "photo")
             self.imageLoader.image.map
             { image in
+                VStack {
+                if ifNeedOverlayFrame {
+                    if contentMode == .fit {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
-                //  .aspectRatio(, contentMode: .fit)
                     .frame(height: 150)
                      .padding()
-                     .overlay(
-                                         Image("logomain")
-                                             .resizable()
-                                             .renderingMode(.template)
-                                             .foregroundColor(Color("ColorMain"))
-                                             .rotationEffect(Angle(degrees: -15.0))
-                                             .opacity(0.2)
-                                             .aspectRatio(contentMode: .fit)
-                                             .scaledToFit()
+                    .overlay(overlay)
+                        
+                    } else {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(height: 150)
+                            .overlay(overlay)
+                    }
+                    
+                } else {
+                    if contentMode == .fit {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFit()
 
+                    } else {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
 
-                                 )
+                    }
+                }
+            }
             }.transition(AnyTransition.opacity.animation(Animation.default))
         }
         .compositingGroup()

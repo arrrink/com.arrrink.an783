@@ -49,29 +49,30 @@ struct CellObject2: View {
             }.padding(.horizontal)
            
             Text(data.address).fontWeight(.light).padding(.horizontal).foregroundColor(.gray).font(.footnote)
-                .padding(.bottom, data.type == "Новостройки" ? 0 : 10)
+                .padding(.bottom, 0)
             
+            HStack {
+            ZStack{
+            Text(data.type)
+            .font(.footnote)
+            .foregroundColor(.white)
+                .fontWeight(.heavy)
+               
+                .padding(.horizontal, 3)
+                .padding(.vertical, 3)
+               // .font(.system(.body, design: .rounded))
+            } .background(Color("ColorMain").opacity(0.8).cornerRadius(3)
+                           
+                            //.shadow(color: Color.black.opacity(0.15), radius: 5, x: 5, y: 5)
+                            //.shadow(color: Color.black.opacity(0.1), radius: 5, x: -5, y: -5)
+            )
             
-            if data.type == "Новостройки" {
                 
-                ZStack{
-                Text(data.type)
-                .font(.footnote)
-                .foregroundColor(.white)
-                    .fontWeight(.heavy)
-                   
-                    .padding(.horizontal, 3)
-                    .padding(.vertical, 3)
-                   // .font(.system(.body, design: .rounded))
-                } .background(Color("ColorMain").opacity(0.8).cornerRadius(3)
-                               
-                                //.shadow(color: Color.black.opacity(0.15), radius: 5, x: 5, y: 5)
-                                //.shadow(color: Color.black.opacity(0.1), radius: 5, x: -5, y: -5)
-                )
-                .padding(.horizontal)
-                .padding(.bottom, 10)
-                    
-            }
+            
+                
+        }.padding(.horizontal)
+            
+           
             
             objImgCell
             
@@ -175,8 +176,10 @@ struct CellObject: View {
    
     var btnBack : some View {
         Button {
-            self.presentationMode.wrappedValue.dismiss()
+          //  self.presentationMode.wrappedValue.dismiss()
         //  self.isNeedBackButton.toggle()
+            
+            self.navigationStack.pop()
         } label: {
            // HStack {
                
@@ -321,34 +324,40 @@ struct CellObject: View {
           
                                       HStack {
                                           Text("КВАРТИРЫ").foregroundColor(.gray).fontWeight(.black).font(.footnote)
-                                        Text("\(getFlats.dataFilter.filter{$0.complexName == data.complexName}.count)").foregroundColor(.gray).font(.footnote)
+                                        Text("\(getFlats.note)").foregroundColor(.gray).font(.footnote)
                                           Spacer()
           
                                       }.padding().background(Color.white)
           
                                   }
-        VStack{
-            ForEach(getFlats.filterFlatsOndetailView, id: \.self) { i in
-                HStack(spacing: 10) {
-                   
-                    ForEach(i) { j in
-                        if i.count == 2 {
-                            CellView(data: j, status: $status, ASRemoteLoad : false).environmentObject(getFlats)
-                            
-                            .frame(width: (UIScreen.main.bounds.width - 40) / 2)
-                        } else if i.count == 1 {
-                            CellView(data: j, status: $status, ASRemoteLoad : false).environmentObject(getFlats)
-                                
-                                .frame(width: (UIScreen.main.bounds.width - 40) / 2)
-                            Spacer()
-                        }
-                        
-                    }
-                }
-            }
-        
-           
-        }.padding(.horizontal).background(Color.white)
+//        VStack{
+//
+//
+//
+//
+//
+//
+//            ForEach(getFlats.filterFlatsOndetailView, id: \.self) { i in
+//                HStack(spacing: 10) {
+//
+//                    ForEach(i) { j in
+//                        if i.count == 2 {
+//                            CellView(data: j, status: $status, ASRemoteLoad : false).environmentObject(getFlats)
+//
+//                            .frame(width: (UIScreen.main.bounds.width - 40) / 2)
+//                        } else if i.count == 1 {
+//                            CellView(data: j, status: $status, ASRemoteLoad : false).environmentObject(getFlats)
+//
+//                                .frame(width: (UIScreen.main.bounds.width - 40) / 2)
+//                            Spacer()
+//                        }
+//
+//                    }
+//                }
+//            }
+//
+//
+//        }.padding(.horizontal).background(Color.white)
 
         }
         }
@@ -374,69 +383,151 @@ struct CellObject: View {
             }
         }
     }
+    var AS : some View {
+        ASCollectionView{
+                            
+                            
+            ASCollectionViewSection(id: 0, data: self.getFlats.data, onCellEvent: onCellEvent, contentBuilder: { (item, _)  in
 
+                CellView(data: item, status: $status, ASRemoteLoad : true).environmentObject(getFlats)
+
+                    //.environmentObject(navigationStack)
+
+                            })
+                            .sectionHeader {
+                                
+                                                      VStack(alignment: .leading, spacing: 0) {
+                              
+                                                           header
+                              
+                              
+                                                       .background(
+                                                        ZStack {
+                                                            VStack {
+                                                                Color.init(.systemBackground)
+                                                                Color.white
+                                                            }
+                                                        RoundedCorners(color: Color.init(.systemBackground), tl: 0, tr: 0, bl: 0, br: 60)
+                                                        }
+                                                       )
+                              
+                              
+                              
+                                                          HStack {
+                                                              Text("КВАРТИРЫ").foregroundColor(.gray).fontWeight(.black).font(.footnote)
+                                                            Text("\(getFlats.note)").foregroundColor(.gray).font(.footnote)
+                                                              Spacer()
+                              
+                                                          }.padding().background(Color.white)
+                              
+                                                      }
+                    //        VStack{
+                    //
+                    //
+                    //
+                    //
+                    //
+                    //
+                    //            ForEach(getFlats.filterFlatsOndetailView, id: \.self) { i in
+                    //                HStack(spacing: 10) {
+                    //
+                    //                    ForEach(i) { j in
+                    //                        if i.count == 2 {
+                    //                            CellView(data: j, status: $status, ASRemoteLoad : false).environmentObject(getFlats)
+                    //
+                    //                            .frame(width: (UIScreen.main.bounds.width - 40) / 2)
+                    //                        } else if i.count == 1 {
+                    //                            CellView(data: j, status: $status, ASRemoteLoad : false).environmentObject(getFlats)
+                    //
+                    //                                .frame(width: (UIScreen.main.bounds.width - 40) / 2)
+                    //                            Spacer()
+                    //                        }
+                    //
+                    //                    }
+                    //                }
+                    //            }
+                    //
+                    //
+                    //        }.padding(.horizontal).background(Color.white)
+
+                            }
+                            
+        }.scrollIndicatorsEnabled(horizontal: false, vertical: false)
+           
+        
+        
+        
+        .onReachedBoundary({ (i) in
+                           if i == .bottom {
+                            print( "from onReachedBoundary")
+                            guard getFlats.data.count % 10 == 0 else {
+                                return
+                            }
+                            getFlats.getPromiseFlat()
+                                                    .done({ (data1) in
+
+                                                       let flats = data1
+
+                                                        getFlats.data.append(contentsOf: flats)
+
+
+                                                    }).catch { (er) in
+
+                                                    print(er)
+                                                }
+
+                           }
+
+                       })
+        .layout(self.layout)
+        //{
+//            .grid(
+//                layoutMode: .adaptive(withMinItemSize: 165),
+//                itemSpacing: 20,
+//                lineSpacing: 20,
+//                itemSize: .estimated(90))
+//    }
+//
+    }
     var body: some View {
        
 
             
        
-        cV
-            .onAppear() {
-                var total = [[taFlatPlans]]()
-                let arrOneD = getFlats.dataFilter.filter{$0.complexName == data.complexName}
-                
-                var arrTwoD = [taFlatPlans]()
-                for (n, i) in arrOneD.enumerated() {
-                    
-                    
-                    if (n + 1) % 2 != 0 {
-                    arrTwoD.append(i)
-                    } else {
-                        arrTwoD.append(i)
-                        total.append(arrTwoD)
-                        arrTwoD.removeAll()
-                            
-                    }
-                    if arrOneD.count == (n + 1) {
-                        total.append([i])
-                        arrTwoD.removeAll()
-                    }
-                    
-                }
-                print(total)
-                getFlats.filterFlatsOndetailView = total
-              
-                
-            }
+       // cV
+        
+        VStack {
+           AS //.frame(height: UIScreen.main.bounds.height)
+        }
            
         
             .background(
-            
+
                  VStack {
-                     Color.init(.systemBackground)
+                    // Color.init(.systemBackground)
                      Color.white
                  }
-             
+
             )
-           
-                   .edgesIgnoringSafeArea(.vertical)
-            .navigationBarTitle("f")
-            .navigationBarHidden(true)
-            .navigationBarBackButtonHidden(true)
+//
+//                   .edgesIgnoringSafeArea(.vertical)
+//            .navigationBarTitle("")
+//            .navigationBarHidden(true)
+//            .navigationBarBackButtonHidden(true)
            
         
     }
-    var layout: ASCollectionLayout<Section>
+    var layout: ASCollectionLayout<Int>
     {
-        ASCollectionLayout<Section>(scrollDirection: .vertical, interSectionSpacing: 0)
+        ASCollectionLayout<Int>(scrollDirection: .vertical, interSectionSpacing: 0)
         { sectionID in
             
-            switch sectionID
-            {
+          //  switch sectionID
+           // {
             
-            case .footnote:
+           // case .footnote:
                 return .grid(layoutMode: .fixedNumberOfColumns(2), itemSpacing:  5, lineSpacing:  5, itemSize: .estimated(150))
-            }
+           // }
         }
         
         
@@ -558,179 +649,5 @@ extension UINavigationController {
         navigationController?.setNavigationBarHidden(true, animated: true)
         navigationBar.isHidden = true
         navigationBar.standardAppearance = appearance
-    }
-}
-fileprivate extension DateFormatter {
-    static var month: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM"
-        return formatter
-    }
-
-    static var monthAndYear: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM yyyy"
-        return formatter
-    }
-}
-
-fileprivate extension Calendar {
-    func generateDates(
-        inside interval: DateInterval,
-        matching components: DateComponents
-    ) -> [Date] {
-        var dates: [Date] = []
-        dates.append(interval.start)
-
-        enumerateDates(
-            startingAfter: interval.start,
-            matching: components,
-            matchingPolicy: .nextTime
-        ) { date, _, stop in
-            if let date = date {
-                if date < interval.end {
-                    dates.append(date)
-                } else {
-                    stop = true
-                }
-            }
-        }
-
-        return dates
-    }
-}
-
-struct WeekView<DateView>: View where DateView: View {
-    @Environment(\.calendar) var calendar
-
-    let week: Date
-    let content: (Date) -> DateView
-
-    init(week: Date, @ViewBuilder content: @escaping (Date) -> DateView) {
-        self.week = week
-        self.content = content
-    }
-
-    private var days: [Date] {
-        guard
-            let weekInterval = calendar.dateInterval(of: .weekOfYear, for: week)
-            else { return [] }
-        return calendar.generateDates(
-            inside: weekInterval,
-            matching: DateComponents(hour: 0, minute: 0, second: 0)
-        )
-    }
-
-    var body: some View {
-        HStack {
-            ForEach(days, id: \.self) { date in
-                HStack {
-                    if self.calendar.isDate(self.week, equalTo: date, toGranularity: .month) {
-                        self.content(date)
-                    } else {
-                        self.content(date).hidden()
-                    }
-                }
-            }
-        }
-    }
-}
-
-struct MonthView<DateView>: View where DateView: View {
-    @Environment(\.calendar) var calendar
-
-    let month: Date
-    let showHeader: Bool
-    let content: (Date) -> DateView
-
-    init(
-        month: Date,
-        showHeader: Bool = true,
-        @ViewBuilder content: @escaping (Date) -> DateView
-    ) {
-        self.month = month
-        self.content = content
-        self.showHeader = showHeader
-    }
-
-    private var weeks: [Date] {
-        guard
-            let monthInterval = calendar.dateInterval(of: .month, for: month)
-            else { return [] }
-        return calendar.generateDates(
-            inside: monthInterval,
-            matching: DateComponents(hour: 0, minute: 0, second: 0, weekday: calendar.firstWeekday)
-        )
-    }
-
-    private var header: some View {
-        let component = calendar.component(.month, from: month)
-        let formatter = component == 1 ? DateFormatter.monthAndYear : .month
-        return Text(formatter.string(from: month))
-            .font(.title)
-            .padding()
-    }
-
-    var body: some View {
-        VStack {
-            if showHeader {
-                header
-            }
-
-            ForEach(weeks, id: \.self) { week in
-                WeekView(week: week, content: self.content)
-            }
-        }
-    }
-}
-
-struct CalendarView<DateView>: View where DateView: View {
-    @Environment(\.calendar) var calendar
-
-    let interval: DateInterval
-    let content: (Date) -> DateView
-
-    init(interval: DateInterval, @ViewBuilder content: @escaping (Date) -> DateView) {
-        self.interval = interval
-        self.content = content
-    }
-
-    private var months: [Date] {
-        calendar.generateDates(
-            inside: interval,
-            matching: DateComponents(day: 1, hour: 0, minute: 0, second: 0)
-        )
-    }
-
-    var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            VStack {
-                ForEach(months, id: \.self) { month in
-                    MonthView(month: month, content: self.content)
-                }
-            }
-        }
-    }
-}
-
-struct RootView: View {
-    @Environment(\.calendar) var calendar
-
-    private var year: DateInterval {
-        calendar.dateInterval(of: .year, for: Date())!
-    }
-
-    var body: some View {
-        CalendarView(interval: year) { date in
-            Text("30")
-                .hidden()
-                .padding(8)
-                .background(Color.blue)
-                .clipShape(Circle())
-                .padding(.vertical, 4)
-                .overlay(
-                    Text(String(self.calendar.component(.day, from: date)))
-                )
-        }
     }
 }

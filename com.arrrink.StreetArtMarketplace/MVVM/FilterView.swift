@@ -20,10 +20,19 @@ struct FilterView: View {
     @State var size = UIScreen.main.bounds.width - 10
     @Binding var showFilterView : Bool
     
-    @State var needRequestToFB = false
+    
     var defaultArrRepair = ["Без отделки", "Подчистовая", "Чистовая", "С ремонтом", "С мебелью"]
     var defaultArrType = ["Студии" , "1-к.кв", "2Е-к.кв", "2-к.кв", "3Е-к.кв", "3-к.кв", "4Е-к.кв", "4-к.кв", "5Е-к.кв", "5-к.кв", "6-к.кв", "7-к.кв", "Таунхаусы", "Коттеджи", "Своб. план."]
-    
+    var  defaultArrToMetro = ["5 мин пешком",
+                              "10 мин пешком",
+                              "15 мин пешком",
+                              "20 мин пешком",
+                              "10 мин транспортом",
+                              "20 мин транспортом",
+                              "30 мин транспортом",
+                              "40 мин транспортом",
+                              "50 мин транспортом"
+    ]
     var  defaultArrDeadline = ["Сдан",
                         "4 кв. 2020",
                         "1 кв. 2021",
@@ -43,6 +52,7 @@ struct FilterView: View {
                         "4 кв. 2025"
                     ]
     
+
     var scroll : some View {
         ASCollectionView(staticContent: { () -> ViewArrayBuilder.Wrapper in
     VStack(alignment: .leading, spacing: 10){
@@ -66,200 +76,201 @@ struct FilterView: View {
             Button {
                 
                 
-                if needRequestToFB {
-                    
-                    print("new")
+                data.query = Firebase.Firestore.firestore().collection("taflatplans")
                 
-                    self.needRequestToFB.toggle()
-               // let maxPrice = 250000000
-              //  let maxTotalS = 510.0
+                let decodePerToPriceFrom = 1000000 * pow(1.0225, (data.flatPrice[0] * 320000000 - 1000000) /  1000000)
+             
+                let decodePerToPriceTo = 1000000 * pow(1.0225, (data.flatPrice[1] * 320000000 - 1000000) /  1000000)
+             
+                data.query = data.query.whereField("price", isLessThanOrEqualTo: Int(decodePerToPriceTo / 100000) * 100000)
                 
-                    //getFlats.data.sorted(by: {
-             //       $0.price < $1.price
-             //   }).last
-                getFlats.getPromiseFlat(query: Firebase.Firestore.firestore().collection("taflatplans").whereField("price", isLessThanOrEqualTo: Int((Double(data.flatPrice[1] * 250000000) / 100000).rounded() * 100000))
-            .whereField("price", isGreaterThanOrEqualTo: Int((Double(data.flatPrice[0] * 250000000) / 100000).rounded() * 100000)).order(by: "price", descending: false)
-                                            
-//                                                    .whereField("totalS", isLessThanOrEqualTo: Double(data.totalS[1]) * 510.0)
-//                                    .whereField("totalS", isGreaterThanOrEqualTo: Double(data.totalS[0]) * 510.0)
-//
-//                    .order(by: "totalS", descending: true)
-                ).done { (totalData) in
-                    
-                            var arr = totalData["limitFlats"] as! [taFlatPlans]
-                    
-                    getFlats.data = arr
-                    
-                    
-                    
-                    
-                    
-//                            arr = arr.filter{
-//
-//                                    Double($0.totalS) ?? 0.0 >= Double(data.totalS[0] * 510)
-//
-//                                && Double($0.totalS) ?? 0.0 <= Double(data.totalS[1] * 510)
-//
-//                            }
-                    getFlats.dataFilter = arr
-                            
-                            getFlats.note = "\(arr.count)"
-                           
-                            
-                            
-                            
-                            
-                            getFlats.getPromiseAnno(complexNameArray: totalData["anno"] as! [String]).done { (annoAndObjData) in
-                                
-                                getFlats.annoData = annoAndObjData["annotations"] as! [CustomAnnotation]
-                                
-                                getFlats.annoDataFilter = getFlats.annoData
-                                
-                                
-                                getFlats.objects = annoAndObjData["objects"] as! [taObjects]
-                                getFlats.needUpdateMap = true
-                                
-                                
-                            }.catch { (er) in
-                                print(er)
-                            }
-                        }.catch { (er) in
-                            print(er)
-                        }
                 
-                } else {
-                    print("old")
+                
+               
+                
+                
+                
+                
+                if data.tags.filter({ (j) -> Bool in
+                                                return j.data.type == .developer }).count != 0 {
                     
-                    let metroTimeArr = ["5 мин","10 мин","15 мин","20 мин","10 мин","20 мин","30 мин","40 мин","50 мин"]
-                    
-                     getFlats.dataFilter = getFlats.data.filter{
-                            Double($0.totalS) ?? 0.0 >= Double(data.totalSfrom * 510)
+                    var devArr = [String]()
+                    for i in data.tags.filter({ (j) -> Bool in
+                                                return j.data.type == .developer }) {
                         
-                        && Double($0.totalS) ?? 0.0 <= Double(data.totalSto * 510)
-                       
-                        
-                                && Int($0.floor) ?? 1 >= Int((data.floor[0] * 30).rounded())
-                                
-                                && Int($0.floor) ?? 1 <= Int((data.floor[1] * 30).rounded())
-                          
-                            
+                        devArr.append(i.data.name)
                     }
-                    getFlats.dataFilter = getFlats.dataFilter.filter{
-                         data.type.contains($0.roomType) ? true : false
-                    }
-                    getFlats.dataFilter = getFlats.dataFilter.filter{
-                        data.repair.contains($0.repair) ? true : false
-                    }
-                    getFlats.dataFilter = getFlats.dataFilter.filter{
-                        data.deadline.contains($0.deadline) ? true : false
-                    }
-                    getFlats.dataFilter = getFlats.dataFilter.filter{ item in
-                        var checkTagsUnderground : Bool {
-                        if data.tags.filter({ (j) -> Bool in
-                                 return j.data.type == .underground
-                                                            }).count == 0 {
-                                                                return true
-                                                            } else {
-                                                           return data.tags.filter({ (j) -> Bool in
-                                                            return j.data.type == .underground
-                                                        })
-                                                           .filter({ (j) -> Bool in
-                                                                return j.data.name ==  item.underground
-                                                            }) .count != 0 ? true : false
-                                                            }
-                        
-                                                        }
-                        
-                        return checkTagsUnderground
-                       
-                    }
-                    
-                    getFlats.dataFilter = getFlats.dataFilter.filter{ item in
-                        var checkTagsDeveloper : Bool {
-                        if data.tags.filter({ (j) -> Bool in
-                                 return j.data.type == .developer
-                                                            }).count == 0 {
-                                                                return true
-                                                            } else {
-                                                           return data.tags.filter({ (j) -> Bool in
-                                                            return j.data.type == .developer
-                                                        })
-                                                           .filter({ (j) -> Bool in
-                                                                return j.data.name ==  item.developer
-                                                            }) .count != 0 ? true : false
-                                                            }
-                        
-                                                        }
-                        
-                        return checkTagsDeveloper
-                       
-                    }
-                    
-                    getFlats.dataFilter = getFlats.dataFilter.filter{ item in
-                        var checkTagsComplexName : Bool {
-                        if data.tags.filter({ (j) -> Bool in
-                                 return j.data.type == .complexName
-                                                            }).count == 0 {
-                                                                return true
-                                                            } else {
-                                                           return data.tags.filter({ (j) -> Bool in
-                                                            return j.data.type == .complexName
-                                                        })
-                                                           .filter({ (j) -> Bool in
-                                                                return j.data.name ==  item.complexName
-                                                            }) .count != 0 ? true : false
-                                                            }
-                        
-                                                        }
-                        
-                        return checkTagsComplexName
-                       
-                    }
-                   
-                    getFlats.dataFilter = getFlats.dataFilter.filter{
-                        item in
-                        var checkIfApart = true
 
-                        if data.ifApart == "Только апартаменты" {
-                            checkIfApart = item.type == "Апартаменты" ? true : false
-                       } else if data.ifApart == "Исключить апартаменты"{
-                        checkIfApart = item.type != "Апартаменты" ? true : false
-                       }
-                        return checkIfApart
-                    }
-                   
-                    print(getFlats.dataFilter)
-                    
-                    var array = [String]()
-                    for i in getFlats.dataFilter{
-                        
-                        
-                        
-                        array.append(i.complexName)
-                        
-                    }
-                    
-                    
-                    array = Array(Set(array))
-                   
-                    getFlats.annoDataFilter.removeAll()
-                    for i in array {
-                        getFlats.annoDataFilter.append(contentsOf: getFlats.annoData.filter{$0.title == i})
-                    }
-                   
-                    getFlats.needUpdateMap = true
-                   
-                    if getFlats.dataFilter.count == 0  {
-                        getFlats.note = "Не найдено"
-                        
-                        
-                    } else {
-                            getFlats.note = "\(getFlats.dataFilter.count)"
-                    }
+                    data.query = data.query.whereField("developer", in: devArr)
                     
                 }
                 
+                
+                if data.tags.filter({ (j) -> Bool in
+                    return j.data.type == .underground
+                }).count != 0 {
+                    
+                    for i in data.tags.filter({ (j) -> Bool in
+                                                return j.data.type == .underground }) {
+                        
+                        
+                        data.query = data.query.whereField("underground.\(i.data.name)", isEqualTo: true)
+                        
+                    }
+                     
+                    
+                }
+                
+                if data.tags.filter({ (j) -> Bool in
+                    return j.data.type == .complexName
+                }).count != 0 {
+                    
+                    for i in data.tags.filter({ (j) -> Bool in
+                                                return j.data.type == .complexName }) {
+                        
+                        data.query = data.query.whereField("complexName", isEqualTo: i.data.name)
+                    }
+
+                   
+                    
+                }
+                
+                if data.tags.filter({ (j) -> Bool in
+                    return j.data.type == .district
+                }).count != 0 {
+                    
+                   // var districtArr = [String]()
+                    for i in data.tags.filter({ (j) -> Bool in
+                                                return j.data.type == .district }) {
+                                                
+                        data.query = data.query.whereField("district", isEqualTo: i.data.name)
+                        
+                        
+                    }
+
+                    
+                }
+                
+                if !data.decodeFloor.isEmpty {
+                    let decodeFloorFrom = Int((data.floor[0] * 40).rounded())
+                    let decodeFloorTo = Int((data.floor[1] * 40).rounded())
+                    
+                    let arr = Array(Set(decodeFloorFrom...decodeFloorTo)).sorted(by : {$0 < $1})
+                        print(arr)
+                    
+                    for i in arr {
+                        
+                    
+                    data.query = data.query.whereField("floor", isEqualTo: i)
+                    }
+
+                }
+                
+                if defaultArrDeadline.count != data.deadline.count {
+                    //data.query = data.query.whereField("deadline", in: data.deadline)
+
+                    for i in data.deadline {
+                        
+                    
+                    data.query = data.query.whereField("deadline", isEqualTo: i)
+                    }
+                }
+                
+                if defaultArrToMetro.count != data.timeToMetro.count {
+                    //data.query = data.query.whereField("deadline", in: data.deadline)
+
+                    for i in data.deadline {
+                        
+
+                        data.query = data.query.whereField("toUnderground", isEqualTo: i)
+                    }
+                }
+
+                
+                if defaultArrType.count != data.type.count {
+
+                    for i in data.type {
+                    data.query = data.query.whereField("roomType", isEqualTo: i)
+                    }
+                }
+                
+                if defaultArrRepair.count != data.repair.count {
+
+                    for i in data.repair {
+                    data.query = data.query.whereField("repair", isEqualTo: i)
+                    }
+                }
+                
+                
+                if data.ifApart == "Только апартаменты" {
+                    data.query = data.query.whereField("type", isEqualTo: "Апартаменты")
+                } else if data.ifApart == "Исключить апартаменты"{
+                    data.query = data.query.whereField("type", isEqualTo: "Новостройки")
+                }
+                
+                if data.ifApart == "Только уступки застройщика" {
+                    data.query = data.query.whereField("cession", isEqualTo: "Уступка застройщика")
+                } else if data.ifApart == "Исключить уступки застройщика"{
+                    data.query = data.query.whereField("cession", isEqualTo: "default")
+                }
+                
+                data.query = data.query.whereField("price", isGreaterThanOrEqualTo: Int(decodePerToPriceFrom / 100000) * 100000)
+                    .order(by: "price", descending: false)
+                
+                
+                
+                getFlats.query = data.query
+                
+                getFlats.startKey.removeAll()
+                
+                
+                getFlats.getPromiseFlatTotal().done { (totalData) in
+                    
+                      if totalData["foundCount"] as? Int ?? 0 == 0  {
+                        getFlats.note = "Не найдено"
+                        
+                        getFlats.data.removeAll()
+
+
+                      } else {
+                        getFlats.note = "\(getFlats.foundCount)"
+                      }
+                    
+                    print(totalData["anno"])
+                    
+                        getFlats.getPromiseAnno(complexNameArray: totalData["anno"] as? [String] ?? [String]()).done { (annoAndObjData) in
+
+                            getFlats.annoData = annoAndObjData["annotations"] as! [CustomAnnotation]
+
+                           
+
+                            getFlats.objects = annoAndObjData["objects"] as! [taObjects]
+                      
+                            getFlats.needUpdateMap = true
+                        
+                        
+                        
+                            getFlats.getPromiseFlat()
+                            .done { (data) in
+
+                                getFlats.data = data
+                               
+                            }.catch { (er) in
+                                print(er)
+                            }
+
+                    }.catch { (er) in
+                        print(er)
+                    }
+                    
+                    
+            }.catch { (er) in
+                print(er)
+            }
+                    
+                    
                 self.showFilterView.toggle()
+
             } label: {
                
                     Text("ПОИСК").foregroundColor(Color.white)
@@ -289,64 +300,160 @@ struct FilterView: View {
             }.padding(.horizontal)
             
         }
+      //  ForEach(sliders) { i in
+            
+           
+            SliderView(title: "Стоимость", decode: data.decodePrice, data: $data.flatPrice)
+            
+                
+//        SliderView(title: "Площадь", decode: data.decodeTotalS, data: $data.totalS)
+//
+//        SliderView(title: "Площадь кухни", decode: data.decodeKitchenS, data: $data.kitchenS)
+            
+        SliderView(title: "Этаж", decode: data.decodeFloor, data: $data.floor)
+      
         
-        
-            Text($checkKey.wrappedValue)
-                .font(.system(.body, design: .rounded))
-                .fontWeight(.black).padding(.horizontal).foregroundColor(.gray)
-                .multilineTextAlignment(.center)
-            
-        ZStack{
-            
-            // Price
-            ProgressBar(height: size - (1 * size / 7), to: $data.flatPrice[1], color: Color("ColorMain"), movable: true, min: 0, max: 1, fromable: true, from: $data.flatPrice[0])
-                .onReceive(data.publisher) { (v) in
-                    self.needRequestToFB = true
-                    
-                    data.flatPrice[0] = v[0]
-                    data.flatPrice[1] = v[1]
-                }
-  
-            // totalS
-            ProgressBar(height: size - (2 * size / 7), to: $data.totalSto, color: Color.orange, movable: true, min: 0, max: 1, fromable: true,  from: $data.totalSfrom)
+
+            .onReceive(data.publisher) { (v) in
                 
-         
-            
-            // timeToMetro
-            ProgressBar(height: size - (3 * size / 7) , to: $data.timeToMetro[1], color: Color("ColorLightBlue"), movable: true, min: 0, max: 1, fromable: true , from: $data.timeToMetro[0])
                 
-            
-            // kitchenS
-            ProgressBar(height: size - (4 * size / 7) , to: $data.kitchenS[1], color: Color("ColorGreen"), movable: true, min: 0, max: 1, fromable: true , from: $data.kitchenS[0])
-                
-             
-            // floor
-            ProgressBar(height: size - (5 * size / 7), to: $data.floor[1], color: .purple, movable: true, min: 0, max: 1, fromable: true,  from: $data.floor[0])
-     
-                VStack {
-                    
-                    Text($checkValue.wrappedValue).fontWeight(.black).padding()
-                        .font(.system(.body, design: .rounded)).multilineTextAlignment(.center)
-                        .foregroundColor(colorScheme == .dark ?   Color.white :  Color.gray)
-                }
-                .frame(width: size - (5 * size / 7), height: size - (5 * size / 7))
-                
+                data.flatPrice[0] = v[0]
+                data.flatPrice[1] = v[1]
                
-               
-            
+                let decodePerToPriceFrom = 1000000 * pow(1.0225, (data.flatPrice[0] * 320000000 - 1000000) /  1000000)
                 
+                let decodePerToPriceTo = 1000000 * pow(1.0225, (data.flatPrice[1] * 320000000 - 1000000) /  1000000)
                 
+                if data.flatPrice[0] == 0.0 && data.flatPrice[1] >= 0.78 {
+                    data.decodePrice = ""
+                    
+                } else if data.flatPrice[0] == 0.0 && data.flatPrice[1] < 0.78 {
+                    data.decodePrice = "до "  + String(format: "%.1f", Double(decodePerToPriceTo) / 1000000.0) + " млн"
+                } else if data.flatPrice[0]  > 0.0 && data.flatPrice[1] < 0.78 {
+                    
+                    data.decodePrice = "от "  + String(format: "%.1f", Double(decodePerToPriceFrom) / 1000000.0) + " млн "
+                        + "до "  + String(format: "%.1f", Double(decodePerToPriceTo) / 1000000.0) + " млн"
+                } else {
+                    data.decodePrice = "от "  + String(format: "%.1f", Double(decodePerToPriceFrom) / 1000000.0) + " млн"
+                }
                 
-                
-            }.padding()
+            }
         
-        ScrollView(.horizontal, showsIndicators: false) {
-        HStack(spacing: 15){
-            TabButtonForSpecialType(selected: $data.ifApart, title: "Только апартаменты")
-            TabButtonForSpecialType(selected: $data.ifApart, title: "Исключить апартаменты")
-        }.padding(.horizontal)
+        
+        
+            .onReceive(data.publisher2) { _ in
+
+                
+               // data.totalS[0] = v[0]
+               // data.totalS[1] = v[1]
+
+                let decodePerToTotalSFrom = 10 * pow(1.01, (data.totalS[0] * 550 - 10))
+
+                let decodePerToTotalSTo = 10 * pow(1.01, (data.totalS[1] * 550 - 10))
+
+                if data.totalS[0] == 0.0 && data.totalS[1] >= 0.78 {
+                    data.decodeTotalS = ""
+
+                } else if data.totalS[0] == 0.0 && data.totalS[1] < 0.78 {
+                    data.decodeTotalS = "до "  + String(format: "%.1f", Double(decodePerToTotalSTo)) + " м²"
+                    
+                } else if data.totalS[0]  > 0.0 && data.totalS[1] < 0.78 {
+
+                    data.decodeTotalS = "от "  + String(format: "%.1f", Double(decodePerToTotalSFrom)) + " м² "
+                        + "м² "  + String(format: "%.1f", Double(decodePerToTotalSTo)) + " м²"
+                } else {
+                    data.decodeTotalS = "от "  + String(format: "%.1f", Double(decodePerToTotalSFrom) ) + " м²"
+                }
+
+            }
+        
+            .onReceive(data.publisher4) { _ in
+
+                
+              
+
+                let decodePerToKitchenSFrom = 1 * pow(1.0295, (data.kitchenS[0] * 250 - 1))
+
+                let decodePerToKitchenSTo = 1 * pow(1.0295, (data.kitchenS[1] * 250 - 1))
+
+                if data.kitchenS[0] == 0.0 && data.kitchenS[1] >= 0.78 {
+                    data.decodeKitchenS = ""
+
+                } else if data.kitchenS[0] == 0.0 && data.kitchenS[1] < 0.78 {
+                    
+                    data.decodeKitchenS = "до "  + String(format: "%.1f", Double(decodePerToKitchenSTo)) + " м²"
+                    
+                } else if data.kitchenS[0]  > 0.0 && data.kitchenS[1] < 0.78 {
+
+                    data.decodeKitchenS = "от "  + String(format: "%.1f", Double(decodePerToKitchenSFrom)) + " м² "
+                        
+                        + "м² "  + String(format: "%.1f", Double(decodePerToKitchenSTo)) + " м²"
+                } else {
+                    data.decodeKitchenS = "от "  + String(format: "%.1f", Double(decodePerToKitchenSFrom) ) + " м²"
+                }
+
+            }
+        
+            .onReceive(data.publisher5) { (v) in
+                
+                
+                let decodeFloorFrom = data.floor[0] * 40
+                let decodeFloorTo = data.floor[1] * 40
+                        
+                if data.floor[0] == 0.0 && data.floor[1] >= 0.78 {
+                    data.decodeFloor = ""
+                    
+                } else if data.floor[0] == 0.0 && data.floor[1] < 0.78 {
+                    data.decodeFloor = "до "  + String(format: "%.0f", Double(decodeFloorTo).rounded())
+                } else if data.floor[0]  > 0.0 && data.floor[1] < 0.78 {
+                    
+                    data.decodeFloor = "от "  + String(format: "%.0f", Double(decodeFloorFrom).rounded()) + " "
+                        + "до "  + String(format: "%.0f", Double(decodeFloorTo).rounded())
+                } else {
+                    data.decodeFloor = "от "  + String(format: "%.0f", Double(decodeFloorFrom).rounded())
+                }
+                
+            }
+        
+
+        bottom
+       
+
+
+        
+    }.navigationBarTitle("")
+    .navigationBarHidden(true)
+        
+    })
+        .scrollIndicatorsEnabled(horizontal: false, vertical: false)
+
+    }
+    
+    var body: some View {
+       
+        NavigationView{
+           // ScrollView(.vertical, showsIndicators: false) {
+//            var IpotekaCollectionView: some View
+//        {
+           // SliderView(percentage: $data.flatPrice[0])
+
+        scroll
+        
+               
+        } .dismissKeyboardOnTap()
+        
+       
+    }
+    
+    var bottom : some View {
+        VStack {
+        VStack(alignment: .leading, spacing : 5) {
+        
             
-        }
+        Text("Отделка")
+            .fontWeight(.light)
+           // .font(.title)
+            .padding(.horizontal)
         
         ScrollView(.horizontal, showsIndicators: false) {
         HStack(spacing: 15){
@@ -359,6 +466,11 @@ struct FilterView: View {
         .padding(.horizontal)
             
         }
+            
+        Text("Количество комнат")
+            .fontWeight(.light)
+           // .font(.title)
+            .padding(.horizontal)
         
         ScrollView(.horizontal, showsIndicators: false) {
         HStack(spacing: 15){
@@ -371,6 +483,11 @@ struct FilterView: View {
         .padding(.horizontal)
             
         }
+            
+        Text("Срок сдачи")
+            .fontWeight(.light)
+            //.font(.title)
+            .padding(.horizontal)
         
         ScrollView(.horizontal, showsIndicators: false) {
         HStack(spacing: 15){
@@ -383,206 +500,57 @@ struct FilterView: View {
         .padding(.horizontal)
             
         }
+        }
+        
+        VStack(alignment: .leading, spacing : 5) {
+            Text("До метро")
+                .fontWeight(.light)
+                //.font(.title)
+                .padding(.horizontal)
 
-                    
-            
-            
-//                    VStack(alignment: .leading) {
-//
-//
-//
-//                        Text("Трудоустройство")
-//                           // .foregroundColor(.secondary)
-//                            .fontWeight(.light)
-//                            //.font(.title)
-//                            .fixedSize(horizontal: false, vertical: true).padding().multilineTextAlignment(.leading)
-//
-//                    HStack(spacing: 15){
-//
-//                        TabButton(selected: $to.workType, title: "Найм")
-//                        Spacer()
-//                        TabButton(selected: $to.workType , title: "ИП")
-//                        Spacer()
-//                        TabButton(selected: $to.workType, title: "Бизнес")
-//
-//                    }.onReceive(to.publisherWorkType) { (v) in
-//                        checkKey = ""
-//                        checkValue = ""
-//
-//                        self.to.workType = v
-//
-//                        if v == "Найм" {
-//                            sliderText = "Минимальный стаж на текущем месте"
-//                        } else if v == "ИП" {
-//                            sliderText = "Минимальный срок владения ИП"
-//                        } else {
-//                            sliderText = "Минимальный срок владения бизнесом"
-//                        }
-//
-//
-//
-//
-//                        to.findPercent()
-//                    }
-//                                  .background(Color.white.opacity(0.08))
-//                                  .clipShape(Capsule())
-//                                  .padding(.horizontal)
-//
-//                    }
-//                    VStack(alignment: .leading) {
-//                      //  HStack{
-//                            Text($sliderText.wrappedValue + " ")
-//                                //.foregroundColor(.secondary)
-//                                .fontWeight(.light)
-//                               // .font(.subheadline)
-//                                .fixedSize(horizontal: false, vertical: true)
-//                                .padding([.horizontal,.top])
-//                                .multilineTextAlignment(.leading)
-//
-//                           // Spacer()
-//                            Text(String(format: "%.0f", to.minCurrentWorkDurationSlider) + getMonthString(to: CGFloat(to.minCurrentWorkDurationSlider)))
-//                                .foregroundColor(colorScheme == .dark ? Color.white : Color("ColorMain"))
-//                                .fontWeight(.heavy)
-//                                .font(.title)
-//                                .fixedSize(horizontal: false, vertical: true)
-//                                .padding(.horizontal)
-//                                .multilineTextAlignment(.trailing)
-//
-//                       // }.padding([.horizontal, .top])
-//
-//
-//                        if to.workType == "Бизнес" {
-//                            withAnimation {
-//
-//                                VStack(alignment: .leading) {
-//
-//                                Text("Минимальная доля владения бизнесом ")
-//                                   // .foregroundColor(.secondary)
-//                                    .fontWeight(.light)
-//                                    //.font(.subheadline)
-//                                    .fixedSize(horizontal: false, vertical: true)
-//
-//                                    .multilineTextAlignment(.leading)
-//                             //  Spacer()
-//                                Text(String(format: "%.0f", to.partOfBusiness * 100) + "%")
-//                                    .foregroundColor(colorScheme == .dark ? Color.white : Color("ColorMain"))
-//                                    .fontWeight(.heavy)
-//                                    .font(.title)
-//                                    .fixedSize(horizontal: false, vertical: true)
-//
-//
-//                                    .multilineTextAlignment(.leading)
-//
-//                            }.padding([.horizontal, .top])
-//                            }
-//                        }
-//
-//
-//
-//                        Text("Подтверждение дохода")
-//                           // .foregroundColor(.secondary)
-//                            .fontWeight(.light)
-//                           // .font(.title)
-//                            .fixedSize(horizontal: false, vertical: true)
-//                            .padding()
-//                            .multilineTextAlignment(.leading)
-//
-//                    ScrollView(.horizontal, showsIndicators: false) {
-//                    HStack(spacing: 15){
-//
-//                                      TabButton(selected: $to.checkMoneyType, title: "2-НДФЛ")
-//
-//                                      TabButton(selected: $to.checkMoneyType, title: "Справка по форме банка")
-//                                    TabButton(selected: $to.checkMoneyType, title: "По двум документам")
-//                                    TabButton(selected: $to.checkMoneyType, title: "Выписка из ПФР")
-//
-//                                  }.onReceive(to.publisherCheckMoneyType) { (v) in
-//                                    checkKey = ""
-//                                    checkValue = ""
-//                                    self.to.checkMoneyType = v
-//                                    to.findPercent()
-//                                }
-//                                  .background(Color.white.opacity(0.08))
-//                                  .clipShape(Capsule())
-//                                  .padding(.horizontal)
-//
-//                        }
-//
-//
-//
-//                        Text("Госпрограммы")
-//                          //  .foregroundColor(.secondary)
-//                            .fontWeight(.light)
-//                          //  .font(.title)
-//                            .fixedSize(horizontal: false, vertical: true)
-//                            .padding([.horizontal, .top])
-//                            .multilineTextAlignment(.leading)
-//
-//                    ScrollView(.horizontal, showsIndicators: false) {
-//                    HStack(spacing: 15){
-//                        TabButtonForSpecialType(selected: $to.checkSpecialType, title: "Госпрограмма 6,5%")
-//                                      TabButtonForSpecialType(selected: $to.checkSpecialType, title: "Военная ипотека")
-//
-//                        TabButtonForSpecialType(selected: $to.checkSpecialType, title: "Семейная ипотека")
-//
-//
-//
-//                                  }.onReceive(to.publisherCheckSpecialType) { (v) in
-//                                    checkKey = ""
-//                                    checkValue = ""
-//                                    self.to.checkSpecialType = v
-//                                    to.findPercent()
-//                                }
-//
-//                    .background(Color.white.opacity(0.08))
-//
-//                                  .clipShape(Capsule())
-//                    .padding(.horizontal)
-//
-//
-//                        }
-//
-//                        Text("Доход за пределами РФ")
-//                           // .foregroundColor(.secondary)
-//                            .fontWeight(.light)
-//                           // .font(.title)
-//                            .fixedSize(horizontal: false, vertical: true)
-//                            .padding()
-//                            .multilineTextAlignment(.leading)
-//                       swipeView
-//
-//
-//
-//                    }
-            //.padding(.bottom, 55)
-        
-        
-        
-        
-      
-        
-    }.navigationBarTitle("")
-    .navigationBarHidden(true)
-        
-    })
-        .scrollIndicatorsEnabled(horizontal: false, vertical: false)
+            ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 15){
 
+                ForEach(defaultArrToMetro, id: \.self) { i  in
+                    TabButtonChooseFromNowToDeadlineOrDefault(selected: $data.timeToMetro, defaultArr: defaultArrToMetro, title: i)
+                }
+
+            }
+            .padding(.horizontal)
+
+            }
+            
+            Text("Апартаменты")
+                .fontWeight(.light)
+                //.font(.title)
+                .padding(.horizontal)
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 15){
+                TabButtonForSpecialType(selected: $data.ifApart, title: "Только апартаменты")
+                TabButtonForSpecialType(selected: $data.ifApart, title: "Исключить апартаменты")
+            }.padding(.horizontal)
+            }
+                Text("Уступки застройщика")
+                    .fontWeight(.light)
+                    //.font(.title)
+                    .padding(.horizontal)
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 15){
+                    TabButtonForSpecialType(selected: $data.ifCession, title: "Только уступки застройщика")
+                    TabButtonForSpecialType(selected: $data.ifCession, title: "Исключить уступки застройщика")
+                }.padding(.horizontal)
+                
+                }
+        }
+        .padding(.top, 5)
+        .padding(.bottom)
     }
-    var body: some View {
-       
-        NavigationView{
-           // ScrollView(.vertical, showsIndicators: false) {
-//            var IpotekaCollectionView: some View
-//        {
-            
-        scroll
-        
-               
-        } .dismissKeyboardOnTap()
-        
-       
     }
 }
+
+
 struct PlaceHolder<T: View>: ViewModifier {
     var placeHolder: T
     var show: Bool
@@ -639,22 +607,7 @@ struct CustomSearchBar : View {
                     
             }.padding(.horizontal)
                 
-            
-//                if self.txt != ""{
-//
-//                    Button(action: {
-//
-//                        self.txt = ""
-//
-//                    }) {
-//
-//                        Text("Cancel")
-//                    }
-//                  //  .foregroundColor(.black)
-//
-//                }
 
-           // .padding()
             
             if self.txt != ""{
                 
@@ -672,7 +625,21 @@ struct CustomSearchBar : View {
                 {i in
                   
                     HStack {
-                    Text(i.name) .fontWeight(.light)
+                        
+                        if i.type == .complexName {
+                    Text("ЖК " + i.name) .fontWeight(.light)
+                            
+                        } else if i.type == .underground {
+                            
+
+                            Image("metro").resizable().renderingMode(.template).foregroundColor(self.getMetroColor(i.name)).frame(width: 15, height: 12)
+                            
+                            
+                            Text(i.name) .fontWeight(.light)
+                                    
+                        } else {
+                            Text(i.name) .fontWeight(.light)
+                        }
                     
                     Spacer()
                     }.onTapGesture {
@@ -703,45 +670,6 @@ struct CustomSearchBar : View {
     }
 }
 
-//class getData : ObservableObject{
-//
-//    @Published var datas = [dataType]()
-//    @Published var tags = [tagSearch]()
-//    init() {
-//
-//        let db = Firestore.firestore()
-//
-//        db.collection("objects").getDocuments { (snap, err) in
-//
-//            if err != nil{
-//
-//                print((err?.localizedDescription)!)
-//                return
-//            }
-//
-//            for i in snap!.documents{
-//
-//               // let id = i.documentID
-//                let name = i.get("complexName") as! String
-//                let developer = i.get("developer") as! String
-//
-//                self.datas.append(dataType(id: UUID().uuidString, name: name, type: .complexName))
-//
-//                if self.datas.filter({$0.type == .developer && $0.name == developer }).count == 0 {
-//
-//
-//                self.datas.append(dataType(id: UUID().uuidString, name: developer, type: .developer))
-//             }
-//            }
-//        }
-//
-//        let undegroundArray = ["Девяткино", "Гражданский проспект"]
-//
-//        for i in undegroundArray {
-//            self.datas.append(dataType(id: UUID().uuidString, name: i, type: .underground))
-//        }
-//    }
-//}
 
 struct dataType : Identifiable {
     
@@ -774,20 +702,112 @@ enum typeSearchTextField {
     case developer
     case complexName
     case underground
-    
-    
-//    fileprivate func emptySpaceHeight(in size: CGSize) -> CGFloat? {
-//        switch self {
-//        case .points(let height):
-//            let remaining = size.height - height
-//            return max(remaining, 0)
-//        case .percentage(let percentage):
-//            precondition(0...100 ~= percentage)
-//            let remaining = 100 - percentage
-//            return size.height / 100 * remaining
-//        case .infered:
-//            return nil
-//        }
-//    }
+    case district
+
 }
-   
+
+struct RangeSlider : View {
+    @Binding var from : CGFloat
+    @Binding var to : CGFloat
+    
+    var totalW = UIScreen.main.bounds.width - 30
+    
+    var body: some View {
+        ZStack(alignment: .leading) {
+            Capsule().fill(Color.gray.opacity(0.6))
+                .frame(height: 4)
+            
+            Capsule().fill(Color("ColorMain"))
+                .frame(width: self.to * totalW - self.from  * totalW, height: 4)
+                .offset(x: self.from * totalW + 36)
+            
+            HStack(spacing: 0) {
+                
+                ZStack {
+
+                    Circle().fill(Color("ColorMain"))
+                    .frame(width: 36, height: 36)
+                   
+
+                    Circle().fill(Color.white).shadow(color: Color.black.opacity(0.15), radius: 5, x: 5, y: 5)
+                        .frame(width: 30, height: 30)
+                        
+                            
+                    
+                }
+                    
+                    
+                .offset(x:  self.from * totalW)
+                
+                    .gesture(DragGesture()
+                                .onChanged({ (value) in
+                                    if value.location.x >= 0 && value.location.x <= self.to * (totalW + 30) {
+                                        
+                                        self.from = value.location.x /  (totalW + 30)
+
+                                    }
+                                    
+                                    
+                                })
+                    )
+                // to
+                
+                ZStack {
+
+                    Circle().fill(Color("ColorMain"))
+                    .frame(width: 36, height: 36)
+                   
+
+                    Circle().fill(Color.white).shadow(color: Color.black.opacity(0.15), radius: 5, x: 5, y: 5)
+                        .frame(width: 30, height: 30)
+                        
+                            
+                    
+                }
+                    
+                    
+                .offset(x:  self.to * totalW)
+                
+                    .gesture(DragGesture()
+                                .onChanged({ (value) in
+                                    if value.location.x <= totalW - 51 && value.location.x > self.from * (totalW + 30) {
+                                        
+                                        self.to = value.location.x / (totalW + 30)
+
+                                    }
+                                    
+                                    
+                                })
+                    )
+                
+                
+            }
+            
+        }
+    }
+    
+}
+
+
+struct SliderView  : View {
+    
+    var title : String
+    
+    var decode : String
+    
+    @Binding var data : [CGFloat]
+    
+    var body : some View {
+        HStack {
+        Text(title)
+            .fontWeight(.light)
+           
+            
+            Text(decode)
+                .fontWeight(.heavy)
+            
+        } .padding(.horizontal)
+        RangeSlider(from: $data[0], to: $data[1])
+            .padding(.horizontal)
+    }
+}

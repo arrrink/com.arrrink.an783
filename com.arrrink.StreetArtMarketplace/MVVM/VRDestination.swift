@@ -13,10 +13,17 @@ struct VRDestination: View {
     @EnvironmentObject private var navigationStack: NavigationStack
     @Binding var showRepairAR : Bool
     
-    @State var currentRoom = "0"
-    @State var tab = "Ваниль"
-    
+    @State var currentRoom = 0
+    var data = ["Скандинавия Нео" : 0, "Классика Нео" : 1 , "Эко-стиль Нео" : 2, "Скандинавия Модерн" : 3, "Классика Модерн" : 4, "Эко-стиль Модерн" : 5, "" : 6]
+    var btns = [VRButton(id: 0, name: "Скандинавия Нео"),
+                VRButton(id: 3, name: "Классика Нео"),
+                VRButton(id: 2, name: "Эко-стиль Нео"),
+                VRButton(id: 1, name: "Скандинавия Модерн"),
+                VRButton(id: 4, name: "Классика Модерн"),
+                VRButton(id: 5, name: "Эко-стиль Модерн"),
+    ]
     var getVRData = SendRoomTypeToVRView()
+    
     var body: some View {
        
         ZStack(alignment: .topLeading){
@@ -31,7 +38,8 @@ struct VRDestination: View {
             VStack(alignment: .leading){
             
                 Button {
-                    self.showRepairAR.toggle()
+                   // self.showRepairAR.toggle()
+                    self.navigationStack.pop()
                 } label: {
                     HStack {
                        
@@ -39,9 +47,11 @@ struct VRDestination: View {
                         .resizable()
                         .renderingMode(.template)
                         .frame(width: 25, height: 25)
-                        .foregroundColor( Color("ColorMain"))
+                        .foregroundColor( Color.white)
                         .padding(10)
-                    } .background(Color.white).cornerRadius(23).padding(.leading,10)
+                    }
+                    //.background(Color.white)
+                    .cornerRadius(23).padding(.leading,10)
                 }
 
             Spacer()
@@ -57,72 +67,22 @@ struct VRDestination: View {
 //                    .padding(.bottom, 10)
                     
                     ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                    Button {
-                        currentRoom = currentRoom == "0" ? "1" : "0"
-                        print(currentRoom)
-                        NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: nil, userInfo: ["current": "\(currentRoom)"])
-                    } label: {
-                        VStack {
-                           
-                            Text("Кухня").padding().foregroundColor(Color("ColorMain"))
-                        } .background(Color.white).cornerRadius(23).padding(.leading,10)
-                        
-                    }.padding(.leading)
-                        
-                        // 2
-                        Button {
-                            currentRoom = currentRoom == "0" ? "1" : "0"
-                            print(currentRoom)
-                            NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: nil, userInfo: ["current": "\(currentRoom)"])
-                        } label: {
-                            VStack {
-                               
-                                Text("Гостинная").padding().foregroundColor(Color("ColorMain"))
-                            } .background(Color.white).cornerRadius(23).padding(.leading,10)
-                        }
-                            
-                            // 3
+                        HStack(spacing: 15) {
+                        ForEach(btns) { i in
                             Button {
-                                currentRoom = currentRoom == "0" ? "1" : "0"
-                                print(currentRoom)
+                                currentRoom = i.id
+
                                 NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: nil, userInfo: ["current": "\(currentRoom)"])
                             } label: {
                                 VStack {
                                    
-                                    Text("Свободная планировка").padding().foregroundColor(Color("ColorMain"))
-                                } .background(Color.white).cornerRadius(23).padding(.leading,10)
+                                    Text(i.name).padding().foregroundColor(Color.white)
+                                } .background(Capsule().fill(Color.white).opacity(0.2))
+                                .padding(.leading,10)
+                            }
                         
-                   
                         }
-                        
-                        //4
-                        
-                        //
-                        Button {
-                            currentRoom = currentRoom == "0" ? "1" : "0"
-                            print(currentRoom)
-                            NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: nil, userInfo: ["current": "\(currentRoom)"])
-                        } label: {
-                            VStack {
-                               
-                                Text("Столовая").padding().foregroundColor(Color("ColorMain"))
-                            } .background(Color.white).cornerRadius(23).padding(.leading,10)
-                    }
-                        // 5
-                        Button {
-                            currentRoom = currentRoom == "0" ? "1" : "0"
-                            print(currentRoom)
-                            NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: nil, userInfo: ["current": "\(currentRoom)"])
-                        } label: {
-                            VStack {
-                               
-                                Text("Столовая").padding().foregroundColor(Color("ColorMain"))
-                            } .background(Color.white).cornerRadius(23).padding(.leading,10)
-                    
-               
-                        }.padding(.trailing)
-                }
+                    }.padding(.horizontal)
                 }.padding(.bottom, 15)
            // }
                 }
@@ -136,3 +96,7 @@ struct VRDestination: View {
     }
 }
 
+struct VRButton : Identifiable {
+    var id : Int
+    var name : String
+}

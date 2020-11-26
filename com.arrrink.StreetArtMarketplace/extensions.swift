@@ -11,7 +11,8 @@ import NavigationStack
 import UIKit
 import Firebase
 import Combine
-
+import SDWebImageSwiftUI
+import WebKit
 
 struct Blur: UIViewRepresentable {
     var style: UIBlurEffect.Style = .systemMaterial
@@ -242,9 +243,9 @@ struct PinchToZoomDefault: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .scaleEffect(scale, anchor: anchor)
-            .offset(offset)
-            .animation(isPinching ? .none : .spring())
+//            .scaleEffect(scale, anchor: anchor)
+//            .offset(offset)
+            // .animation(isPinching ? .none : .spring())
             .overlay(PinchZoomDefault(scale: $scale, anchor: $anchor, offset: $offset, isPinching: $isPinching))
     }
 }
@@ -280,17 +281,14 @@ struct PinchToZoomDefault: ViewModifier {
         }
     }
     
-    private(set) var currentImg: String = "" {
-        didSet {
-            delegate?.pinchZoomView(self, didChangeCurrentImg: currentImg)
-        }
-    }
+   
     
    // var imgString: String
 
     private var startLocation: CGPoint = .zero
     private var location: CGPoint = .zero
     private var numberOfTouches: Int = 0
+    private var newsArray = [News]()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -316,33 +314,6 @@ struct PinchToZoomDefault: ViewModifier {
             startLocation = gesture.location(in: self)
             anchor = UnitPoint(x: startLocation.x / bounds.width, y: startLocation.y / bounds.height)
             numberOfTouches = gesture.numberOfTouches
-            
-           // currentImg = imgString
-            print(currentImg)
-//
-//            let win = UIWindow(frame: UIScreen.main.bounds)
-//            let vc = UIViewController()
-//            vc.view.backgroundColor = .green
-//            vc.view.frame = UIScreen.main.bounds
-//            win.rootViewController = vc
-//            win.windowLevel = UIWindow.Level.alert + 1  // Swift 3-4: UIWindowLevelAlert + 1
-//            win.makeKeyAndVisible()
-//
-//            print("h")
-//            let view = UIView()
-//            view.backgroundColor = .green
-//
-//            //vc.present(P, animated: true, completion: nil)
-//            view.frame = UIScreen.main.bounds
-//
-//            self.clipsToBounds = false
-//            self.translatesAutoresizingMaskIntoConstraints = false
-//            self.frame = UIScreen.main.bounds
-           
-            
-        
-            
-            
         case .changed:
             if gesture.numberOfTouches != numberOfTouches {
                 // If the number of fingers being used changes, the start location needs to be adjusted to avoid jumping.
@@ -360,7 +331,6 @@ struct PinchToZoomDefault: ViewModifier {
 
         case .ended, .cancelled, .failed:
             isPinching = false
-            currentImg = ""
             scale = 1.0
             anchor = .center
             offset = .zero
@@ -368,18 +338,7 @@ struct PinchToZoomDefault: ViewModifier {
             break
         }
     }
-    
-    @objc func methodOfReceivedNotification(notification: Notification) {
-        
-        if let string = notification.userInfo?["currentImgPinch"] as? String {
-             print(string)
-//            if UIImage(named: string) != nil {
-//                 
-//                print("next")
-//               // nextRepair()
-//              }
-          }
-    }
+
 
 }
 
@@ -392,8 +351,7 @@ protocol PinchZoomViewDelgate: AnyObject {
     func pinchZoomView(_ pinchZoomView: PinchZoomView, didChangeAnchor anchor: UnitPoint)
     func pinchZoomView(_ pinchZoomView: PinchZoomView, didChangeOffset offset: CGSize)
     
-    func pinchZoomView(_ pinchZoomView: PinchZoomView, didChangeCurrentImg currentImg: String)
-    func pinchZoomView(_ pinchZoomView: PinchZoomView, willSetImg imgString: String)
+    
 }
 
 struct PinchZoom: UIViewRepresentable {
@@ -402,9 +360,7 @@ struct PinchZoom: UIViewRepresentable {
     @Binding var anchor: UnitPoint
     @Binding var offset: CGSize
     @Binding var isPinching: Bool
-    @Binding var currentImg : String
     
-    var imgString : String
 
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -419,14 +375,7 @@ struct PinchZoom: UIViewRepresentable {
     func updateUIView(_ pageControl: PinchZoomView, context: Context) { }
 
     class Coordinator: NSObject, PinchZoomViewDelgate {
-        func pinchZoomView(_ pinchZoomView: PinchZoomView, didChangeCurrentImg currentImg: String) {
-            pinchZoom.currentImg = currentImg
-        }
-        
-        func pinchZoomView(_ pinchZoomView: PinchZoomView, willSetImg imgString: String) {
-            pinchZoom.imgString = imgString
-        }
-        
+      
         
         
         var pinchZoom: PinchZoom
@@ -453,39 +402,39 @@ struct PinchZoom: UIViewRepresentable {
     }
 }
 
-struct PinchToZoom: ViewModifier {
-    @Binding var scale: CGFloat
-    @Binding var anchor: UnitPoint
-    @Binding var offset: CGSize
-    @Binding var isPinching: Bool
-    @Binding var currentImg : String
-    
-    var imgString : String
-    
-    func body(content: Content) -> some View {
-        
-              content
-                .scaleEffect(scale, anchor: anchor)
-                .offset(offset)
-                .animation(isPinching ? .none : .spring())
-                
-                
-            .overlay(
-                PinchZoom(scale: $scale, anchor: $anchor, offset: $offset, isPinching: $isPinching, currentImg : $currentImg, imgString : imgString)
-            )
-        
-        
-    }
-}
-
-extension View {
-    func pinchToZoom(scale: Binding<CGFloat>, anchor: Binding<UnitPoint>, offset: Binding<CGSize>, isPinching: Binding<Bool>, currentImg: Binding<String>, imgString: String) -> some View {
-        self.modifier(PinchToZoom(scale: scale, anchor: anchor, offset: offset, isPinching: isPinching, currentImg: currentImg, imgString: imgString))
-    }
-    func pinchToZoomDefault() -> some View {
-        self.modifier(PinchToZoomDefault())
-    }
-}
+//struct PinchToZoom: ViewModifier {
+//    @Binding var scale: CGFloat
+//    @Binding var anchor: UnitPoint
+//    @Binding var offset: CGSize
+//    @Binding var isPinching: Bool
+//
+//
+//    func body(content: Content) -> some View {
+//
+//        WebImage(url: URL(string: imgString))
+//            .resizable()
+//            .scaledToFit()
+////                .scaleEffect(scale, anchor: anchor)
+////                .offset(offset)
+////                .animation(isPinching ? .none : .spring())
+//
+//
+//            .overlay(
+//                PinchZoom(scale: $scale, anchor: $anchor, offset: $offset, isPinching: $isPinching)
+//            )
+//
+//
+//    }
+//}
+//
+//extension View {
+//    func pinchToZoom(scale: Binding<CGFloat>, anchor: Binding<UnitPoint>, offset: Binding<CGSize>, isPinching: Binding<Bool>) -> some View {
+//        self.modifier(PinchToZoom(scale: scale, anchor: anchor, offset: offset, isPinching: isPinching))
+//    }
+//    func pinchToZoomDefault() -> some View {
+//        self.modifier(PinchToZoomDefault())
+//    }
+//}
 
 public extension UIAlertController {
     func show() {
@@ -632,6 +581,14 @@ struct taFlatPlans : Identifiable, Hashable, Decodable {
     var repair : String
     var roomType : String
     var underground : String
+    
+    var cession  : String
+    
+    var section : String
+    
+    var flatNumber  : String
+    
+    var toUnderground : String
     
 }
 struct taObjects : Identifiable, Hashable {
@@ -824,7 +781,7 @@ extension View {
         
         
         var object = taObjects(id: "", address: "", complexName: "", deadline: "", developer: "", geo: GeoPoint(latitude: 0.0, longitude: 0.0), img: "", type: "", underground: "", timeToUnderground: "", typeToUnderground: "")
-        print(query.documents.first)
+
         if let i = query.documents.first,
             let coords = i.get("geo"),
            let address = i.get("address") as? String ?? "",
@@ -860,19 +817,25 @@ extension View {
           
           let district = i.get("district") as? String ?? ""
           
-        let totalS = i.get("totalS") as? Double ?? 0.0
-          
-        let kitchenS = i.get("kitchenS") as? Double ?? 0.0
-          let repair = i.get("repair") as? String ?? ""
+        let totalS =  i.get("totalS") as? Double ??  Double(i.get("totalS") as? Int ?? 0)
+            
+        
+        
+        let kitchenS =  i.get("kitchenS") as? Double ??  Double(i.get("kitchenS") as? Int ?? 0)
+
+        let repair = i.get("repair") as? String ?? ""
           let roomType = i.get("roomType") as? String ?? ""
           let underground = i.get("underground") as? String ?? ""
-
-          
-          
-          
-          
+        
+        let cession = i.get("cession") as? String ?? ""
+        
+        let section = i.get("section") as? String ?? ""
+        
+        let flatNumber = i.get("flatNumber") as? String ?? ""
+        
+        let toUnderground = i.get("toUnderground") as? String ?? ""
   
-         return taFlatPlans(id: "\(id)", img: img, complexName: complexName, price: String(price), room: room, deadline: deadline, type: type, floor: String(floor), developer: developer, district: district , totalS: String(totalS), kitchenS: String(kitchenS), repair: repair, roomType: roomType, underground: underground)
+        return taFlatPlans(id: "\(id)", img: img, complexName: complexName, price: String(price), room: room, deadline: deadline, type: type, floor: String(floor), developer: developer, district: district , totalS: String(totalS), kitchenS: String(kitchenS), repair: repair, roomType: roomType, underground: underground, cession : cession, section: section, flatNumber : flatNumber, toUnderground: toUnderground)
           
     }
 }
@@ -980,9 +943,7 @@ extension Array where Element: Equatable {
 
 struct FlatOrder : Identifiable{
     var id : String
-    
-    var orderRepair : Bool
-    
+        
     var orderDesign : String
 }
 
@@ -1102,4 +1063,50 @@ extension View {
     func KeyboardAwarePadding() -> some View {
         ModifiedContent(content: self, modifier: KeyboardAwareModifier())
     }
+}
+struct WebView: UIViewRepresentable {
+    
+    var view = WKWebView()
+   
+    var url: String
+    var colorScheme  : colorScheme
+    func makeUIView(context: Context) -> WKWebView {
+        
+        view.load(URLRequest(url: URL(string: url)!))
+        view.bounds = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+        view.backgroundColor = colorScheme == .dark ? .black : .white
+        view.scrollView.minimumZoomScale = 1.0
+        view.scrollView.maximumZoomScale = 1.0
+        
+        view.scrollView.isScrollEnabled = false
+        
+        view.scrollView.setZoomScale(1.0, animated: false)
+        view.scrollView.delegate = context.coordinator
+        return view
+    }
+    func updateUIView(_ uiView: WKWebView, context: Context) {
+        
+    }
+    
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    final class Coordinator: NSObject, UIScrollViewDelegate, UIWebViewDelegate {
+     
+        var parent: WebView
+     
+        init(_ parent: WebView) {
+            self.parent = parent
+        }
+     
+        func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
+            parent.view.scrollView.pinchGestureRecognizer?.isEnabled = false
+            }
+        
+    }
+   
+}
+enum colorScheme {
+    case dark, light
 }

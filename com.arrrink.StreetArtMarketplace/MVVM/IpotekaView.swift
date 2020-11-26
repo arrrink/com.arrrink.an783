@@ -19,7 +19,7 @@ struct IpotekaView: View {
     @EnvironmentObject private var navigationStack: NavigationStack
     @State var size = UIScreen.main.bounds.width - 20
     @Environment(\.colorScheme) var colorScheme
-    @ObservedObject var to = To(to: 0.202, to2: 0.36, to3: 0.667, to4: 0.064, to5: 0.08, workType: "Найм", checkMoneyType: "2-НДФЛ", checkSpecialType: "default", bank : "domrf", ifRF: "Являюсь налоговым резидентом РФ")
+    @ObservedObject var to = To(to: 0.202, to2: 0.36, to3: 0.667, to4: 0.064, to5: 0.08, workType: "Найм", checkMoneyType: "2-НДФЛ", checkSpecialType: "default", bank : "vtb", ifRF: "Являюсь налоговым резидентом РФ")
     @State var price : CGFloat = 0.0
     @EnvironmentObject var getFlats : getTaFlatPlansData
     func map(_ v: [Bank]) -> [Bank] {
@@ -41,7 +41,7 @@ struct IpotekaView: View {
         return newData
     }
     
-    func pow(value: CGFloat, count: Int) -> CGFloat {
+    func powIpoteka(value: CGFloat, count: Int) -> CGFloat {
         
         var answer : CGFloat = 1
         var counter = 1
@@ -104,9 +104,14 @@ struct IpotekaView: View {
                         
                         //.fontWeight(.regular)
                         .font(.footnote).fixedSize(horizontal: false, vertical: true)
-                    Text(String(format: "%.1f", Double(to.flatPrice * (to.maxPrice == "" ? 22.0 : CGFloat(Double(
-                    to.maxPrice) ?? 22.0))) / 1000000.0)
+                    
+                    VStack { () -> AnyView in
+                        
+                        let count = Double(decodePrice()) / 1000000.0
+                   return AnyView( Text(String(format: "%.1f", count)
                         + " млн").font(.title).fontWeight(.bold).fixedSize(horizontal: false, vertical: true)
+                       )
+                    }
                     
                 }
                 
@@ -132,13 +137,18 @@ struct IpotekaView: View {
                                 + "%")
                             .foregroundColor(.secondary)
                             .fontWeight(.light)
-                            
+
                            // .fontWeight(.heavy)
-                            
+
                             .font(.footnote).fixedSize(horizontal: false, vertical: true)
-                        Text(String(format: "%.1f", Double(to.flatPrice * to.value2 * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))) / 1000000.0) + " млн").font(.title).fontWeight(.bold)
-                            .fixedSize(horizontal: false, vertical: true)
                         
+                        VStack { () -> AnyView in
+                            let c = CGFloat(decodePrice()) * to.value2 / 1000000.0
+                       return AnyView( Text(String(format: "%.1f", c) + " млн").font(.title).fontWeight(.bold)
+                            .fixedSize(horizontal: false, vertical: true)
+                            
+                        )}
+
                     }
                     
                     
@@ -304,6 +314,16 @@ struct IpotekaView: View {
     @State var checkValue = ""
     @State var from : CGFloat = 0
     @State var safeAreaTop = UIApplication.shared.windows.first?.safeAreaInsets.top
+    
+    
+    func decodePrice() -> Int {
+        let decodePerToPrice = 1000000 * pow(1.0481, (Double(to.flatPrice * 99800000) - 1000000) /  1000000)
+                                             
+        let decodePerToPriceTotal = (decodePerToPrice / 100000).rounded() * 100000
+        
+        return Int(decodePerToPriceTotal)
+    }
+    
     var IpotekaCollectionView: some View
 {
         ASCollectionView(staticContent: { () -> ViewArrayBuilder.Wrapper in
@@ -351,16 +371,15 @@ struct IpotekaView: View {
             
             checkKey = "Стоимость квартиры"
             
-            checkValue = String(format: "%.1f", Double(to.flatPrice * (to.maxPrice == "" ? 22.0 : CGFloat(Double(
-                                                                                                            to.maxPrice) ?? 22.0))) / 1000000.0) + " млн"
+            checkValue = String(format: "%.1f", Double(decodePrice()) / 1000000.0) + " млн"
                                                                                                                 
             
             to.findPercent()
             let monthPercentConctant = to.percent / 12 / 100
-            let totalPercentConctant = pow(value: (1 + monthPercentConctant), count: Int(to.creditDuration * 30 * 12))
+            let totalPercentConctant = powIpoteka(value: (1 + monthPercentConctant), count: Int(to.creditDuration * 30 * 12))
             
             
-            let summIpoteka = (v * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))) - to.value2 * v * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))
+            let summIpoteka = CGFloat(decodePrice()) - to.value2 * CGFloat(decodePrice())
             
             guard (Double(to.value4 * 500000)) < 500000 else { print("(((")
                 return }
@@ -369,7 +388,7 @@ struct IpotekaView: View {
             withAnimation(Animation.linear(duration: 0.15)){
                 
                 to.value4 = (summIpoteka * monthPercentConctant * totalPercentConctant / (totalPercentConctant - 1)) / 500000
-               print(to.value4)
+
             }
            
         }
@@ -384,15 +403,15 @@ struct IpotekaView: View {
            
             to.findPercent()
             
-            checkKey = "Первоначальный взнос"
+        checkKey = "Первоначальный взнос"
             
-           checkValue = String(format: "%.1f", Double(to.flatPrice * to.value2 * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))) / 1000000.0) + " млн"
+                checkValue = String(format: "%.1f", Double(decodePrice()) * Double(to.value2) / 1000000.0) + " млн"
                 
             let monthPercentConctant = to.percent / 12 / 100
-            let totalPercentConctant = pow(value: (1 + monthPercentConctant), count: Int(to.creditDuration * 30 * 12))
+            let totalPercentConctant = powIpoteka(value: (1 + monthPercentConctant), count: Int(to.creditDuration * 30 * 12))
             
             
-            let summIpoteka = (to.flatPrice * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))) - to.flatPrice * v * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))
+            let summIpoteka = CGFloat(decodePrice()) - CGFloat(decodePrice()) * v
             
             guard (Double(to.value4 * 500000)) < 500000 else { print("(((")
                 
@@ -419,10 +438,10 @@ struct IpotekaView: View {
                 
             to.findPercent()
             let monthPercentConctant = to.percent / 12 / 100
-             let totalPercentConctant = pow(value: (1 + monthPercentConctant), count: Int(v * 30 * 12))
+             let totalPercentConctant = powIpoteka(value: (1 + monthPercentConctant), count: Int(v * 30 * 12))
              
              
-            let summIpoteka = (to.flatPrice * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))) - to.value2 * to.flatPrice * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))
+            let summIpoteka = CGFloat(decodePrice()) - to.value2 * CGFloat(decodePrice())
              
              guard (summIpoteka * monthPercentConctant * totalPercentConctant / (totalPercentConctant - 1)) / 500000 < 1 else {
                  return }
@@ -450,40 +469,7 @@ struct IpotekaView: View {
                                     to.value5 = CGFloat((Double(v * 500000)) / 1000000 / 0.4)
             
                                 }
-                           // }
-            
-//
-//            let find = dataBank.filter{$0.img == self.to.bank}
-//
-//            guard find.count == 1 else { return }
-//
-//
-//                let newPercent = CGFloat(find[0].percent)
-//            guard to.percent != newPercent else {
-//                print("oggg")
-//                return
-//            }
-//
-//
-//
-//
-//            let monthPercentConctant = to.percent / 12 / 100
-//
-//            let summIpoteka = (to.value * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))) - to.value2 * to.value * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))
-//            //срок кредита по платежу
-//
-//            let forLogCustom = v * 500000  / ((v * 500000) - (summIpoteka * monthPercentConctant))
-//            let near = logCustom(main: Double(1 + monthPercentConctant), val: forLogCustom)
-//
-//
-//            guard (near / 12) >= 1.0 else {
-//                return }
-//
-//            guard CGFloat(near / 12 / 30) < 1.0 else {
-//                return }
-//
-//            to.value3 = CGFloat(near / 12 / 30)
-            
+ 
         }
 
 
@@ -557,10 +543,10 @@ struct IpotekaView: View {
 //                    to.percent = newPercent
                     
                     let monthPercentConctant = to.percent / 12 / 100
-                    let totalPercentConctant = pow(value: (1 + monthPercentConctant), count: Int(to.creditDuration * 30 * 12))
+                    let totalPercentConctant = powIpoteka(value: (1 + monthPercentConctant), count: Int(to.creditDuration * 30 * 12))
                     
                     
-                    let summIpoteka = (to.flatPrice * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))) - to.flatPrice * to.value2 * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))
+                    let summIpoteka = CGFloat(decodePrice()) - CGFloat(decodePrice()) * to.value2
                     
                     guard (Double(to.value4 * 500000)) < 500000 else {
                         return }
@@ -584,6 +570,11 @@ struct IpotekaView: View {
         }.fixedSize(horizontal: false, vertical: true)
         
         VStack(alignment: .leading) {
+            
+            
+            Text("Ставка примерная. ").foregroundColor(.secondary).fontWeight(.light)
+                .font(.footnote)
+                .padding([.horizontal, .bottom])
             
             
             
@@ -716,7 +707,7 @@ struct IpotekaView: View {
                 
         ScrollView(.horizontal, showsIndicators: false) {
         HStack(spacing: 15){
-            TabButtonForSpecialType(selected: $to.checkSpecialType, title: "Госпрограмма 6,5%")
+            TabButtonForSpecialType(selected: $to.checkSpecialType, title: "Госпрограмма 2020")
                           TabButtonForSpecialType(selected: $to.checkSpecialType, title: "Военная ипотека")
 
             TabButtonForSpecialType(selected: $to.checkSpecialType, title: "Семейная ипотека")
@@ -730,10 +721,10 @@ struct IpotekaView: View {
                         to.findPercent()
                     }
        
-        .background(Color.white.opacity(0.08))
+        .background(Color.white.opacity(0.08).padding(.vertical))
         
                       .clipShape(Capsule())
-        .padding(.horizontal)
+        .padding()
         
                 
             }
@@ -820,20 +811,19 @@ struct IpotekaView: View {
                 
                 Button(action: {
                     
-                    price = to.flatPrice * (to.maxPrice == "" ? 22.0 : CGFloat(Double(to.maxPrice) ?? 22.0))
                     
                     
                     
-                         
+
+                    
          //            if maxPrice != 0.0 {
          //                query = query.whereField("price", isLessThanOrEqualTo: Int((maxPrice / 100000).rounded() * 100000)).order(by: "price", descending: true)
                     
-                    self.navigationStack.push(                                              SearchView().environmentObject(getTaFlatPlansData(query: Firebase.Firestore.firestore().collection("taflatplans").whereField("price", isLessThanOrEqualTo: Int((Double(price) / 100000).rounded() * 100000)).order(by: "price", descending: true))))
+                    self.navigationStack.push(                                              SearchView().environmentObject(getTaFlatPlansData(query: Firebase.Firestore.firestore().collection("taflatplans").whereField("price", isLessThanOrEqualTo: decodePrice()).order(by: "price", descending: true))))
                     
                 }) {
                     
-                    Text("Просмотреть квартиры до " + String(format: "%.1f", Double(to.flatPrice * (to.maxPrice == "" ? 22.0 : CGFloat(Double(
-                         to.maxPrice) ?? 22.0))) / 1000000.0)
+                    Text("Просмотреть квартиры до " + String(format: "%.1f", Double(decodePrice()) / 1000000.0)
                             + " млн")
                         .font(.subheadline)
                         .fontWeight(.light)
@@ -1034,14 +1024,14 @@ struct TabButtonChooseFromNowToDeadlineOrDefault : View {
                                 selected.append(title)
                             }
                             
-                            print(selected)
+
                             
                           }
                     }))
             
         //  }
             
-        }.padding(colorScheme == .dark ? Edge.Set(rawValue: 0) : .vertical)
+        }.padding(.vertical)
            
       )
       }
@@ -1114,14 +1104,14 @@ struct TabButtonChooseAnyOrDefault : View {
                                 selected.append(title)
                             }
                             
-                            print(selected)
+
                             
                           }
                     }))
             
         //  }
             
-        }.padding(colorScheme == .dark ? Edge.Set(rawValue: 0) : .vertical)
+        }.padding(.vertical)
            
       )
       }
@@ -1173,7 +1163,8 @@ struct TabButtonForSpecialType : View {
             
         //  }
             
-        }.padding(colorScheme == .dark ? Edge.Set(rawValue: 0) : .vertical)
+        }
+        .padding(.vertical)
            
       )
       }
@@ -1203,7 +1194,7 @@ struct BankCell : View {
             
           Button(action: {
                     guard canClick else {
-                        print("cant click")
+
                         return
                     }
             withAnimation(.default){

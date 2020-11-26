@@ -35,19 +35,25 @@ struct StoryView: View {
                                                    GeometryReader{_ in
                                                        
                                                     VStack(spacing: 15){
-                                                    HStack{
-                                                        Spacer()
-                                                        WebImage(url: URL(string: item.imglink)).resizable().scaledToFit()
-                                                            
-                                                    
-                                                        Spacer()
-                                                       } .padding(.top, 55)
+                                                        
+                                                        if item.storyType == .fit {
+                                                            HStack{
+                                                                Spacer()
+                                                                WebImage(url: URL(string: item.imglink)).resizable().scaledToFit().cornerRadius(20)
+                                                                    .shadow(color: Color.black.opacity(0.15), radius: 5, x: 5, y: 5)
+                                                                Spacer()
+                                                            }.padding(.top, 65)
+                                                        } else {
+                                                        
+                                                    Spacer()
+                                                        }
                                                     //.frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height, alignment: .center)
                                                         
-                                                        Text(item.text)
+                                                        Text(item.text.replacingOccurrences(of: "\\n", with: "\n"))
                                                             .font(.title)
+                                                            .foregroundColor(item.storyType == .fill ? .white : .primary)
                                                         .fontWeight(.heavy)
-                                                            .lineLimit(4)
+                                                            .lineLimit(20)
                                                             .minimumScaleFactor(0.5)
                                                             .padding().multilineTextAlignment(.leading).frame(width: UIScreen.main.bounds.width).padding(.horizontal)
                                                     }
@@ -62,7 +68,7 @@ struct StoryView: View {
          
                                                            
                                                         Text(item.name)
-                                                            
+                                                            .foregroundColor(item.storyType == .fill ? .white : .primary)
                                                             .fontWeight(.heavy)
                                                                
                                                            
@@ -74,7 +80,17 @@ struct StoryView: View {
                                                
                                                    .padding(.top)
                                                 }
-                                               }
+                                               }.background(
+                                                ZStack {
+                                                    Color.init(item.storyType == .fill ? .black : .systemBackground)
+                                                if item.storyType == .fill {
+
+                                                    WebImage(url: URL(string: item.imglink)).resizable().scaledToFill()
+                                                        
+                                                }
+                                                }
+                                               )
+                                               
                                                .onReceive(self.time) { (i) in
                                                   
                                  
@@ -122,6 +138,7 @@ struct StoryView: View {
         }
     }
      var time = Timer.publish(every: 0.02, on: .main, in: .common).autoconnect()
+    
     @GestureState var isLongPress = false
     var plusLongPress: some Gesture {
         LongPressGesture(minimumDuration: 0.1).sequenced(before:
@@ -165,24 +182,28 @@ struct Loader : View {
      }
  }
 
-
+enum StoryType {
+    case fill, fit
+}
 class PostRealmFB : Object, Identifiable {
     var id: String = UUID().uuidString
     var name : String = ""
     var text : String = ""
     var imglink : String = ""
     var createdAt : Timestamp = Timestamp(date: Date())
+    var storyType = StoryType.fill
     @objc dynamic var seen : Bool = false // Realm
     @objc dynamic var idSeen : String = "" // Realm
 
     var loading : Bool = false
-    convenience init(id: String, name: String, text : String, imglink: String, createdAt: Timestamp, seen: Bool = false, idSeen: String = "") {
+    convenience init(id: String, name: String, text : String, imglink: String, createdAt: Timestamp, storyType: StoryType, seen: Bool = false, idSeen: String = "") {
         self.init() //Please note this says 'self' and not 'super'
         self.seen = seen
         self.id = id
         self.name = name
         self.text = text
         self.createdAt = createdAt
+        self.storyType = storyType
         self.imglink = imglink
         self.idSeen = idSeen
     }
