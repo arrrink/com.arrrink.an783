@@ -18,7 +18,7 @@ import Foundation
   import FoundationNetworking
 #endif
 import NIOHTTP1
-import TinyHTTPServer
+//import TinyHTTPServer
 
 struct Credentials: Codable {
   let clientID: String

@@ -9,7 +9,6 @@
 import SwiftUI
 import SDWebImageSwiftUI
 import ASCollectionView_SwiftUI
-import NavigationStack
 // Flat Card
 
  
@@ -18,22 +17,14 @@ struct CellView : View {
     @State var data : taFlatPlans
     @State var show = false
    
-    @EnvironmentObject private var navigationStack: NavigationStack
 
     @State var modalController = false
 
-    @Binding var status : Bool
+    @State var status = UserDefaults.standard.value(forKey: "status") as? Bool ?? false
     var ASRemoteLoad : Bool
     var price : String {
         
-        var string = String(data.price).reversed
-        
-        string = string.separate(every: 3, with: " ")
-        
-        string = string.reversed
-        
-       
-        return "\(string) руб."
+        return String(data.price).price()
     }
 
     @State var isAnimating: Bool = true
@@ -64,13 +55,68 @@ struct CellView : View {
                     
                     VStack(alignment: .leading, spacing: 8) {
      
-                        
+                        HStack {
+                            
+                           
                         Text(data.room)
                         //.font(.body)
                         .foregroundColor(.black)
                             .font(.system(.footnote, design: .rounded))
                             .fixedSize(horizontal: false, vertical: true)
                         
+                            .padding(.horizontal)
+                        
+                      
+                                
+                            
+                            
+                            Spacer()
+                            Text(data.id).foregroundColor(.black)
+                            Text(price).foregroundColor(.black)
+                                .font(.system(.footnote, design: .rounded))
+                                .fixedSize(horizontal: false, vertical: true)
+
+                                .padding(.bottom)
+                            
+                                .padding(.horizontal)
+                            
+                        }
+                        
+                       // ScrollView(.horizontal) {
+                            HStack {
+                                ZStack{
+                                Text(data.type)
+                               // .font(.footnote)
+                                .foregroundColor(.white)
+                                   // .fontWeight(.heavy)
+                                   
+                                    .padding(.horizontal, 3)
+                                    .padding(.vertical, 3)
+                                    .font(.system(.footnote, design: .rounded))
+                                } .background(Color("ColorMain").opacity(0.8).cornerRadius(3)
+                                                //.shadow(color: Color.black.opacity(0.15), radius: 5, x: 5, y: 5)
+                                                //.shadow(color: Color.black.opacity(0.1), radius: 5, x: -5, y: -5)
+                                )
+                            
+                            if data.cession != "default" {
+                                ZStack{
+                                Text(data.cession)
+                               // .font(.footnote)
+                                .foregroundColor(.white)
+                                   // .fontWeight(.heavy)
+                                   
+                                    .padding(.horizontal, 3)
+                                    .padding(.vertical, 3)
+                                    .font(.system(.footnote, design: .rounded))
+                                } .background(Color("ColorMain").opacity(0.8).cornerRadius(3)
+                                                //.shadow(color: Color.black.opacity(0.15), radius: 5, x: 5, y: 5)
+                                                //.shadow(color: Color.black.opacity(0.1), radius: 5, x: -5, y: -5)
+                                )
+                            }
+                                
+                            } .padding(.horizontal)
+                       // }
+                        HStack {
                         Text(data.complexName)
                             .font(.footnote)
                             .foregroundColor(.gray)
@@ -79,38 +125,16 @@ struct CellView : View {
                             .font(.system(.callout, design: .rounded))
                             .fixedSize(horizontal: false, vertical: true)
                         
+                            .padding(.horizontal)
+                        Spacer()
+                        }  .padding([.horizontal, .bottom])
                        
-                        
-                            ZStack{
-                            Text(data.type)
-                           // .font(.footnote)
-                            .foregroundColor(.white)
-                               // .fontWeight(.heavy)
-                               
-                                .padding(.horizontal, 3)
-                                .padding(.vertical, 3)
-                                .font(.system(.footnote, design: .rounded))
-                            } .background(Color("ColorMain").opacity(0.8).cornerRadius(3)
-                                            //.shadow(color: Color.black.opacity(0.15), radius: 5, x: 5, y: 5)
-                                            //.shadow(color: Color.black.opacity(0.1), radius: 5, x: -5, y: -5)
-                            )
-                            
-                                
-                        
-                        
-                        Text(price).foregroundColor(.black)
-                            .font(.system(.footnote, design: .rounded))
-                            .fixedSize(horizontal: false, vertical: true)
-
-                            .padding(.bottom)
-                        
-                        
                             
                         
                        
                     }
                    // .foregroundColor(.black)
-                    .padding(.horizontal)
+                   
                   
                 
                 
@@ -131,6 +155,8 @@ struct CellView : View {
              y: 5
            )
         )
+        .frame(width : UIScreen.main.bounds.width - 30 )
+        .padding()
        // .cornerRadius(15)
         .onTapGesture {
             
@@ -144,29 +170,30 @@ struct CellView : View {
             
                                   self.modalController.toggle()
             
+            
                           }
         
-        .sheet(isPresented: self.$modalController) {
-            
-            if status{
-              //  NavigationView {
-
-                DetailFlatView(data: $data).environmentObject(getFlats)
-                //}
-                          }
-                          else{
-                              
-
-                            
-                            EnterPhoneNumberView(detailView: $data, modalController: $modalController, status: $status).environmentObject(getFlats)
-                              
-                          }
-           // FirstPage(modalController: $modalController)
-          //  LoginView().environmentObject(SessionStore())
-           // OrderView(data: self.data)
-        }
-        Spacer(minLength: 25)
-        }
+//        .sheet(isPresented: self.$modalController) {
+//
+//            if status{
+//
+//                DetailFlatView(getFlats : getFlats, data: data)
+//                    //.environmentObject(getFlats)
+//
+//                          }
+//                          else{
+//
+//
+//
+//                            EnterPhoneNumberView(detailView: $data, modalController: $modalController, status: $status).environmentObject(getFlats)
+//
+//                          }
+//           // FirstPage(modalController: $modalController)
+//          //  LoginView().environmentObject(SessionStore())
+//           // OrderView(data: self.data)
+//        }
+//        Spacer(minLength: 25)
+        }.background(Color.white)
 
       
     }

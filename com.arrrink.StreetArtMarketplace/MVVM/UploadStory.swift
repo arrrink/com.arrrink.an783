@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import NavigationStack
 import Firebase
 import Alamofire
 import CoreLocation
@@ -17,8 +16,7 @@ struct UploadStory: View {
     @State var isShowPhotoLibrary = false
     @State private var uploadImage = UIImage()
     @State private var uploadImageForNew = UIImage()
-    //@Environment(\.presentationMode) var presentation
-    @EnvironmentObject private var navigationStack: NavigationStack
+    @Binding var showUploadStory : Bool
     @Binding var adminNumber : String
     
     @State var uploadImageType : UploadImageFor = .story
@@ -26,9 +24,7 @@ struct UploadStory: View {
     var btnBack : some View { Button(action: {
         
         
-        
-        self.navigationStack.pop()
-        
+        self.showUploadStory = false
         
             }) {
                 HStack {
@@ -158,25 +154,25 @@ struct UploadStory: View {
                 .padding(.horizontal)
                 .padding(.bottom, 55)
                 
-                HStack {
-                    Spacer()
-                Button {
-                    if Auth.auth().currentUser?.phoneNumber == adminNumber  {
-                        
-                        convertFlats()
-                        
-                }
-                
-                } label: {
-                    
-                    Text("CONVERT TOTAL FLATS JSON TO FIRESTORE")
-                        
-                        .foregroundColor(.white).padding().background(Color.red.cornerRadius(15))
-                }
-                    Spacer()
-            }
-                .padding(.horizontal)
-                .padding(.bottom, 55)
+//                HStack {
+//                    Spacer()
+//                Button {
+//                    if Auth.auth().currentUser?.phoneNumber == adminNumber  {
+//
+//                        convertFlats()
+//
+//                }
+//
+//                } label: {
+//
+//                    Text("CONVERT TOTAL FLATS JSON TO FIRESTORE")
+//
+//                        .foregroundColor(.white).padding().background(Color.red.cornerRadius(15))
+//                }
+//                    Spacer()
+//            }
+//                .padding(.horizontal)
+//                .padding(.bottom, 55)
 
                 
                 
@@ -203,7 +199,7 @@ struct UploadStory: View {
                 case .success(let value):
     
     guard let flats = value as? [[String: Any]] else {
-      print("(((((")
+
         return
     }
 
@@ -277,8 +273,6 @@ struct UploadStory: View {
                         Firestore.firestore().collection("taflatplans").document("\(id)").setData(arr)
                         
                         
-                    } else {
-                        print(complexName)
                     }
                     
                 }
@@ -311,7 +305,7 @@ struct UploadStory: View {
 
                                 
                                 guard let obj = value as? [[String: Any]] else {
-                                  print("(((((")
+
                                     return
                                 }
 
@@ -340,20 +334,20 @@ struct UploadStory: View {
 
 
                                                                                        guard let value = response.value as? [String: AnyObject] else {
-                                                                                         print("(((((")
-                                                                                           return
+
+                                                                                        return
                                                                                        }
 
                                                                                        guard  let results = value["results"]  as? [[String: AnyObject]] else {
-                                                                                         print("((")
-                                                                                           return
+
+                                                                                        return
                                                                                        }
 
                                                                                        if results.count > 0 {
 
                              guard let coor = results[0]["geometry"] as? [String: AnyObject]  else {
-                                                                                           print("(")
-                                                                                           return
+
+                                return
                                                                                        }
 
                                                                                        if  let location = coor["location"] as? [String: AnyObject]  {
@@ -404,9 +398,7 @@ struct UploadStory: View {
 
 
                                     }
-                                                                                       } else {
-                                                                                        print("err")
-                                                                                       }
+                                                                                       } 
                                                                 
                                                                                        }}
                                 }

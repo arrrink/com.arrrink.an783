@@ -16,6 +16,11 @@
 		61108AEA2555C71600E9D7A6 /* welcome.json in Resources */ = {isa = PBXBuildFile; fileRef = 61108AE62555C70600E9D7A6 /* welcome.json */; };
 		61108AEB2555C71600E9D7A6 /* agency.json in Resources */ = {isa = PBXBuildFile; fileRef = 61108AE72555C70A00E9D7A6 /* agency.json */; };
 		61108AED2555C71600E9D7A6 /* city.json in Resources */ = {isa = PBXBuildFile; fileRef = 61108AE92555C71300E9D7A6 /* city.json */; };
+		6112CD2C256FF5EE008FDC66 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 6112CD2B256FF5EE008FDC66 /* CryptoSwift */; };
+		6112CD31256FF66E008FDC66 /* BigInt in Frameworks */ = {isa = PBXBuildFile; productRef = 6112CD30256FF66E008FDC66 /* BigInt */; };
+		6112CD38256FF6C0008FDC66 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 6112CD35256FF6C0008FDC66 /* LICENSE */; };
+		6112CD39256FF6C0008FDC66 /* Alphabets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6112CD36256FF6C0008FDC66 /* Alphabets.swift */; };
+		6112CD3A256FF6C0008FDC66 /* Base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6112CD37256FF6C0008FDC66 /* Base64.swift */; };
 		611A5DF52536665100872513 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611A5DF42536665100872513 /* FilterView.swift */; };
 		611A5DF925366EED00872513 /* To.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611A5DF825366EED00872513 /* To.swift */; };
 		61259149250AADFD00B62B75 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61259148250AADFD00B62B75 /* MapView.swift */; };
@@ -25,35 +30,35 @@
 		6130448F254384CE00807952 /* VRDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6130448E254384CE00807952 /* VRDestination.swift */; };
 		61383185252F5393006A12D5 /* LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61383184252F5393006A12D5 /* LoaderView.swift */; };
 		6138318F252F58E9006A12D5 /* GetFlatsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6138318E252F58E9006A12D5 /* GetFlatsData.swift */; };
-		613BD86D251374490000B9F8 /* SwiftUIMapView in Frameworks */ = {isa = PBXBuildFile; productRef = 613BD86C251374490000B9F8 /* SwiftUIMapView */; };
 		613BD86F251383B40000B9F8 /* CustomAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 613BD86E251383B30000B9F8 /* CustomAnnotationView.swift */; };
 		61432C3424EC91DF00E9A141 /* LoadingRectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61432C3224EC91DF00E9A141 /* LoadingRectangle.swift */; };
 		61432C3624EDC9EE00E9A141 /* StoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61432C3524EDC9EE00E9A141 /* StoryView.swift */; };
 		61432C3824EE7B3700E9A141 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61432C3724EE7B3700E9A141 /* SearchView.swift */; };
 		61432C3A24EEACA700E9A141 /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61432C3924EEACA600E9A141 /* extensions.swift */; };
+		6144CCF72577EA7900B4B1BF /* CollectionView in Frameworks */ = {isa = PBXBuildFile; productRef = 6144CCF62577EA7900B4B1BF /* CollectionView */; };
 		6146F306252205D500410573 /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6146F305252205D500410573 /* SessionStore.swift */; };
 		6146F30A2522064000410573 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6146F3092522064000410573 /* LoginView.swift */; };
-		6146F316252254CC00410573 /* InputMask in Frameworks */ = {isa = PBXBuildFile; productRef = 6146F315252254CC00410573 /* InputMask */; };
 		614E75462549883800F2E5A4 /* GoogleService-Infofoog.plist in Resources */ = {isa = PBXBuildFile; fileRef = 614E75452549883700F2E5A4 /* GoogleService-Infofoog.plist */; };
-		6178A538256F989C0071CFF0 /* Code.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A525256F98860071CFF0 /* Code.swift */; };
-		6178A539256F989C0071CFF0 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A526256F98880071CFF0 /* Connection.swift */; };
-		6178A53A256F989C0071CFF0 /* BrowserTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A527256F988A0071CFF0 /* BrowserTokenProvider.swift */; };
-		6178A53B256F989C0071CFF0 /* openURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A528256F988C0071CFF0 /* openURL.swift */; };
-		6178A53C256F989C0071CFF0 /* RSA.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A52A256F988E0071CFF0 /* RSA.swift */; };
-		6178A53D256F989C0071CFF0 /* JWT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A52B256F988E0071CFF0 /* JWT.swift */; };
-		6178A53E256F989C0071CFF0 /* ServiceAccountTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A52C256F988E0071CFF0 /* ServiceAccountTokenProvider.swift */; };
-		6178A53F256F989C0071CFF0 /* ASN1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A52D256F988E0071CFF0 /* ASN1.swift */; };
-		6178A540256F989C0071CFF0 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A52E256F98900071CFF0 /* Token.swift */; };
-		6178A541256F989C0071CFF0 /* DefaultTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A52F256F98910071CFF0 /* DefaultTokenProvider.swift */; };
-		6178A542256F989C0071CFF0 /* TokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A530256F98930071CFF0 /* TokenProvider.swift */; };
-		6178A543256F989C0071CFF0 /* FCMTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A532256F98950071CFF0 /* FCMTokenProvider.swift */; };
-		6178A544256F989C0071CFF0 /* index.js in Resources */ = {isa = PBXBuildFile; fileRef = 6178A533256F98950071CFF0 /* index.js */; };
-		6178A545256F989C0071CFF0 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6178A534256F98950071CFF0 /* README.md */; };
-		6178A546256F989C0071CFF0 /* AuthError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A535256F98970071CFF0 /* AuthError.swift */; };
-		6178A547256F989C0071CFF0 /* GoogleCloudMetadataTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A536256F98990071CFF0 /* GoogleCloudMetadataTokenProvider.swift */; };
-		6178A548256F989C0071CFF0 /* GoogleRefreshTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A537256F989C0071CFF0 /* GoogleRefreshTokenProvider.swift */; };
-		6178A54F256F99800071CFF0 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 6178A54E256F99800071CFF0 /* CryptoSwift */; };
-		6178A554256F9A0D0071CFF0 /* BigNumber in Frameworks */ = {isa = PBXBuildFile; productRef = 6178A553256F9A0D0071CFF0 /* BigNumber */; };
+		617564EA257D903A00E14FA2 /* CustomCellFlat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617564E8257D903A00E14FA2 /* CustomCellFlat.swift */; };
+		617564EB257D903A00E14FA2 /* CustomCellFlat.xib in Resources */ = {isa = PBXBuildFile; fileRef = 617564E9257D903A00E14FA2 /* CustomCellFlat.xib */; };
+		6178A5E7256FD74D0071CFF0 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A5D4256FD74D0071CFF0 /* Connection.swift */; };
+		6178A5E8256FD74D0071CFF0 /* RSA.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A5D6256FD74D0071CFF0 /* RSA.swift */; };
+		6178A5E9256FD74D0071CFF0 /* JWT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A5D7256FD74D0071CFF0 /* JWT.swift */; };
+		6178A5EA256FD74D0071CFF0 /* ServiceAccountTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A5D8256FD74D0071CFF0 /* ServiceAccountTokenProvider.swift */; };
+		6178A5EB256FD74D0071CFF0 /* ASN1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A5D9256FD74D0071CFF0 /* ASN1.swift */; };
+		6178A5EC256FD74D0071CFF0 /* openURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A5DA256FD74D0071CFF0 /* openURL.swift */; };
+		6178A5ED256FD74D0071CFF0 /* AuthError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A5DB256FD74D0071CFF0 /* AuthError.swift */; };
+		6178A5EE256FD74D0071CFF0 /* FCMTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A5DD256FD74D0071CFF0 /* FCMTokenProvider.swift */; };
+		6178A5EF256FD74D0071CFF0 /* index.js in Resources */ = {isa = PBXBuildFile; fileRef = 6178A5DE256FD74D0071CFF0 /* index.js */; };
+		6178A5F0256FD74D0071CFF0 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6178A5DF256FD74D0071CFF0 /* README.md */; };
+		6178A5F1256FD74D0071CFF0 /* DefaultTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A5E0256FD74D0071CFF0 /* DefaultTokenProvider.swift */; };
+		6178A5F2256FD74D0071CFF0 /* BrowserTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A5E1256FD74D0071CFF0 /* BrowserTokenProvider.swift */; };
+		6178A5F3256FD74D0071CFF0 /* Code.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A5E2256FD74D0071CFF0 /* Code.swift */; };
+		6178A5F4256FD74D0071CFF0 /* GoogleCloudMetadataTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A5E3256FD74D0071CFF0 /* GoogleCloudMetadataTokenProvider.swift */; };
+		6178A5F5256FD74D0071CFF0 /* GoogleRefreshTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A5E4256FD74D0071CFF0 /* GoogleRefreshTokenProvider.swift */; };
+		6178A5F6256FD74D0071CFF0 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A5E5256FD74D0071CFF0 /* Token.swift */; };
+		6178A5F7256FD74D0071CFF0 /* TokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A5E6256FD74D0071CFF0 /* TokenProvider.swift */; };
+		6178A5FF256FD92E0071CFF0 /* TinyHTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6178A5FE256FD92E0071CFF0 /* TinyHTTPServer.swift */; };
 		6189144B253F21FD001914A8 /* CellObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6189144A253F21FC001914A8 /* CellObject.swift */; };
 		61896C07255F08C8009E626A /* ApartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61896C06255F08C7009E626A /* ApartView.swift */; };
 		61896C0E256200D3009E626A /* ISO8859 in Frameworks */ = {isa = PBXBuildFile; productRef = 61896C0D256200D3009E626A /* ISO8859 */; };
@@ -77,9 +82,8 @@
 		61C3418E24EC7A3A0065C5D4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 61C3418C24EC7A3A0065C5D4 /* LaunchScreen.storyboard */; };
 		61C3419924EC7A3B0065C5D4 /* com_arrrink_StreetArtMarketplaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C3419824EC7A3B0065C5D4 /* com_arrrink_StreetArtMarketplaceTests.swift */; };
 		61C341A424EC7A3B0065C5D4 /* com_arrrink_StreetArtMarketplaceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C341A324EC7A3B0065C5D4 /* com_arrrink_StreetArtMarketplaceUITests.swift */; };
-		61C68C73256C3856002ACCAD /* 2211obj.json in Resources */ = {isa = PBXBuildFile; fileRef = 61C68C72256C3855002ACCAD /* 2211obj.json */; };
+		61C38A7F25A356E300465AAB /* ListPagination in Frameworks */ = {isa = PBXBuildFile; productRef = 61C38A7E25A356E300465AAB /* ListPagination */; };
 		61C8D86F256A4B5F007D6924 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 61C8D86E256A4B5F007D6924 /* GoogleService-Info.plist */; };
-		61C91CB72541DB4600DF6B85 /* Pages in Frameworks */ = {isa = PBXBuildFile; productRef = 61C91CB62541DB4600DF6B85 /* Pages */; };
 		61C91D1025430D8800DF6B85 /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C91D0F25430D8800DF6B85 /* ARViewController.swift */; };
 		61C91D562543167E00DF6B85 /* main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 61C91D552543167D00DF6B85 /* main.storyboard */; };
 		61CB4244255442BA001F4EBD /* emtycart.json in Resources */ = {isa = PBXBuildFile; fileRef = 61CB4243255442BA001F4EBD /* emtycart.json */; };
@@ -87,10 +91,12 @@
 		61CC2207254030EB002E3E03 /* launchscreen3.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 61CC2206254030EA002E3E03 /* launchscreen3.PNG */; };
 		61CC220B25403201002E3E03 /* launchscreen4.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 61CC220A254031FF002E3E03 /* launchscreen4.PNG */; };
 		61CC2211254095D6002E3E03 /* CellFlat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61CC2210254095D6002E3E03 /* CellFlat.swift */; };
+		61DBA2C82577BF1900EA1604 /* ASCollectionView in Frameworks */ = {isa = PBXBuildFile; productRef = 61DBA2C72577BF1900EA1604 /* ASCollectionView */; };
+		61E7BBE22570FF1100AD330A /* credentials.json in Resources */ = {isa = PBXBuildFile; fileRef = 61E7BBE12570FF1100AD330A /* credentials.json */; };
 		61EFD8342535A2F600F21580 /* GoogleService-Infoold.plist in Resources */ = {isa = PBXBuildFile; fileRef = 61EFD8332535A2F600F21580 /* GoogleService-Infoold.plist */; };
-		850B24B8CAB820580764AB3E /* Pods_com_arrrink_StreetArtMarketplaceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88CC2AC90F36BCD3DE40CFB1 /* Pods_com_arrrink_StreetArtMarketplaceTests.framework */; };
-		9649EDCB79E2CE38F91877D8 /* Pods_com_arrrink_StreetArtMarketplace_com_arrrink_StreetArtMarketplaceUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9DC6E04FCBF50B4C7794664 /* Pods_com_arrrink_StreetArtMarketplace_com_arrrink_StreetArtMarketplaceUITests.framework */; };
-		E34B341D412C0BD25FC40B91 /* Pods_com_arrrink_StreetArtMarketplace.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB08B99CF6EE13D396BE9180 /* Pods_com_arrrink_StreetArtMarketplace.framework */; };
+		C60B90EC48EE7465E934981D /* Pods_com_arrrink_StreetArtMarketplace.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BB09A625709A67D2B0627DB /* Pods_com_arrrink_StreetArtMarketplace.framework */; };
+		D1ACF8391C5CF3D6C7C4CC85 /* Pods_com_arrrink_StreetArtMarketplaceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D450B30B965AB2743C9FAB1 /* Pods_com_arrrink_StreetArtMarketplaceTests.framework */; };
+		F52A9DFE3567E09611881FA8 /* Pods_com_arrrink_StreetArtMarketplace_com_arrrink_StreetArtMarketplaceUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B170645B5A0534D60AE4C43 /* Pods_com_arrrink_StreetArtMarketplace_com_arrrink_StreetArtMarketplaceUITests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -124,8 +130,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2254579784634310ED6AC71B /* Pods-com.arrrink.StreetArtMarketplaceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.arrrink.StreetArtMarketplaceTests.release.xcconfig"; path = "Target Support Files/Pods-com.arrrink.StreetArtMarketplaceTests/Pods-com.arrrink.StreetArtMarketplaceTests.release.xcconfig"; sourceTree = "<group>"; };
-		2F5AAB612638E605DFB4B28C /* Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.release.xcconfig"; path = "Target Support Files/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.release.xcconfig"; sourceTree = "<group>"; };
+		1BB09A625709A67D2B0627DB /* Pods_com_arrrink_StreetArtMarketplace.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_com_arrrink_StreetArtMarketplace.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B170645B5A0534D60AE4C43 /* Pods_com_arrrink_StreetArtMarketplace_com_arrrink_StreetArtMarketplaceUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_com_arrrink_StreetArtMarketplace_com_arrrink_StreetArtMarketplaceUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F8EBC4C2FFC7FE823C21CD9 /* Pods-com.arrrink.StreetArtMarketplaceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.arrrink.StreetArtMarketplaceTests.release.xcconfig"; path = "Target Support Files/Pods-com.arrrink.StreetArtMarketplaceTests/Pods-com.arrrink.StreetArtMarketplaceTests.release.xcconfig"; sourceTree = "<group>"; };
+		46A6ED54A6FFAC1168048BEC /* Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.release.xcconfig"; path = "Target Support Files/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.release.xcconfig"; sourceTree = "<group>"; };
+		4BDAD74EE05619153C34132D /* Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.debug.xcconfig"; path = "Target Support Files/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		6100539F2555CC3200CD16C5 /* find.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = find.json; sourceTree = "<group>"; };
 		610309F3255083AA00A24286 /* bgls.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bgls.png; sourceTree = "<group>"; };
 		610309F72551726C00A24286 /* RemoteImagerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImagerManager.swift; sourceTree = "<group>"; };
@@ -135,6 +144,9 @@
 		61108AE62555C70600E9D7A6 /* welcome.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = welcome.json; sourceTree = "<group>"; };
 		61108AE72555C70A00E9D7A6 /* agency.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = agency.json; sourceTree = "<group>"; };
 		61108AE92555C71300E9D7A6 /* city.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = city.json; sourceTree = "<group>"; };
+		6112CD35256FF6C0008FDC66 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		6112CD36256FF6C0008FDC66 /* Alphabets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alphabets.swift; sourceTree = "<group>"; };
+		6112CD37256FF6C0008FDC66 /* Base64.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Base64.swift; sourceTree = "<group>"; };
 		611A5DF42536665100872513 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
 		611A5DF825366EED00872513 /* To.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = To.swift; sourceTree = "<group>"; };
 		61259148250AADFD00B62B75 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
@@ -154,30 +166,33 @@
 		614E754225497A4F00F2E5A4 /* AN78.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AN78.entitlements; sourceTree = "<group>"; };
 		614E75452549883700F2E5A4 /* GoogleService-Infofoog.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Infofoog.plist"; sourceTree = "<group>"; };
 		6153FED3255DC1E4009920B1 /* ru-RU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ru-RU"; path = "ru-RU.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		6178A525256F98860071CFF0 /* Code.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Code.swift; sourceTree = "<group>"; };
-		6178A526256F98880071CFF0 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
-		6178A527256F988A0071CFF0 /* BrowserTokenProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserTokenProvider.swift; sourceTree = "<group>"; };
-		6178A528256F988C0071CFF0 /* openURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = openURL.swift; sourceTree = "<group>"; };
-		6178A52A256F988E0071CFF0 /* RSA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSA.swift; sourceTree = "<group>"; };
-		6178A52B256F988E0071CFF0 /* JWT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JWT.swift; sourceTree = "<group>"; };
-		6178A52C256F988E0071CFF0 /* ServiceAccountTokenProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceAccountTokenProvider.swift; sourceTree = "<group>"; };
-		6178A52D256F988E0071CFF0 /* ASN1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1.swift; sourceTree = "<group>"; };
-		6178A52E256F98900071CFF0 /* Token.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
-		6178A52F256F98910071CFF0 /* DefaultTokenProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultTokenProvider.swift; sourceTree = "<group>"; };
-		6178A530256F98930071CFF0 /* TokenProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenProvider.swift; sourceTree = "<group>"; };
-		6178A532256F98950071CFF0 /* FCMTokenProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FCMTokenProvider.swift; sourceTree = "<group>"; };
-		6178A533256F98950071CFF0 /* index.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = index.js; sourceTree = "<group>"; };
-		6178A534256F98950071CFF0 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		6178A535256F98970071CFF0 /* AuthError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthError.swift; sourceTree = "<group>"; };
-		6178A536256F98990071CFF0 /* GoogleCloudMetadataTokenProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleCloudMetadataTokenProvider.swift; sourceTree = "<group>"; };
-		6178A537256F989C0071CFF0 /* GoogleRefreshTokenProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleRefreshTokenProvider.swift; sourceTree = "<group>"; };
+		617564E8257D903A00E14FA2 /* CustomCellFlat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCellFlat.swift; sourceTree = "<group>"; };
+		617564E9257D903A00E14FA2 /* CustomCellFlat.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomCellFlat.xib; sourceTree = "<group>"; };
+		6178A5D4256FD74D0071CFF0 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
+		6178A5D6256FD74D0071CFF0 /* RSA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSA.swift; sourceTree = "<group>"; };
+		6178A5D7256FD74D0071CFF0 /* JWT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JWT.swift; sourceTree = "<group>"; };
+		6178A5D8256FD74D0071CFF0 /* ServiceAccountTokenProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceAccountTokenProvider.swift; sourceTree = "<group>"; };
+		6178A5D9256FD74D0071CFF0 /* ASN1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1.swift; sourceTree = "<group>"; };
+		6178A5DA256FD74D0071CFF0 /* openURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = openURL.swift; sourceTree = "<group>"; };
+		6178A5DB256FD74D0071CFF0 /* AuthError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthError.swift; sourceTree = "<group>"; };
+		6178A5DD256FD74D0071CFF0 /* FCMTokenProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FCMTokenProvider.swift; sourceTree = "<group>"; };
+		6178A5DE256FD74D0071CFF0 /* index.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = index.js; sourceTree = "<group>"; };
+		6178A5DF256FD74D0071CFF0 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		6178A5E0256FD74D0071CFF0 /* DefaultTokenProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultTokenProvider.swift; sourceTree = "<group>"; };
+		6178A5E1256FD74D0071CFF0 /* BrowserTokenProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserTokenProvider.swift; sourceTree = "<group>"; };
+		6178A5E2256FD74D0071CFF0 /* Code.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Code.swift; sourceTree = "<group>"; };
+		6178A5E3256FD74D0071CFF0 /* GoogleCloudMetadataTokenProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleCloudMetadataTokenProvider.swift; sourceTree = "<group>"; };
+		6178A5E4256FD74D0071CFF0 /* GoogleRefreshTokenProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleRefreshTokenProvider.swift; sourceTree = "<group>"; };
+		6178A5E5256FD74D0071CFF0 /* Token.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
+		6178A5E6256FD74D0071CFF0 /* TokenProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenProvider.swift; sourceTree = "<group>"; };
+		6178A5FE256FD92E0071CFF0 /* TinyHTTPServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TinyHTTPServer.swift; sourceTree = "<group>"; };
 		6189144A253F21FC001914A8 /* CellObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellObject.swift; sourceTree = "<group>"; };
 		61896C06255F08C7009E626A /* ApartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApartView.swift; sourceTree = "<group>"; };
 		61A89C67251F45FB00883023 /* GoogleService-Info34.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info34.plist"; sourceTree = "<group>"; };
 		61B0EF332507F04A0053A472 /* LoadStoryImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadStoryImage.swift; sourceTree = "<group>"; };
 		61B256EE2540281D001271D5 /* DetailFlatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailFlatView.swift; sourceTree = "<group>"; };
 		61B3F12625543B0D00C6E17D /* CartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartView.swift; sourceTree = "<group>"; };
-		61B82611256E63DC006D3B0B /* BigQueryAuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BigQueryAuthProvider.swift; path = ../Big/BigQueryAuthProvider.swift; sourceTree = "<group>"; };
+		61B82611256E63DC006D3B0B /* BigQueryAuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigQueryAuthProvider.swift; sourceTree = "<group>"; };
 		61B8261A256E64A5006D3B0B /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 		61B8261E256E6501006D3B0B /* BigQuerySwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigQuerySwift.swift; sourceTree = "<group>"; };
 		61C3417E24EC7A2F0065C5D4 /* AN78.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AN78.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -194,7 +209,6 @@
 		61C3419F24EC7A3B0065C5D4 /* com.arrrink.StreetArtMarketplaceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = com.arrrink.StreetArtMarketplaceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		61C341A324EC7A3B0065C5D4 /* com_arrrink_StreetArtMarketplaceUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = com_arrrink_StreetArtMarketplaceUITests.swift; sourceTree = "<group>"; };
 		61C341A524EC7A3B0065C5D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		61C68C72256C3855002ACCAD /* 2211obj.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 2211obj.json; sourceTree = "<group>"; };
 		61C8D86E256A4B5F007D6924 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		61C91D0F25430D8800DF6B85 /* ARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
 		61C91D552543167D00DF6B85 /* main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = main.storyboard; sourceTree = "<group>"; };
@@ -202,14 +216,12 @@
 		61CC2206254030EA002E3E03 /* launchscreen3.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = launchscreen3.PNG; sourceTree = "<group>"; };
 		61CC220A254031FF002E3E03 /* launchscreen4.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = launchscreen4.PNG; sourceTree = "<group>"; };
 		61CC2210254095D6002E3E03 /* CellFlat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellFlat.swift; sourceTree = "<group>"; };
+		61E7BBE12570FF1100AD330A /* credentials.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = credentials.json; sourceTree = "<group>"; };
 		61EFD8332535A2F600F21580 /* GoogleService-Infoold.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Infoold.plist"; sourceTree = "<group>"; };
-		88CC2AC90F36BCD3DE40CFB1 /* Pods_com_arrrink_StreetArtMarketplaceTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_com_arrrink_StreetArtMarketplaceTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A9DC6E04FCBF50B4C7794664 /* Pods_com_arrrink_StreetArtMarketplace_com_arrrink_StreetArtMarketplaceUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_com_arrrink_StreetArtMarketplace_com_arrrink_StreetArtMarketplaceUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		ABE27AE7DA71E9A669675AA8 /* Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.debug.xcconfig"; path = "Target Support Files/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		BB5FCF3CBFC3DDD7DFB99F04 /* Pods-com.arrrink.StreetArtMarketplace.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.arrrink.StreetArtMarketplace.debug.xcconfig"; path = "Target Support Files/Pods-com.arrrink.StreetArtMarketplace/Pods-com.arrrink.StreetArtMarketplace.debug.xcconfig"; sourceTree = "<group>"; };
-		E5951982F7E242273A705EF6 /* Pods-com.arrrink.StreetArtMarketplaceTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.arrrink.StreetArtMarketplaceTests.debug.xcconfig"; path = "Target Support Files/Pods-com.arrrink.StreetArtMarketplaceTests/Pods-com.arrrink.StreetArtMarketplaceTests.debug.xcconfig"; sourceTree = "<group>"; };
-		F2D5D770B730FE27B6AA97B7 /* Pods-com.arrrink.StreetArtMarketplace.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.arrrink.StreetArtMarketplace.release.xcconfig"; path = "Target Support Files/Pods-com.arrrink.StreetArtMarketplace/Pods-com.arrrink.StreetArtMarketplace.release.xcconfig"; sourceTree = "<group>"; };
-		FB08B99CF6EE13D396BE9180 /* Pods_com_arrrink_StreetArtMarketplace.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_com_arrrink_StreetArtMarketplace.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6D450B30B965AB2743C9FAB1 /* Pods_com_arrrink_StreetArtMarketplaceTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_com_arrrink_StreetArtMarketplaceTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9CF04AF4C909207DEDFE347C /* Pods-com.arrrink.StreetArtMarketplace.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.arrrink.StreetArtMarketplace.release.xcconfig"; path = "Target Support Files/Pods-com.arrrink.StreetArtMarketplace/Pods-com.arrrink.StreetArtMarketplace.release.xcconfig"; sourceTree = "<group>"; };
+		C9D79DA8F450E0B0D3A0D375 /* Pods-com.arrrink.StreetArtMarketplaceTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.arrrink.StreetArtMarketplaceTests.debug.xcconfig"; path = "Target Support Files/Pods-com.arrrink.StreetArtMarketplaceTests/Pods-com.arrrink.StreetArtMarketplaceTests.debug.xcconfig"; sourceTree = "<group>"; };
+		FB495E252A72DEEA7A3F4E10 /* Pods-com.arrrink.StreetArtMarketplace.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.arrrink.StreetArtMarketplace.debug.xcconfig"; path = "Target Support Files/Pods-com.arrrink.StreetArtMarketplace/Pods-com.arrrink.StreetArtMarketplace.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -217,19 +229,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6144CCF72577EA7900B4B1BF /* CollectionView in Frameworks */,
+				6112CD31256FF66E008FDC66 /* BigInt in Frameworks */,
 				61A06B592510F54F0039ACD0 /* Alamofire in Frameworks */,
 				61CB42492554498E001F4EBD /* LottieSwiftUI in Frameworks */,
 				61896C132562B78A009E626A /* HTMLEntities in Frameworks */,
 				61B3F12C25543E0800C6E17D /* Lottie in Frameworks */,
+				61C38A7F25A356E300465AAB /* ListPagination in Frameworks */,
 				61896C0E256200D3009E626A /* ISO8859 in Frameworks */,
-				6178A554256F9A0D0071CFF0 /* BigNumber in Frameworks */,
-				6178A54F256F99800071CFF0 /* CryptoSwift in Frameworks */,
+				6112CD2C256FF5EE008FDC66 /* CryptoSwift in Frameworks */,
 				61A06B562510C49F0039ACD0 /* SDWebImageSwiftUI in Frameworks */,
-				6146F316252254CC00410573 /* InputMask in Frameworks */,
 				61B82617256E6499006D3B0B /* SwiftyRequest in Frameworks */,
-				61C91CB72541DB4600DF6B85 /* Pages in Frameworks */,
-				613BD86D251374490000B9F8 /* SwiftUIMapView in Frameworks */,
-				E34B341D412C0BD25FC40B91 /* Pods_com_arrrink_StreetArtMarketplace.framework in Frameworks */,
+				61DBA2C82577BF1900EA1604 /* ASCollectionView in Frameworks */,
+				C60B90EC48EE7465E934981D /* Pods_com_arrrink_StreetArtMarketplace.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,7 +249,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				850B24B8CAB820580764AB3E /* Pods_com_arrrink_StreetArtMarketplaceTests.framework in Frameworks */,
+				D1ACF8391C5CF3D6C7C4CC85 /* Pods_com_arrrink_StreetArtMarketplaceTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -245,7 +257,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9649EDCB79E2CE38F91877D8 /* Pods_com_arrrink_StreetArtMarketplace_com_arrrink_StreetArtMarketplaceUITests.framework in Frameworks */,
+				F52A9DFE3567E09611881FA8 /* Pods_com_arrrink_StreetArtMarketplace_com_arrrink_StreetArtMarketplaceUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,24 +267,34 @@
 		0DD3FF37F0F7AD8C4A5D98C8 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				BB5FCF3CBFC3DDD7DFB99F04 /* Pods-com.arrrink.StreetArtMarketplace.debug.xcconfig */,
-				F2D5D770B730FE27B6AA97B7 /* Pods-com.arrrink.StreetArtMarketplace.release.xcconfig */,
-				ABE27AE7DA71E9A669675AA8 /* Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.debug.xcconfig */,
-				2F5AAB612638E605DFB4B28C /* Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.release.xcconfig */,
-				E5951982F7E242273A705EF6 /* Pods-com.arrrink.StreetArtMarketplaceTests.debug.xcconfig */,
-				2254579784634310ED6AC71B /* Pods-com.arrrink.StreetArtMarketplaceTests.release.xcconfig */,
+				FB495E252A72DEEA7A3F4E10 /* Pods-com.arrrink.StreetArtMarketplace.debug.xcconfig */,
+				9CF04AF4C909207DEDFE347C /* Pods-com.arrrink.StreetArtMarketplace.release.xcconfig */,
+				4BDAD74EE05619153C34132D /* Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.debug.xcconfig */,
+				46A6ED54A6FFAC1168048BEC /* Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.release.xcconfig */,
+				C9D79DA8F450E0B0D3A0D375 /* Pods-com.arrrink.StreetArtMarketplaceTests.debug.xcconfig */,
+				3F8EBC4C2FFC7FE823C21CD9 /* Pods-com.arrrink.StreetArtMarketplaceTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		52BCEB9FA493631CAD622ED7 /* Frameworks */ = {
+		5F64CF99F793891AFF6B2F07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				FB08B99CF6EE13D396BE9180 /* Pods_com_arrrink_StreetArtMarketplace.framework */,
-				A9DC6E04FCBF50B4C7794664 /* Pods_com_arrrink_StreetArtMarketplace_com_arrrink_StreetArtMarketplaceUITests.framework */,
-				88CC2AC90F36BCD3DE40CFB1 /* Pods_com_arrrink_StreetArtMarketplaceTests.framework */,
+				1BB09A625709A67D2B0627DB /* Pods_com_arrrink_StreetArtMarketplace.framework */,
+				2B170645B5A0534D60AE4C43 /* Pods_com_arrrink_StreetArtMarketplace_com_arrrink_StreetArtMarketplaceUITests.framework */,
+				6D450B30B965AB2743C9FAB1 /* Pods_com_arrrink_StreetArtMarketplaceTests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6112CD34256FF6C0008FDC66 /* SwiftyBase64 */ = {
+			isa = PBXGroup;
+			children = (
+				6112CD35256FF6C0008FDC66 /* LICENSE */,
+				6112CD36256FF6C0008FDC66 /* Alphabets.swift */,
+				6112CD37256FF6C0008FDC66 /* Base64.swift */,
+			);
+			path = SwiftyBase64;
 			sourceTree = "<group>";
 		};
 		61383176252F5265006A12D5 /* StoriesStyle */ = {
@@ -312,8 +334,8 @@
 		6138317D252F5338006A12D5 /* MVVM */ = {
 			isa = PBXGroup;
 			children = (
+				6138318E252F58E9006A12D5 /* GetFlatsData.swift */,
 				61C3418524EC7A2F0065C5D4 /* ContentView.swift */,
-				61C68C72256C3855002ACCAD /* 2211obj.json */,
 				61108ADE2555A5EB00E9D7A6 /* UploadStory.swift */,
 				610BB2ED2525FE6E00C9A329 /* IpotekaView.swift */,
 				61896C06255F08C7009E626A /* ApartView.swift */,
@@ -322,6 +344,8 @@
 				612605F725574029005B2E47 /* map.json */,
 				612605F82557402D005B2E47 /* percent.json */,
 				61432C3724EE7B3700E9A141 /* SearchView.swift */,
+				617564E8257D903A00E14FA2 /* CustomCellFlat.swift */,
+				617564E9257D903A00E14FA2 /* CustomCellFlat.xib */,
 				611A5DF42536665100872513 /* FilterView.swift */,
 				61B3F12625543B0D00C6E17D /* CartView.swift */,
 				61B256EE2540281D001271D5 /* DetailFlatView.swift */,
@@ -332,7 +356,6 @@
 				611A5DF825366EED00872513 /* To.swift */,
 				61CB4243255442BA001F4EBD /* emtycart.json */,
 				61259148250AADFD00B62B75 /* MapView.swift */,
-				6138318E252F58E9006A12D5 /* GetFlatsData.swift */,
 				61C91D552543167D00DF6B85 /* main.storyboard */,
 			);
 			path = MVVM;
@@ -346,23 +369,43 @@
 			path = Annotations;
 			sourceTree = "<group>";
 		};
-		6178A529256F988E0071CFF0 /* ServiceAccountTokenProvider */ = {
+		6178A5D3256FD74D0071CFF0 /* OAuth2 */ = {
 			isa = PBXGroup;
 			children = (
-				6178A52A256F988E0071CFF0 /* RSA.swift */,
-				6178A52B256F988E0071CFF0 /* JWT.swift */,
-				6178A52C256F988E0071CFF0 /* ServiceAccountTokenProvider.swift */,
-				6178A52D256F988E0071CFF0 /* ASN1.swift */,
+				6178A5D4256FD74D0071CFF0 /* Connection.swift */,
+				6178A5D5256FD74D0071CFF0 /* ServiceAccountTokenProvider */,
+				6178A5DA256FD74D0071CFF0 /* openURL.swift */,
+				6178A5DB256FD74D0071CFF0 /* AuthError.swift */,
+				6178A5DC256FD74D0071CFF0 /* FCMTokenProvider */,
+				6178A5E0256FD74D0071CFF0 /* DefaultTokenProvider.swift */,
+				6178A5E1256FD74D0071CFF0 /* BrowserTokenProvider.swift */,
+				6178A5E2256FD74D0071CFF0 /* Code.swift */,
+				6178A5E3256FD74D0071CFF0 /* GoogleCloudMetadataTokenProvider.swift */,
+				6178A5E4256FD74D0071CFF0 /* GoogleRefreshTokenProvider.swift */,
+				6178A5E5256FD74D0071CFF0 /* Token.swift */,
+				6178A5E6256FD74D0071CFF0 /* TokenProvider.swift */,
+			);
+			path = OAuth2;
+			sourceTree = "<group>";
+		};
+		6178A5D5256FD74D0071CFF0 /* ServiceAccountTokenProvider */ = {
+			isa = PBXGroup;
+			children = (
+				6178A5D6256FD74D0071CFF0 /* RSA.swift */,
+				6178A5D7256FD74D0071CFF0 /* JWT.swift */,
+				6178A5D8256FD74D0071CFF0 /* ServiceAccountTokenProvider.swift */,
+				6178A5D9256FD74D0071CFF0 /* ASN1.swift */,
 			);
 			path = ServiceAccountTokenProvider;
 			sourceTree = "<group>";
 		};
-		6178A531256F98950071CFF0 /* FCMTokenProvider */ = {
+		6178A5DC256FD74D0071CFF0 /* FCMTokenProvider */ = {
 			isa = PBXGroup;
 			children = (
-				6178A532256F98950071CFF0 /* FCMTokenProvider.swift */,
-				6178A533256F98950071CFF0 /* index.js */,
-				6178A534256F98950071CFF0 /* README.md */,
+				6178A5FE256FD92E0071CFF0 /* TinyHTTPServer.swift */,
+				6178A5DD256FD74D0071CFF0 /* FCMTokenProvider.swift */,
+				6178A5DE256FD74D0071CFF0 /* index.js */,
+				6178A5DF256FD74D0071CFF0 /* README.md */,
 			);
 			path = FCMTokenProvider;
 			sourceTree = "<group>";
@@ -370,20 +413,10 @@
 		61B82622256E6549006D3B0B /* BigQuery */ = {
 			isa = PBXGroup;
 			children = (
-				61B82611256E63DC006D3B0B /* BigQueryAuthProvider.swift */,
+				6112CD34256FF6C0008FDC66 /* SwiftyBase64 */,
+				6178A5D3256FD74D0071CFF0 /* OAuth2 */,
 				61B8261A256E64A5006D3B0B /* HTTPClient.swift */,
-				6178A535256F98970071CFF0 /* AuthError.swift */,
-				6178A527256F988A0071CFF0 /* BrowserTokenProvider.swift */,
-				6178A525256F98860071CFF0 /* Code.swift */,
-				6178A526256F98880071CFF0 /* Connection.swift */,
-				6178A52F256F98910071CFF0 /* DefaultTokenProvider.swift */,
-				6178A531256F98950071CFF0 /* FCMTokenProvider */,
-				6178A536256F98990071CFF0 /* GoogleCloudMetadataTokenProvider.swift */,
-				6178A537256F989C0071CFF0 /* GoogleRefreshTokenProvider.swift */,
-				6178A528256F988C0071CFF0 /* openURL.swift */,
-				6178A529256F988E0071CFF0 /* ServiceAccountTokenProvider */,
-				6178A52E256F98900071CFF0 /* Token.swift */,
-				6178A530256F98930071CFF0 /* TokenProvider.swift */,
+				61B82611256E63DC006D3B0B /* BigQueryAuthProvider.swift */,
 				61B8261E256E6501006D3B0B /* BigQuerySwift.swift */,
 			);
 			path = BigQuery;
@@ -397,7 +430,7 @@
 				61C341A224EC7A3B0065C5D4 /* com.arrrink.StreetArtMarketplaceUITests */,
 				61C3417F24EC7A2F0065C5D4 /* Products */,
 				0DD3FF37F0F7AD8C4A5D98C8 /* Pods */,
-				52BCEB9FA493631CAD622ED7 /* Frameworks */,
+				5F64CF99F793891AFF6B2F07 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -416,6 +449,7 @@
 			children = (
 				614E754225497A4F00F2E5A4 /* AN78.entitlements */,
 				61C3418124EC7A2F0065C5D4 /* AppDelegate.swift */,
+				61E7BBE12570FF1100AD330A /* credentials.json */,
 				61C3418324EC7A2F0065C5D4 /* SceneDelegate.swift */,
 				61B82622256E6549006D3B0B /* BigQuery */,
 				61383184252F5393006A12D5 /* LoaderView.swift */,
@@ -470,13 +504,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 61C341A824EC7A3B0065C5D4 /* Build configuration list for PBXNativeTarget "com.arrrink.StreetArtMarketplace" */;
 			buildPhases = (
-				6473EE3D3AF3C9D06B08C629 /* [CP] Check Pods Manifest.lock */,
+				31CD214DB7C318ED87CD4C2F /* [CP] Check Pods Manifest.lock */,
 				61C3417A24EC7A2F0065C5D4 /* Sources */,
 				61C3417B24EC7A2F0065C5D4 /* Frameworks */,
 				61C3417C24EC7A2F0065C5D4 /* Resources */,
-				F980F2305243F7F3D948482A /* [CP] Embed Pods Frameworks */,
 				611B52892507CDD50049F9A4 /* Embed Frameworks */,
-				2CFCDBB7278425FA0C8B3290 /* [CP] Copy Pods Resources */,
+				6EBB5AC0F82A3B7F0E193E5B /* [CP] Embed Pods Frameworks */,
+				EEFF02F2E2BB4B29102DF86C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -486,16 +520,16 @@
 			packageProductDependencies = (
 				61A06B552510C49F0039ACD0 /* SDWebImageSwiftUI */,
 				61A06B582510F54F0039ACD0 /* Alamofire */,
-				613BD86C251374490000B9F8 /* SwiftUIMapView */,
-				6146F315252254CC00410573 /* InputMask */,
-				61C91CB62541DB4600DF6B85 /* Pages */,
 				61B3F12B25543E0800C6E17D /* Lottie */,
 				61CB42482554498E001F4EBD /* LottieSwiftUI */,
 				61896C0D256200D3009E626A /* ISO8859 */,
 				61896C122562B78A009E626A /* HTMLEntities */,
 				61B82616256E6499006D3B0B /* SwiftyRequest */,
-				6178A54E256F99800071CFF0 /* CryptoSwift */,
-				6178A553256F9A0D0071CFF0 /* BigNumber */,
+				6112CD2B256FF5EE008FDC66 /* CryptoSwift */,
+				6112CD30256FF66E008FDC66 /* BigInt */,
+				61DBA2C72577BF1900EA1604 /* ASCollectionView */,
+				6144CCF62577EA7900B4B1BF /* CollectionView */,
+				61C38A7E25A356E300465AAB /* ListPagination */,
 			);
 			productName = com.arrrink.StreetArtMarketplace;
 			productReference = 61C3417E24EC7A2F0065C5D4 /* AN78.app */;
@@ -505,7 +539,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 61C341AB24EC7A3B0065C5D4 /* Build configuration list for PBXNativeTarget "com.arrrink.StreetArtMarketplaceTests" */;
 			buildPhases = (
-				724BD6A0842486CB4A8D6102 /* [CP] Check Pods Manifest.lock */,
+				29E1DBC5379C0D12EEA3D5A0 /* [CP] Check Pods Manifest.lock */,
 				61C3419024EC7A3B0065C5D4 /* Sources */,
 				61C3419124EC7A3B0065C5D4 /* Frameworks */,
 				61C3419224EC7A3B0065C5D4 /* Resources */,
@@ -524,12 +558,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 61C341AE24EC7A3B0065C5D4 /* Build configuration list for PBXNativeTarget "com.arrrink.StreetArtMarketplaceUITests" */;
 			buildPhases = (
-				6FC1F75F821F8A2B4F3FD4AD /* [CP] Check Pods Manifest.lock */,
+				89966B4F6F74CF0BBEF5DC66 /* [CP] Check Pods Manifest.lock */,
 				61C3419B24EC7A3B0065C5D4 /* Sources */,
 				61C3419C24EC7A3B0065C5D4 /* Frameworks */,
 				61C3419D24EC7A3B0065C5D4 /* Resources */,
-				DA15F3B8715C4D86F3A03A1B /* [CP] Embed Pods Frameworks */,
-				879402BBEC902439CC95F071 /* [CP] Copy Pods Resources */,
+				C88BD83C731DCF06597A5DDB /* [CP] Embed Pods Frameworks */,
+				ACAA8D2007D7056A4E1E6F56 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -577,17 +611,16 @@
 			packageReferences = (
 				61A06B542510C49F0039ACD0 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				61A06B572510F54F0039ACD0 /* XCRemoteSwiftPackageReference "Alamofire" */,
-				613BD86B251374490000B9F8 /* XCRemoteSwiftPackageReference "swiftui-mapview" */,
-				6146F314252254CB00410573 /* XCRemoteSwiftPackageReference "input-mask-ios" */,
-				61C91CB52541DB4600DF6B85 /* XCRemoteSwiftPackageReference "Pages" */,
-				610309FB2551748D00A24286 /* XCRemoteSwiftPackageReference "ASCollectionView" */,
 				61B3F12A25543E0800C6E17D /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				61CB42472554498D001F4EBD /* XCRemoteSwiftPackageReference "Lottie-SwiftUI" */,
 				61896C0C256200CE009E626A /* XCRemoteSwiftPackageReference "ISO8859" */,
 				61896C112562B789009E626A /* XCRemoteSwiftPackageReference "swift-html-entities" */,
 				61B82615256E6499006D3B0B /* XCRemoteSwiftPackageReference "SwiftyRequest" */,
-				6178A54D256F99800071CFF0 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
-				6178A552256F9A0D0071CFF0 /* XCRemoteSwiftPackageReference "Swift-Big-Integer" */,
+				6112CD2A256FF5EE008FDC66 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
+				6112CD2F256FF66E008FDC66 /* XCRemoteSwiftPackageReference "BigInt" */,
+				61DBA2C62577BF1900EA1604 /* XCRemoteSwiftPackageReference "ASCollectionView" */,
+				6144CCF52577EA7900B4B1BF /* XCRemoteSwiftPackageReference "collectionview" */,
+				61C38A7D25A356E300465AAB /* XCRemoteSwiftPackageReference "ListPagination" */,
 			);
 			productRefGroup = 61C3417F24EC7A2F0065C5D4 /* Products */;
 			projectDirPath = "";
@@ -610,7 +643,7 @@
 				61C3418B24EC7A3A0065C5D4 /* Preview Assets.xcassets in Resources */,
 				614E75462549883800F2E5A4 /* GoogleService-Infofoog.plist in Resources */,
 				61C8D86F256A4B5F007D6924 /* GoogleService-Info.plist in Resources */,
-				61C68C73256C3856002ACCAD /* 2211obj.json in Resources */,
+				61E7BBE22570FF1100AD330A /* credentials.json in Resources */,
 				61108AEB2555C71600E9D7A6 /* agency.json in Resources */,
 				61108AED2555C71600E9D7A6 /* city.json in Resources */,
 				61C3418824EC7A3A0065C5D4 /* Assets.xcassets in Resources */,
@@ -618,14 +651,16 @@
 				61CC220B25403201002E3E03 /* launchscreen4.PNG in Resources */,
 				61C91D562543167E00DF6B85 /* main.storyboard in Resources */,
 				61CB4244255442BA001F4EBD /* emtycart.json in Resources */,
+				6112CD38256FF6C0008FDC66 /* LICENSE in Resources */,
 				61EFD8342535A2F600F21580 /* GoogleService-Infoold.plist in Resources */,
 				610053A02555CC3200CD16C5 /* find.json in Resources */,
 				61A89C68251F45FB00883023 /* GoogleService-Info34.plist in Resources */,
 				612605FB25574031005B2E47 /* percent.json in Resources */,
 				612605FA25574031005B2E47 /* map.json in Resources */,
-				6178A544256F989C0071CFF0 /* index.js in Resources */,
+				6178A5EF256FD74D0071CFF0 /* index.js in Resources */,
 				612605FC25574031005B2E47 /* invest.json in Resources */,
-				6178A545256F989C0071CFF0 /* README.md in Resources */,
+				6178A5F0256FD74D0071CFF0 /* README.md in Resources */,
+				617564EB257D903A00E14FA2 /* CustomCellFlat.xib in Resources */,
 				610309F4255083AB00A24286 /* bgls.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -647,68 +682,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2CFCDBB7278425FA0C8B3290 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-com.arrrink.StreetArtMarketplace/Pods-com.arrrink.StreetArtMarketplace-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-com.arrrink.StreetArtMarketplace/Pods-com.arrrink.StreetArtMarketplace-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-com.arrrink.StreetArtMarketplace/Pods-com.arrrink.StreetArtMarketplace-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6473EE3D3AF3C9D06B08C629 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-com.arrrink.StreetArtMarketplace-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6FC1F75F821F8A2B4F3FD4AD /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		724BD6A0842486CB4A8D6102 /* [CP] Check Pods Manifest.lock */ = {
+		29E1DBC5379C0D12EEA3D5A0 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -730,41 +704,29 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		879402BBEC902439CC95F071 /* [CP] Copy Pods Resources */ = {
+		31CD214DB7C318ED87CD4C2F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Copy Pods Resources";
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-com.arrrink.StreetArtMarketplace-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests-resources.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DA15F3B8715C4D86F3A03A1B /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F980F2305243F7F3D948482A /* [CP] Embed Pods Frameworks */ = {
+		6EBB5AC0F82A3B7F0E193E5B /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -781,6 +743,79 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-com.arrrink.StreetArtMarketplace/Pods-com.arrrink.StreetArtMarketplace-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		89966B4F6F74CF0BBEF5DC66 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		ACAA8D2007D7056A4E1E6F56 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C88BD83C731DCF06597A5DDB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests/Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EEFF02F2E2BB4B29102DF86C /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-com.arrrink.StreetArtMarketplace/Pods-com.arrrink.StreetArtMarketplace-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-com.arrrink.StreetArtMarketplace/Pods-com.arrrink.StreetArtMarketplace-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-com.arrrink.StreetArtMarketplace/Pods-com.arrrink.StreetArtMarketplace-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -788,50 +823,54 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6178A538256F989C0071CFF0 /* Code.swift in Sources */,
-				6178A53E256F989C0071CFF0 /* ServiceAccountTokenProvider.swift in Sources */,
 				61432C3424EC91DF00E9A141 /* LoadingRectangle.swift in Sources */,
 				61C3418224EC7A2F0065C5D4 /* AppDelegate.swift in Sources */,
 				61896C07255F08C8009E626A /* ApartView.swift in Sources */,
 				61B3F12725543B0D00C6E17D /* CartView.swift in Sources */,
+				6178A5EB256FD74D0071CFF0 /* ASN1.swift in Sources */,
+				6178A5E7256FD74D0071CFF0 /* Connection.swift in Sources */,
 				61259149250AADFD00B62B75 /* MapView.swift in Sources */,
+				6178A5F6256FD74D0071CFF0 /* Token.swift in Sources */,
 				61B8261B256E64A5006D3B0B /* HTTPClient.swift in Sources */,
-				6178A53F256F989C0071CFF0 /* ASN1.swift in Sources */,
+				6178A5F4256FD74D0071CFF0 /* GoogleCloudMetadataTokenProvider.swift in Sources */,
 				61432C3A24EEACA700E9A141 /* extensions.swift in Sources */,
+				6178A5EC256FD74D0071CFF0 /* openURL.swift in Sources */,
 				610309F82551726D00A24286 /* RemoteImagerManager.swift in Sources */,
-				6178A543256F989C0071CFF0 /* FCMTokenProvider.swift in Sources */,
 				61CC2211254095D6002E3E03 /* CellFlat.swift in Sources */,
+				6178A5E8256FD74D0071CFF0 /* RSA.swift in Sources */,
 				611A5DF52536665100872513 /* FilterView.swift in Sources */,
+				6178A5F5256FD74D0071CFF0 /* GoogleRefreshTokenProvider.swift in Sources */,
+				6178A5EA256FD74D0071CFF0 /* ServiceAccountTokenProvider.swift in Sources */,
 				61432C3824EE7B3700E9A141 /* SearchView.swift in Sources */,
 				61108ADF2555A5EB00E9D7A6 /* UploadStory.swift in Sources */,
+				6112CD39256FF6C0008FDC66 /* Alphabets.swift in Sources */,
 				613BD86F251383B40000B9F8 /* CustomAnnotationView.swift in Sources */,
+				617564EA257D903A00E14FA2 /* CustomCellFlat.swift in Sources */,
 				61B0EF342507F04A0053A472 /* LoadStoryImage.swift in Sources */,
-				6178A547256F989C0071CFF0 /* GoogleCloudMetadataTokenProvider.swift in Sources */,
+				6178A5F7256FD74D0071CFF0 /* TokenProvider.swift in Sources */,
 				61108AE32555B14000E9D7A6 /* OnboardingView.swift in Sources */,
+				6178A5FF256FD92E0071CFF0 /* TinyHTTPServer.swift in Sources */,
 				61B8261F256E6501006D3B0B /* BigQuerySwift.swift in Sources */,
+				6178A5F2256FD74D0071CFF0 /* BrowserTokenProvider.swift in Sources */,
+				6112CD3A256FF6C0008FDC66 /* Base64.swift in Sources */,
 				6146F30A2522064000410573 /* LoginView.swift in Sources */,
-				6178A546256F989C0071CFF0 /* AuthError.swift in Sources */,
 				61B256EF2540281D001271D5 /* DetailFlatView.swift in Sources */,
-				6178A542256F989C0071CFF0 /* TokenProvider.swift in Sources */,
+				6178A5F1256FD74D0071CFF0 /* DefaultTokenProvider.swift in Sources */,
 				6189144B253F21FD001914A8 /* CellObject.swift in Sources */,
 				6146F306252205D500410573 /* SessionStore.swift in Sources */,
 				61B82612256E63DC006D3B0B /* BigQueryAuthProvider.swift in Sources */,
-				6178A548256F989C0071CFF0 /* GoogleRefreshTokenProvider.swift in Sources */,
-				6178A540256F989C0071CFF0 /* Token.swift in Sources */,
-				6178A53A256F989C0071CFF0 /* BrowserTokenProvider.swift in Sources */,
+				6178A5E9256FD74D0071CFF0 /* JWT.swift in Sources */,
+				6178A5F3256FD74D0071CFF0 /* Code.swift in Sources */,
 				61C3418424EC7A2F0065C5D4 /* SceneDelegate.swift in Sources */,
-				6178A53C256F989C0071CFF0 /* RSA.swift in Sources */,
 				6138318F252F58E9006A12D5 /* GetFlatsData.swift in Sources */,
+				6178A5ED256FD74D0071CFF0 /* AuthError.swift in Sources */,
 				6130448F254384CE00807952 /* VRDestination.swift in Sources */,
 				61C91D1025430D8800DF6B85 /* ARViewController.swift in Sources */,
 				610BB2EE2525FE6E00C9A329 /* IpotekaView.swift in Sources */,
-				6178A53D256F989C0071CFF0 /* JWT.swift in Sources */,
-				6178A539256F989C0071CFF0 /* Connection.swift in Sources */,
+				6178A5EE256FD74D0071CFF0 /* FCMTokenProvider.swift in Sources */,
 				61432C3624EDC9EE00E9A141 /* StoryView.swift in Sources */,
 				61383185252F5393006A12D5 /* LoaderView.swift in Sources */,
-				6178A53B256F989C0071CFF0 /* openURL.swift in Sources */,
 				611A5DF925366EED00872513 /* To.swift in Sources */,
-				6178A541256F989C0071CFF0 /* DefaultTokenProvider.swift in Sources */,
 				61C3418624EC7A2F0065C5D4 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -938,6 +977,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_COMPILATION_MODE = singlefile;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -1000,11 +1040,12 @@
 		};
 		61C341A924EC7A3B0065C5D4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BB5FCF3CBFC3DDD7DFB99F04 /* Pods-com.arrrink.StreetArtMarketplace.debug.xcconfig */;
+			baseConfigurationReference = FB495E252A72DEEA7A3F4E10 /* Pods-com.arrrink.StreetArtMarketplace.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = com.arrrink.StreetArtMarketplace/AN78.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_ASSET_PATHS = "\"com.arrrink.StreetArtMarketplace/Preview Content\"";
 				DEVELOPMENT_TEAM = K72ZPG3T29;
 				ENABLE_PREVIEWS = YES;
@@ -1016,6 +1057,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.arrrink.app.agency78;
 				PRODUCT_NAME = AN78;
+				PROVISIONING_PROFILE_SPECIFIER = "iOS Provisioning Distribution";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1024,11 +1066,12 @@
 		};
 		61C341AA24EC7A3B0065C5D4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F2D5D770B730FE27B6AA97B7 /* Pods-com.arrrink.StreetArtMarketplace.release.xcconfig */;
+			baseConfigurationReference = 9CF04AF4C909207DEDFE347C /* Pods-com.arrrink.StreetArtMarketplace.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = com.arrrink.StreetArtMarketplace/AN78.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_ASSET_PATHS = "\"com.arrrink.StreetArtMarketplace/Preview Content\"";
 				DEVELOPMENT_TEAM = K72ZPG3T29;
 				ENABLE_PREVIEWS = YES;
@@ -1040,6 +1083,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.arrrink.app.agency78;
 				PRODUCT_NAME = AN78;
+				PROVISIONING_PROFILE_SPECIFIER = "iOS Provisioning Distribution";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1048,7 +1092,7 @@
 		};
 		61C341AC24EC7A3B0065C5D4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E5951982F7E242273A705EF6 /* Pods-com.arrrink.StreetArtMarketplaceTests.debug.xcconfig */;
+			baseConfigurationReference = C9D79DA8F450E0B0D3A0D375 /* Pods-com.arrrink.StreetArtMarketplaceTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1071,7 +1115,7 @@
 		};
 		61C341AD24EC7A3B0065C5D4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2254579784634310ED6AC71B /* Pods-com.arrrink.StreetArtMarketplaceTests.release.xcconfig */;
+			baseConfigurationReference = 3F8EBC4C2FFC7FE823C21CD9 /* Pods-com.arrrink.StreetArtMarketplaceTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1094,7 +1138,7 @@
 		};
 		61C341AF24EC7A3B0065C5D4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = ABE27AE7DA71E9A669675AA8 /* Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.debug.xcconfig */;
+			baseConfigurationReference = 4BDAD74EE05619153C34132D /* Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1115,7 +1159,7 @@
 		};
 		61C341B024EC7A3B0065C5D4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2F5AAB612638E605DFB4B28C /* Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.release.xcconfig */;
+			baseConfigurationReference = 46A6ED54A6FFAC1168048BEC /* Pods-com.arrrink.StreetArtMarketplace-com.arrrink.StreetArtMarketplaceUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1176,44 +1220,28 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		610309FB2551748D00A24286 /* XCRemoteSwiftPackageReference "ASCollectionView" */ = {
+		6112CD2A256FF5EE008FDC66 /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apptekstudios/ASCollectionView";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.7.1;
-			};
-		};
-		613BD86B251374490000B9F8 /* XCRemoteSwiftPackageReference "swiftui-mapview" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sgade/swiftui-mapview";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.2.0;
-			};
-		};
-		6146F314252254CB00410573 /* XCRemoteSwiftPackageReference "input-mask-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/RedMadRobot/input-mask-ios.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.0.0;
-			};
-		};
-		6178A54D256F99800071CFF0 /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift.git";
+			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.3.7;
 			};
 		};
-		6178A552256F9A0D0071CFF0 /* XCRemoteSwiftPackageReference "Swift-Big-Integer" */ = {
+		6112CD2F256FF66E008FDC66 /* XCRemoteSwiftPackageReference "BigInt" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/mkrd/Swift-Big-Integer.git";
+			repositoryURL = "https://github.com/attaswift/BigInt";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.1.1;
+				minimumVersion = 5.2.1;
+			};
+		};
+		6144CCF52577EA7900B4B1BF /* XCRemoteSwiftPackageReference "collectionview" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pourhadi/collectionview.git";
+			requirement = {
+				branch = master;
+				kind = branch;
 			};
 		};
 		61896C0C256200CE009E626A /* XCRemoteSwiftPackageReference "ISO8859" */ = {
@@ -1264,12 +1292,12 @@
 				minimumVersion = 3.1.0;
 			};
 		};
-		61C91CB52541DB4600DF6B85 /* XCRemoteSwiftPackageReference "Pages" */ = {
+		61C38A7D25A356E300465AAB /* XCRemoteSwiftPackageReference "ListPagination" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/nachonavarro/Pages";
+			repositoryURL = "https://github.com/crelies/ListPagination";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.5;
+				minimumVersion = 0.1.1;
 			};
 		};
 		61CB42472554498D001F4EBD /* XCRemoteSwiftPackageReference "Lottie-SwiftUI" */ = {
@@ -1280,28 +1308,31 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		61DBA2C62577BF1900EA1604 /* XCRemoteSwiftPackageReference "ASCollectionView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apptekstudios/ASCollectionView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.7.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		613BD86C251374490000B9F8 /* SwiftUIMapView */ = {
+		6112CD2B256FF5EE008FDC66 /* CryptoSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 613BD86B251374490000B9F8 /* XCRemoteSwiftPackageReference "swiftui-mapview" */;
-			productName = SwiftUIMapView;
-		};
-		6146F315252254CC00410573 /* InputMask */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 6146F314252254CB00410573 /* XCRemoteSwiftPackageReference "input-mask-ios" */;
-			productName = InputMask;
-		};
-		6178A54E256F99800071CFF0 /* CryptoSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 6178A54D256F99800071CFF0 /* XCRemoteSwiftPackageReference "CryptoSwift" */;
+			package = 6112CD2A256FF5EE008FDC66 /* XCRemoteSwiftPackageReference "CryptoSwift" */;
 			productName = CryptoSwift;
 		};
-		6178A553256F9A0D0071CFF0 /* BigNumber */ = {
+		6112CD30256FF66E008FDC66 /* BigInt */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6178A552256F9A0D0071CFF0 /* XCRemoteSwiftPackageReference "Swift-Big-Integer" */;
-			productName = BigNumber;
+			package = 6112CD2F256FF66E008FDC66 /* XCRemoteSwiftPackageReference "BigInt" */;
+			productName = BigInt;
+		};
+		6144CCF62577EA7900B4B1BF /* CollectionView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6144CCF52577EA7900B4B1BF /* XCRemoteSwiftPackageReference "collectionview" */;
+			productName = CollectionView;
 		};
 		61896C0D256200D3009E626A /* ISO8859 */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1333,15 +1364,20 @@
 			package = 61B82615256E6499006D3B0B /* XCRemoteSwiftPackageReference "SwiftyRequest" */;
 			productName = SwiftyRequest;
 		};
-		61C91CB62541DB4600DF6B85 /* Pages */ = {
+		61C38A7E25A356E300465AAB /* ListPagination */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 61C91CB52541DB4600DF6B85 /* XCRemoteSwiftPackageReference "Pages" */;
-			productName = Pages;
+			package = 61C38A7D25A356E300465AAB /* XCRemoteSwiftPackageReference "ListPagination" */;
+			productName = ListPagination;
 		};
 		61CB42482554498E001F4EBD /* LottieSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 61CB42472554498D001F4EBD /* XCRemoteSwiftPackageReference "Lottie-SwiftUI" */;
 			productName = LottieSwiftUI;
+		};
+		61DBA2C72577BF1900EA1604 /* ASCollectionView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 61DBA2C62577BF1900EA1604 /* XCRemoteSwiftPackageReference "ASCollectionView" */;
+			productName = ASCollectionView;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

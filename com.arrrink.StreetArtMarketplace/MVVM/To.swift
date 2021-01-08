@@ -796,7 +796,7 @@ class FromToSearch: ObservableObject, Identifiable {
     let publisher4 = PassthroughSubject<[CGFloat], Never>()
     let publisher5 = PassthroughSubject<[CGFloat], Never>()
     
-    @Published var query = Firebase.Firestore.firestore().collection("taflatplans").order(by: "price", descending: false)
+    @Published var query = ""
     @Published var decodePrice  = ""
     @Published var decodeTotalS  = ""
     
@@ -920,37 +920,42 @@ class FromToSearch: ObservableObject, Identifiable {
         self.kitchenS = kitchenS
         self.floor = floor
       
-        getMaxPrice()
+      //  getMaxPrice()
         
       //  findPercent()
         
         
         
         // init
-        print("init parse data for search")
+
         
         let db = Firestore.firestore()
         
-        db.collection("objects").getDocuments { (snap, err) in
+        db.collection("objects").getDocuments { (snapp, err) in
             
             if err != nil{
                 
                 print((err?.localizedDescription)!)
                 return
             }
-            
-            for i in snap!.documents{
+            guard let snap = snapp else {return}
+            for i in snap.documents{
                 
                // let id = i.documentID
-                let name = i.get("complexName") as! String
-                let developer = i.get("developer") as! String
+                let name = i.get("complexName") as? String ?? ""
+                let developer = i.get("developer") as? String ?? ""
                 
+                DispatchQueue.main.async {
                 self.datas.append(dataType(id: UUID().uuidString, name: name, type: .complexName))
                 
-                if self.datas.filter({$0.type == .developer && $0.name == developer }).count == 0 {
                 
-                
-                self.datas.append(dataType(id: UUID().uuidString, name: developer, type: .developer))
+                if self.datas.filter({$0.type == .developer }).filter({$0.name == developer}).count == 0 {
+
+
+                    self.datas.append(dataType(id: UUID().uuidString, name: developer, type: .developer))
+
+                    
+                }
              }
             }
         }
@@ -973,7 +978,11 @@ class FromToSearch: ObservableObject, Identifiable {
             "Пушкинский р-н",
             "Фрунзенский р-н",
             "Центральный р-н",
-            "Всеволожский р-н"
+            "Всеволожский р-н",
+            "Гатчинский р-н",
+            "Ломоносовский р-н",
+            
+            "Тосненский р-н"
         ]
         let undegroundArray = ["Комендантский проспект",
                                "Старая Деревня",
@@ -1000,20 +1009,20 @@ class FromToSearch: ObservableObject, Identifiable {
                                "Горьковская",
                                "Невский проспект",
                                "Сенная площадь",
-                               "Технологический институт - 2",
+
                                "Фрунзенская",
                                "Московские ворота",
                                "Электросила",
-                               "Парк победы",
+                               "Парк Победы",
                                "Московская",
-                               "Звездная",
+                               "Звёздная",
                                "Купчино",
                                "Девяткино",
                                     "Гражданский проспект",
                                     "Академическая",
                                          "Политехническая",
                                          
-                                         "Площадь мужества",
+                                         "Площадь Мужества",
                                          "Лесная",
                                          "Выборгская",
                                          "Площадь Ленина",
@@ -1030,11 +1039,11 @@ class FromToSearch: ObservableObject, Identifiable {
                                          "Проспект Ветеранов",
                                          "Беговая",
                                         "Новокрестовская",
-                                        "Приморский",
+                                        "Приморская",
                                         "Василеостровская",
                                        "Гостиный двор",
                                        "Маяковская",
-                                       "Площадь Александра Невского - 1",
+                                       "Площадь Ал. Невского - 1",
                                        "Елизаровская",
                                        "Ломоносовская",
                                        "Пролетарская",
@@ -1044,17 +1053,20 @@ class FromToSearch: ObservableObject, Identifiable {
                                        "Спасская",
                                             "Достоевская",
                                             "Лиговский проспект",
-                                            "Площадь Александра Невского - 2",
                                             "Новочерскасская",
                                             "Ладожская",
                                             "Проспект Большевиков",
                                             "Улица Дыбенко"]
         
         for i in undegroundArray {
+            DispatchQueue.main.async {
             self.datas.append(dataType(id: UUID().uuidString, name: i, type: .underground))
+            }
         }
         for i in districtArray {
+            DispatchQueue.main.async {
             self.datas.append(dataType(id: UUID().uuidString, name: i, type: .district))
+            }
         }
        
     }
@@ -1102,32 +1114,32 @@ class FromToSearch: ObservableObject, Identifiable {
         return answer
     }
     
-    func getMaxPrice() {
-        let db = Database.database().reference()
-        
-            db.child("taflatplans").queryOrdered(byChild: "price").queryLimited(toLast: 1).observe(.value) { (snap) in
-            guard let children = snap.children.allObjects as? [DataSnapshot] else {
-            print("((((((")
-            return
-          }
-               
-            guard children.count != 0 else {
-                print("cant 0")
-                return
-            }
-
-            for j in children {
-                
-                let string = j.childSnapshot(forPath: "price").value as? Int ?? 0
-                DispatchQueue.main.async {
-                    self.maxPrice = string
-                    print(self.maxPrice)
-                }
-            }
-        }
-        
-        
-    }
+//    func getMaxPrice() {
+//        let db = Database.database().reference()
+//
+//            db.child("taflatplans").queryOrdered(byChild: "price").queryLimited(toLast: 1).observe(.value) { (snap) in
+//            guard let children = snap.children.allObjects as? [DataSnapshot] else {
+//            print("((((((")
+//            return
+//          }
+//
+//            guard children.count != 0 else {
+//                print("cant 0")
+//                return
+//            }
+//
+//            for j in children {
+//
+//                let string = j.childSnapshot(forPath: "price").value as? Int ?? 0
+//                DispatchQueue.main.async {
+//                    self.maxPrice = string
+//                    print(self.maxPrice)
+//                }
+//            }
+//        }
+//
+//
+//    }
 
 }
 

@@ -16,8 +16,7 @@ import Firebase
 import GoogleMaps
 import GooglePlaces
 
-import PromiseKit
-import SwiftUIMapView
+
 
 
 struct MapView : UIViewRepresentable {
@@ -63,7 +62,14 @@ struct MapView : UIViewRepresentable {
     
         map.delegate = context.coordinator
     
- 
+        DispatchQueue.main.async {
+            
+            
+           
+            map.addAnnotations(complexNameArray)
+
+    
+    }
           
 
         return map

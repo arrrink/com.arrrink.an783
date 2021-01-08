@@ -14,7 +14,6 @@
 
 import Foundation
 import CryptoSwift
-import SwiftyBase64
 
 struct JWTHeader : Codable {
   let Algorithm : String
@@ -44,17 +43,18 @@ struct JWT {
   static func encodeWithRS256(jwtHeader: JWTHeader,
                               jwtClaimSet: JWTClaimSet,
                               rsaKey: RSAKey) throws -> String {
+    
     let encoder = JSONEncoder()
     let headerData = try encoder.encode(jwtHeader)
     let claimsData = try encoder.encode(jwtClaimSet)
-    let header = SwiftyBase64.EncodeString(Array(headerData), alphabet:.URLAndFilenameSafe)
-    let claims = SwiftyBase64.EncodeString(Array(claimsData), alphabet:.URLAndFilenameSafe)
+    let header = EncodeString(Array(headerData), alphabet:.URLAndFilenameSafe)
+    let claims = EncodeString(Array(claimsData), alphabet:.URLAndFilenameSafe)
     let body = header + "." + claims
     let bodyData = body.data(using: String.Encoding.utf8)!
     let sha2 = SHA2(variant: SHA2.Variant(rawValue:256)!)
     let hash = sha2.calculate(for:Array(bodyData))
     let signature = rsaKey.sign(hash:hash)
-    let signatureString = SwiftyBase64.EncodeString(signature, alphabet:.URLAndFilenameSafe)
+    let signatureString = EncodeString(signature, alphabet:.URLAndFilenameSafe)
     return body + "." + signatureString
   }
 }

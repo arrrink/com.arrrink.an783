@@ -64,7 +64,7 @@ struct FilterView: View {
             
             
             Button {
-               // self.showFilterView.toggle()
+                self.reset()
             } label: {
                
                     Text("СБРОС").foregroundColor(Color.white)
@@ -73,205 +73,7 @@ struct FilterView: View {
                                 .shadow(color: Color.black.opacity(0.1), radius: 5, x: -5, y: -5))
             }
             Spacer()
-            Button {
-                
-                
-                data.query = Firebase.Firestore.firestore().collection("taflatplans")
-                
-                let decodePerToPriceFrom = 1000000 * pow(1.0225, (data.flatPrice[0] * 320000000 - 1000000) /  1000000)
-             
-                let decodePerToPriceTo = 1000000 * pow(1.0225, (data.flatPrice[1] * 320000000 - 1000000) /  1000000)
-             
-                data.query = data.query.whereField("price", isLessThanOrEqualTo: Int(decodePerToPriceTo / 100000) * 100000)
-                
-                
-                
-               
-                
-                
-                
-                
-                if data.tags.filter({ (j) -> Bool in
-                                                return j.data.type == .developer }).count != 0 {
-                    
-                    var devArr = [String]()
-                    for i in data.tags.filter({ (j) -> Bool in
-                                                return j.data.type == .developer }) {
-                        
-                        devArr.append(i.data.name)
-                    }
-
-                    data.query = data.query.whereField("developer", in: devArr)
-                    
-                }
-                
-                
-                if data.tags.filter({ (j) -> Bool in
-                    return j.data.type == .underground
-                }).count != 0 {
-                    
-                    for i in data.tags.filter({ (j) -> Bool in
-                                                return j.data.type == .underground }) {
-                        
-                        
-                        data.query = data.query.whereField("underground.\(i.data.name)", isEqualTo: true)
-                        
-                    }
-                     
-                    
-                }
-                
-                if data.tags.filter({ (j) -> Bool in
-                    return j.data.type == .complexName
-                }).count != 0 {
-                    
-                    for i in data.tags.filter({ (j) -> Bool in
-                                                return j.data.type == .complexName }) {
-                        
-                        data.query = data.query.whereField("complexName", isEqualTo: i.data.name)
-                    }
-
-                   
-                    
-                }
-                
-                if data.tags.filter({ (j) -> Bool in
-                    return j.data.type == .district
-                }).count != 0 {
-                    
-                   // var districtArr = [String]()
-                    for i in data.tags.filter({ (j) -> Bool in
-                                                return j.data.type == .district }) {
-                                                
-                        data.query = data.query.whereField("district", isEqualTo: i.data.name)
-                        
-                        
-                    }
-
-                    
-                }
-                
-                if !data.decodeFloor.isEmpty {
-                    let decodeFloorFrom = Int((data.floor[0] * 40).rounded())
-                    let decodeFloorTo = Int((data.floor[1] * 40).rounded())
-                    
-                    let arr = Array(Set(decodeFloorFrom...decodeFloorTo)).sorted(by : {$0 < $1})
-                        print(arr)
-                    
-                    for i in arr {
-                        
-                    
-                    data.query = data.query.whereField("floor", isEqualTo: i)
-                    }
-
-                }
-                
-                if defaultArrDeadline.count != data.deadline.count {
-                    //data.query = data.query.whereField("deadline", in: data.deadline)
-
-                    for i in data.deadline {
-                        
-                    
-                    data.query = data.query.whereField("deadline", isEqualTo: i)
-                    }
-                }
-                
-                if defaultArrToMetro.count != data.timeToMetro.count {
-                    //data.query = data.query.whereField("deadline", in: data.deadline)
-
-                    for i in data.deadline {
-                        
-
-                        data.query = data.query.whereField("toUnderground", isEqualTo: i)
-                    }
-                }
-
-                
-                if defaultArrType.count != data.type.count {
-
-                    for i in data.type {
-                    data.query = data.query.whereField("roomType", isEqualTo: i)
-                    }
-                }
-                
-                if defaultArrRepair.count != data.repair.count {
-
-                    for i in data.repair {
-                    data.query = data.query.whereField("repair", isEqualTo: i)
-                    }
-                }
-                
-                
-                if data.ifApart == "Только апартаменты" {
-                    data.query = data.query.whereField("type", isEqualTo: "Апартаменты")
-                } else if data.ifApart == "Исключить апартаменты"{
-                    data.query = data.query.whereField("type", isEqualTo: "Новостройки")
-                }
-                
-                if data.ifApart == "Только уступки застройщика" {
-                    data.query = data.query.whereField("cession", isEqualTo: "Уступка застройщика")
-                } else if data.ifApart == "Исключить уступки застройщика"{
-                    data.query = data.query.whereField("cession", isEqualTo: "default")
-                }
-                
-                data.query = data.query.whereField("price", isGreaterThanOrEqualTo: Int(decodePerToPriceFrom / 100000) * 100000)
-                    .order(by: "price", descending: false)
-                
-                
-                
-                getFlats.query = data.query
-                
-                getFlats.startKey.removeAll()
-                
-                
-                getFlats.getPromiseFlatTotal().done { (totalData) in
-                    
-                      if totalData["foundCount"] as? Int ?? 0 == 0  {
-                        getFlats.note = "Не найдено"
-                        
-                        getFlats.data.removeAll()
-
-
-                      } else {
-                        getFlats.note = "\(getFlats.foundCount)"
-                      }
-                    
-                    print(totalData["anno"])
-                    
-                        getFlats.getPromiseAnno(complexNameArray: totalData["anno"] as? [String] ?? [String]()).done { (annoAndObjData) in
-
-                            getFlats.annoData = annoAndObjData["annotations"] as! [CustomAnnotation]
-
-                           
-
-                            getFlats.objects = annoAndObjData["objects"] as! [taObjects]
-                      
-                            getFlats.needUpdateMap = true
-                        
-                        
-                        
-                            getFlats.getPromiseFlat()
-                            .done { (data) in
-
-                                getFlats.data = data
-                               
-                            }.catch { (er) in
-                                print(er)
-                            }
-
-                    }.catch { (er) in
-                        print(er)
-                    }
-                    
-                    
-            }.catch { (er) in
-                print(er)
-            }
-                    
-                    
-                self.showFilterView.toggle()
-
-            } label: {
+            Button {self.search()} label: {
                
                     Text("ПОИСК").foregroundColor(Color.white)
                         .fontWeight(.black).font(.footnote).padding(15)
@@ -292,23 +94,17 @@ struct FilterView: View {
                         .onTapGesture {
                         data.tags.remove(object: tag)
                 }
-                   // .font(.subheadline)
-                    
-                    
-                    
             }
             }.padding(.horizontal)
             
         }
-      //  ForEach(sliders) { i in
-            
            
             SliderView(title: "Стоимость", decode: data.decodePrice, data: $data.flatPrice)
             
                 
-//        SliderView(title: "Площадь", decode: data.decodeTotalS, data: $data.totalS)
-//
-//        SliderView(title: "Площадь кухни", decode: data.decodeKitchenS, data: $data.kitchenS)
+        SliderView(title: "Площадь", decode: data.decodeTotalS, data: $data.totalS)
+
+        SliderView(title: "Площадь кухни", decode: data.decodeKitchenS, data: $data.kitchenS)
             
         SliderView(title: "Этаж", decode: data.decodeFloor, data: $data.floor)
       
@@ -344,8 +140,7 @@ struct FilterView: View {
             .onReceive(data.publisher2) { _ in
 
                 
-               // data.totalS[0] = v[0]
-               // data.totalS[1] = v[1]
+              
 
                 let decodePerToTotalSFrom = 10 * pow(1.01, (data.totalS[0] * 550 - 10))
 
@@ -360,7 +155,7 @@ struct FilterView: View {
                 } else if data.totalS[0]  > 0.0 && data.totalS[1] < 0.78 {
 
                     data.decodeTotalS = "от "  + String(format: "%.1f", Double(decodePerToTotalSFrom)) + " м² "
-                        + "м² "  + String(format: "%.1f", Double(decodePerToTotalSTo)) + " м²"
+                        + "до "  + String(format: "%.1f", Double(decodePerToTotalSTo)) + " м²"
                 } else {
                     data.decodeTotalS = "от "  + String(format: "%.1f", Double(decodePerToTotalSFrom) ) + " м²"
                 }
@@ -387,7 +182,7 @@ struct FilterView: View {
 
                     data.decodeKitchenS = "от "  + String(format: "%.1f", Double(decodePerToKitchenSFrom)) + " м² "
                         
-                        + "м² "  + String(format: "%.1f", Double(decodePerToKitchenSTo)) + " м²"
+                        + "до "  + String(format: "%.1f", Double(decodePerToKitchenSTo)) + " м²"
                 } else {
                     data.decodeKitchenS = "от "  + String(format: "%.1f", Double(decodePerToKitchenSFrom) ) + " м²"
                 }
@@ -400,16 +195,16 @@ struct FilterView: View {
                 let decodeFloorFrom = data.floor[0] * 40
                 let decodeFloorTo = data.floor[1] * 40
                         
-                if data.floor[0] == 0.0 && data.floor[1] >= 0.78 {
+                if  data.floor[1] >= 0.78 && Double(decodeFloorFrom).rounded() == 0.0 {
                     data.decodeFloor = ""
                     
-                } else if data.floor[0] == 0.0 && data.floor[1] < 0.78 {
+                } else if Double(decodeFloorFrom).rounded() == 0.0 && data.floor[1] < 0.78 && Double(decodeFloorTo).rounded() > 0.0 {
                     data.decodeFloor = "до "  + String(format: "%.0f", Double(decodeFloorTo).rounded())
-                } else if data.floor[0]  > 0.0 && data.floor[1] < 0.78 {
+                } else if Double(decodeFloorFrom).rounded() > 0.0 && data.floor[1] < 0.78 && Double(decodeFloorTo).rounded() > 0.0 {
                     
                     data.decodeFloor = "от "  + String(format: "%.0f", Double(decodeFloorFrom).rounded()) + " "
                         + "до "  + String(format: "%.0f", Double(decodeFloorTo).rounded())
-                } else {
+                } else if Double(decodeFloorFrom).rounded() > 0.0 {
                     data.decodeFloor = "от "  + String(format: "%.0f", Double(decodeFloorFrom).rounded())
                 }
                 
@@ -431,7 +226,6 @@ struct FilterView: View {
     
     var body: some View {
        
-        NavigationView{
            // ScrollView(.vertical, showsIndicators: false) {
 //            var IpotekaCollectionView: some View
 //        {
@@ -440,7 +234,7 @@ struct FilterView: View {
         scroll
         
                
-        } .dismissKeyboardOnTap()
+         .dismissKeyboardOnTap()
         
        
     }
@@ -543,9 +337,315 @@ struct FilterView: View {
                 }.padding(.horizontal)
                 
                 }
+            
+            HStack{
+
+               
+                
+                
+                Button {
+                    self.reset()
+                } label: {
+                   
+                        Text("СБРОС").foregroundColor(Color.white)
+                            .fontWeight(.black).font(.footnote).padding(15)
+               .background(Capsule().fill(Color("ColorMain")).shadow(color: Color.black.opacity(0.15), radius: 5, x: 5, y: 5)
+                                    .shadow(color: Color.black.opacity(0.1), radius: 5, x: -5, y: -5))
+                }
+                Spacer()
+                Button {
+                    self.search()} label: {
+                   
+                        Text("ПОИСК").foregroundColor(Color.white)
+                            .fontWeight(.black).font(.footnote).padding(15)
+               .background(Capsule().fill(Color("ColorMain")).shadow(color: Color.black.opacity(0.15), radius: 5, x: 5, y: 5)
+                                    .shadow(color: Color.black.opacity(0.1), radius: 5, x: -5, y: -5))
+                }
+                
+            }.padding(.horizontal)
         }
         .padding(.top, 5)
         .padding(.bottom)
+    }
+    }
+    
+    func reset() {
+        DispatchQueue.main.async {
+            
+        data.flatPrice = [0.0,0.78]
+        data.totalS = [0.0,0.78]
+        data.kitchenS = [0.0,0.78]
+        data.floor = [0.0,0.78]
+        
+        data.tags.removeAll()
+        
+        
+        data.repair = defaultArrRepair
+        
+        data.type = defaultArrType
+        
+        data.deadline = defaultArrDeadline
+        
+        data.timeToMetro = defaultArrToMetro
+        
+        data.ifApart = "default"
+        
+        data.ifCession = "default"
+        }
+        
+    }
+    func search() {
+       
+        DispatchQueue.main.async {
+        
+        
+        data.query = "where "
+        
+        let decodePerToPriceFrom = 1000000 * pow(1.0225, (data.flatPrice[0] * 320000000 - 1000000) /  1000000)
+     
+        let decodePerToPriceTo = 1000000 * pow(1.0225, (data.flatPrice[1] * 320000000 - 1000000) /  1000000)
+     
+        data.query += "price <= \(Int(decodePerToPriceTo / 100000) * 100000)"
+        
+        
+        
+        if data.tags.filter({ (j) -> Bool in
+                                        return j.data.type == .developer }).count != 0 {
+            data.query += " and ( "
+            for (n, i) in data.tags.filter({ (j) -> Bool in
+                                            return j.data.type == .developer }).enumerated() {
+                
+                
+                if n == 0 {
+                data.query += " developer = '\(i.data.name)' "
+                } else {
+                    data.query += " or developer = '\(i.data.name)' "
+                }
+
+            }
+            data.query += " ) "
+        }
+        
+        if data.tags.filter({ (j) -> Bool in
+                                        return j.data.type == .underground }).count != 0 {
+            data.query += " and ( "
+            for (n, i) in data.tags.filter({ (j) -> Bool in
+                                            return j.data.type == .underground }).enumerated() {
+                
+                
+                if n == 0 {
+                data.query += " underground = '\(i.data.name)' "
+                } else {
+                    data.query += " or underground = '\(i.data.name)' "
+                }
+
+            }
+            data.query += " ) "
+        }
+        if data.tags.filter({ (j) -> Bool in
+                                        return j.data.type == .complexName }).count != 0 {
+            data.query += " and ( "
+            for (n, i) in data.tags.filter({ (j) -> Bool in
+                                            return j.data.type == .complexName }).enumerated() {
+                
+                
+                if n == 0 {
+                data.query += " complexName = '\(i.data.name)' "
+                } else {
+                    data.query += " or complexName = '\(i.data.name)' "
+                }
+
+            }
+            data.query += " ) "
+        }
+        
+        if data.tags.filter({ (j) -> Bool in
+                                        return j.data.type == .district }).count != 0 {
+            data.query += " and ( "
+            for (n, i) in data.tags.filter({ (j) -> Bool in
+                                            return j.data.type == .district }).enumerated() {
+                
+                if n == 0 {
+                data.query += " district = '\(i.data.name)' "
+                } else {
+                    data.query += " or district = '\(i.data.name)' "
+                }
+
+            }
+            data.query += " ) "
+        }
+
+
+
+        if !data.decodeFloor.isEmpty {
+            let decodeFloorFrom = Int((data.floor[0] * 40).rounded())
+            let decodeFloorTo = Int((data.floor[1] * 40).rounded())
+       
+            data.query += " and floor >= \(decodeFloorFrom) and floor <= \(decodeFloorTo)"
+            
+        }
+        
+        if !data.decodeTotalS.isEmpty {
+            let decodePerToTotalSFrom = Float(10 * pow(1.01, (data.totalS[0] * 550 - 10)))
+
+            let decodePerToTotalSTo = Float(10 * pow(1.01, (data.totalS[1] * 550 - 10)))
+       
+            data.query += " and totalS >= \(decodePerToTotalSFrom) and totalS <= \(decodePerToTotalSTo)"
+            
+        }
+        
+        if !data.decodeKitchenS.isEmpty {
+            let decodePerToKitchenSFrom = Float(1 * pow(1.0295, (data.kitchenS[0] * 250 - 1)))
+
+            let decodePerToKitchenSTo = Float(1 * pow(1.0295, (data.kitchenS[1] * 250 - 1)))
+       
+            data.query += " and kitchenS >= \(decodePerToKitchenSFrom) and kitchenS <= \(decodePerToKitchenSTo)"
+            
+        }
+
+        if defaultArrDeadline.count != data.deadline.count {
+
+            data.query += " and ( "
+            for (n, i) in data.deadline.enumerated() {
+
+
+                if n == 0 {
+                data.query += " deadline = '\(i)' "
+                } else {
+                    data.query += " or deadline = '\(i)' "
+                }
+            }
+            
+            data.query += " ) "
+        }
+        
+        if defaultArrToMetro.count != data.timeToMetro.count {
+
+            data.query += " and ( "
+            for (n, i) in data.timeToMetro.enumerated() {
+
+
+                if n == 0 {
+                data.query += " toUnderground = '\(i)' "
+                } else {
+                    data.query += " or toUnderground = '\(i)' "
+                }
+            }
+            
+            data.query += " ) "
+        }
+        
+        if defaultArrType.count != data.type.count {
+
+            data.query += " and ( "
+            for (n, i) in data.type.enumerated() {
+
+
+                if n == 0 {
+                data.query += " roomType = '\(i)' "
+                } else {
+                    data.query += " or roomType = '\(i)' "
+                }
+            }
+            
+            data.query += " ) "
+        }
+        
+        if defaultArrRepair.count != data.repair.count {
+
+            data.query += " and ( "
+            for (n, i) in data.repair.enumerated() {
+
+
+                if n == 0 {
+                data.query += " repair = '\(i)' "
+                } else {
+                    data.query += " or repair = '\(i)' "
+                }
+            }
+            
+            data.query += " ) "
+        }
+
+
+
+
+
+        if data.ifApart == "Только апартаменты" {
+            data.query += " and type = 'Апартаменты' "
+        } else if data.ifApart == "Исключить апартаменты"{
+            
+            
+            data.query += " and type != 'Апартаменты' "
+        }
+
+        if data.ifApart == "Только уступки застройщика" {
+
+            data.query += " and cession = 'Уступка застройщика' "
+        } else if data.ifCession == "Исключить уступки застройщика"{
+            data.query += " and cession != 'Уступка застройщика' "
+        }
+        
+        data.query += " and price >= \(Int(decodePerToPriceFrom / 100000) * 100000) order by price asc"
+            
+           
+        getFlats.queryWHERE = data.query
+        
+        getFlats.limit = 10
+        
+        getFlats.offset = 0
+        
+        getFlats.getBQTotal(q: "SELECT id FROM data.taflatplans " + getFlats.queryWHERE, completionHandler: { (foundCount) in
+            DispatchQueue.main.async {
+
+                
+guard foundCount != 0 else {
+getFlats.note = "Не найдено"
+getFlats.data.removeAll()
+getFlats.annoData.removeAll()
+getFlats.objects.removeAll()
+getFlats.needUpdateMap = true
+
+return
+}
+getFlats.note = "\(foundCount)"
+
+            getFlats.data.removeAll()
+            getFlats.annoData.removeAll()
+            getFlats.objects.removeAll()
+
+
+
+            getFlats.getBQUnicComplexNameArray(q: "select distinct complexName from data.taflatplans " + getFlats.queryWHERE.replacingOccurrences(of: "order by price", with: "order by complexName"), completionHandler: { (anno) in
+                
+           
+                
+               // DispatchQueue.main.async {
+                getFlats.getPromiseAnno(complexNameArray: anno, completitionHander: { (annoAndObjData) in
+                    
+                    DispatchQueue.main.async {
+
+                    getFlats.annoData.append(contentsOf: annoAndObjData["annotations"] as! [CustomAnnotation])
+
+                    getFlats.objects.append(contentsOf: annoAndObjData["objects"] as! [taObjects])
+                    getFlats.needUpdateMap = true
+
+
+                    getFlats.getBQLimitOffset(q: "SELECT * FROM data.taflatplans " + getFlats.queryWHERE + " limit \(getFlats.limit) offset \(getFlats.offset)", completitionHander: { (flats) in
+                        
+                        DispatchQueue.main.async {
+                            getFlats.data.append(contentsOf: flats)
+                        }
+
+    })
+               }
+})
+           //}
+})
+        }
+})
+
+        self.showFilterView.toggle()
     }
     }
 }
@@ -566,6 +666,7 @@ extension View {
     func placeHolder<T:View>(_ holder: T, show: Bool) -> some View {
         self.modifier(PlaceHolder(placeHolder:holder, show: show))
     }
+    
 }
 
 struct CustomSearchBar : View {
@@ -647,8 +748,11 @@ struct CustomSearchBar : View {
                         
                         if tags.filter({$0.data.id == tag.data.id }).count == 0 {
                             
+                            DispatchQueue.main.async {
                         tags.append(tag)
+                            
                             self.txt = ""
+                            }
                         }
 
                     }
@@ -671,7 +775,7 @@ struct CustomSearchBar : View {
 }
 
 
-struct dataType : Identifiable {
+struct dataType : Identifiable , Hashable{
     
     var id : String
     var name : String

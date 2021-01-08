@@ -8,7 +8,6 @@
 
 import UIKit
 import SwiftUI
-import NavigationStack
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 

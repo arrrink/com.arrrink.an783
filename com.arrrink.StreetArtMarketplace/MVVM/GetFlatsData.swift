@@ -12,17 +12,23 @@ import Combine
 import FirebaseStorage
 import RealmSwift
 import Firebase
-import PromiseKit
+
 
 import MapKit
 
-
+enum Screens {
+    case first, home, ipoteka, apart
+}
 class getTaFlatPlansData: ObservableObject {
-    var  query : Query
+    var  queryWHERE : String
 
+    var  db :  BigQueryClient<BigQuerySchema>
+  
+    @Published var currentScreen : Screens = .first
+    
     @Published var data = [taFlatPlans]()
-  //  @Published var dataWP = [Flat]()
-  //  @Published var dataFilter = [taFlatPlans]()
+
+      @Published var dataTappedObj = [taFlatPlans]()
     @Published var showCurrentLocation = false
     @Published var annoData = [CustomAnnotation]()
     
@@ -36,126 +42,253 @@ class getTaFlatPlansData: ObservableObject {
     
     @Published var needSetRegion = false
     
-    @Published var tappedObject = taObjects(id: "", address: "", complexName: "", deadline: "", developer: "", geo: GeoPoint(latitude: 0.0, longitude: 0.0), img: "", type: "", underground: "", timeToUnderground: "", typeToUnderground: "")
+    @Published var tappedObject = taObjects(id: "", address: "", complexName: "", deadline: "", developer: "", geo: GeoPoint(latitude: 0.0, longitude: 0.0), img: "", type: "", underground: "", toUnderground: "", cession: "")
     @Published var tappedObjectComplexName = ""
-    @Published var startKey = [QueryDocumentSnapshot?]()
+    
+    
+    @Published var limit = 10
+    
+    @Published var offset = 0
+    
+    @Published var limitTappedObj = 10
+    
+    @Published var offsetTappedObj = 0
     
     
     
     
     @Published var note = ""
-    @Published var foundCount = 0
+    
+    @Published var noteTappedObj = ""
     
 
     @Published var currentImg = ""
     
-    var ifDetailObj = false
     
-   convenience init(query: Query, ifDetailObj : Bool) {
-    self.init(query: query)
-        self.query = query
-        self.ifDetailObj = ifDetailObj
+    init(queryWHERE: String) {
+        
+        self.queryWHERE = queryWHERE
+        self.db = BigQueryClient(
+            authenticationToken: "",
+            projectID: "realestateagency78spb",
+            datasetID: "data",
+            tableName: "taflatplans"
+        )
 
-        getPromiseFlatTotal().done { (data) in
-            
-              if data["foundCount"] as? Int ?? 0 == 0  {
-                  self.note = "Не найдено"
-
-
-              } else {
-                      self.note = "\(self.foundCount)"
-              }
-            
-           
-                
-                self.getPromiseFlat()
-                    .done { (data) in
-
-                        self.data = data
-                 
-
-            }.catch { (er) in
-                print(er)
-            }
-            
-            
-    }.catch { (er) in
-        print(er)
-    }
         
         
         
-        
-      
 }
-    init(query: Query) {
+    
+    func initObserve() {
         
-        self.query = query
+        
+        let provider = BigQueryAuthProvider()
+        try! provider.getAuthenticationToken { r in
+           // let response: AuthResponse?
 
-        getPromiseFlatTotal().done { (data) in
+
+//            guard let r = response else {
+//                        print("Unexpected empty response")
+//                return
+//                    }
+                    switch r {
+                    
+                    case .token(let token):
+                        
+                        
+
+                        self.db = BigQueryClient(
+                            authenticationToken: token,
+                            projectID: "realestateagency78spb",
+                            datasetID: "data",
+                            tableName: "taflatplans"
+                        )
+                       
+                        
+                        self.initBQ()
+        
+       
+                    
+                    case .error(let e):
+                            print(e)
+                  }
+
+        }
+       
+    }
+    
+    func initBQ() {
+        
+        DispatchQueue.main.async {
+            self.note = ""
+            self.data.removeAll()
+            self.annoData.removeAll()
             
-              if data["foundCount"] as? Int ?? 0 == 0  {
-                  self.note = "Не найдено"
+        
 
-
-              } else {
-                      self.note = "\(self.foundCount)"
-              }
+        self.getBQTotal(q: "SELECT id FROM data.taflatplans " + self.queryWHERE, completionHandler: { (foundCount) in
             
-            self.getPromiseAnno(complexNameArray: data["anno"] as? [String] ?? [String]()).done { (annoAndObjData) in
+            DispatchQueue.main.async {
+           // print("foundCount ", foundCount)
+
+guard foundCount != 0 else {
+
+self.note = "Не найдено"
+self.data.removeAll()
+
+self.annoData.removeAll()
+self.objects.removeAll()
+self.needUpdateMap = true
+
+
+
+return
+}
+self.note = "\(foundCount)"
+            
+
+          
+            
+            
+            self.getBQUnicComplexNameArray(q: "select distinct complexName from data.taflatplans " + self.queryWHERE.replacingOccurrences(of: "order by price", with: "order by complexName"), completionHandler: { (anno) in
+                
+                DispatchQueue.main.async {
+                self.getPromiseAnno(complexNameArray: anno, completitionHander: { (annoAndObjData) in
+                    
+                
+                    DispatchQueue.main.async {
 
                 self.annoData = annoAndObjData["annotations"] as! [CustomAnnotation]
-
-               // self.annoDataFilter = annoAndObjData["annotations"] as! [CustomAnnotation]
-
+                
                 self.objects = annoAndObjData["objects"] as! [taObjects]
+        
+        
                 self.needUpdateMap = true
-              //  print(self.annoDataFilter)
-                
-                
-                
-                
-                self.getPromiseFlat()
-                    .done { (data) in
-
-                        self.data = data
-                     
-                        
-                        
-                        
-                        
-                    }.catch { (er) in
-                        print(er)
-                    }
-
-            }.catch { (er) in
-                print(er)
-            }
-            
-            
-    }.catch { (er) in
-        print(er)
-    }
-        
-        
-        
-        
-      
-}
     
+    
+    
+    self.getBQLimitOffset(q: "SELECT * FROM data.taflatplans " + self.queryWHERE + "  limit \(self.limit) offset \(self.offset)", completitionHander: { (flats) in
+        DispatchQueue.main.async {
+            self.data.append(contentsOf: flats)
+        }
+    
+    })
+        
+    
+                    }
+                    
+                })
+                }    })
+
+
+            }
+
+
+})
+    }
+    
+    }
+    func getBQTotal(q : String, completionHandler : @escaping (Int) -> Void)  {
+      
+             //   print("SQL query : \(q)")
+                        db.query(q) { (res) in
+                            
+                            guard let totalFound = res.totalRows else {
+                                return
+                            }
+                            completionHandler(Int(totalFound) ?? 0)
+                            
+                        }
+        
+       }
+    
+    func getBQUnicComplexNameArray(q : String, completionHandler : @escaping ([String]) -> Void)  {
+
+                        db.query(q) { (res) in
+                            guard let simpleDict = res.toComplexArrayDictionary()  else {
+                                completionHandler([String]())
+                                return
+                            }
+                            
+                            completionHandler(simpleDict)
+                        }
+        
+       }
+    
+    func getBQLimitOffset(q : String, completitionHander : @escaping (Array<taFlatPlans>) -> Void)   {
+                        db.query(q) { (res) in
+                            
+                            DispatchQueue.main.async {
+                            
+                            guard let totalFound = res.totalRows else {
+                                completitionHander([taFlatPlans]())
+
+                                return
+                            }
+                            
+                           
+                                
+                            
+                            
+                            self.limit = Int(totalFound) ?? 0
+                            
+                            
+                            self.offset += self.limit 
+                            
+                            
+                            
+                            guard let simpleDict = res.toDictionary()  else {
+                                completitionHander([taFlatPlans]())
+                                return
+                            }
+                            
+                                completitionHander(simpleDict)
+                            }
+                        }
+      
+        
+       }
+    
+    func getBQLimitOffsetTappedObj(q : String, completionHandler : @escaping ([taFlatPlans]) -> Void)  {
+                        db.query(q) { (res) in
+                           
+                            guard let totalFound = res.totalRows else {
+                                completionHandler([taFlatPlans]())
+                                return
+                            }
+                            
+                           
+                            DispatchQueue.main.async {
+                            self.limitTappedObj = Int(totalFound) ?? 0
+                            
+                            
+                            self.offsetTappedObj += self.limitTappedObj
+                            
+                            }
+                            
+                            guard let simpleDict = res.toDictionary()  else {
+                                completionHandler([taFlatPlans]())
+                                return
+                            }
+                                completionHandler(simpleDict)
+                            
+                        }
+      
+        
+       }
 
     
     
     func randomCoordinate() -> Double {
-    return Double(arc4random_uniform(140)) * 0.0000003
+    return Double(arc4random_uniform(140)) * 0.000003
             }
-    func getPromiseAnno(complexNameArray : [String]) -> Promise<Dictionary<String,Any>> {
-        return Promise {seal in
+    func getPromiseAnno(complexNameArray : [String], completitionHander : @escaping ([String:Any]) -> Void)  {
             
             var array = [CustomAnnotation]()
             var objects = [taObjects]()
             // geo
-            
+            var totalCount = complexNameArray.count
             let ref = Firebase.Firestore.firestore().collection("objects")
             
             ref.addSnapshotListener { (snap, err) in
@@ -168,7 +301,8 @@ class getTaFlatPlansData: ObservableObject {
                 
                
                 guard !complexNameArray.isEmpty else {
-                    seal.fulfill(["annotations" : array, "objects" : objects])
+                    
+                    completitionHander(["annotations" : array, "objects" : objects])
                     return
                 }
                 for j in complexNameArray {
@@ -182,11 +316,20 @@ class getTaFlatPlansData: ObservableObject {
                   let find = snap!.documents.filter{
                     $0.get("complexName") as? String ?? "" == j
                     }
+                    if find.count != 1 {
                     
-                    guard find.count == 1 else {
-                        seal.fulfill(["annotations" : array, "objects" : objects])
-                        return
-                    }
+                        
+                      //  print("empty cN")
+                        totalCount -= 1
+                        if totalCount == 0 {
+
+                            if array.count == totalCount && objects.count == totalCount{
+                                
+                                
+                                completitionHander(["annotations" : array, "objects" : objects])
+                            }
+                        }
+                    } else {
                   
                        
                    
@@ -196,22 +339,22 @@ class getTaFlatPlansData: ObservableObject {
                         
                         
                     if let coords = find[0].get("geo"),
-                       let address = find[0].get("address") as? String ?? "",
-                       let complexName = find[0].get("complexName") as? String ?? "",
-                       let deadline = find[0].get("deadline") as? String ?? "",
-                       let developer = find[0].get("developer") as? String ?? "",
-                       let id = find[0].get("id") as? Int ?? 0,
-                       let img = find[0].get("img") as? String ?? "",
-                       let timeToUnderground = find[0].get("timeToUnderground") as? String ?? "",
-                       let type = find[0].get("type") as? String ?? "",
-                       let typeToUnderground = find[0].get("typeToUnderground") as? String ?? "",
-                       let underground = find[0].get("underground") as? String ?? ""
+                       let address = find[0].get("address") as? String ,
+                       let complexName = find[0].get("complexName") as? String ,
+                       let deadline = find[0].get("deadline") as? String,
+                       let developer = find[0].get("developer") as? String ,
+                       let id = find[0].get("id") as? Int,
+                       let img = find[0].get("img") as? String,
+                       let cession = find[0].get("cession") as? String,
+                       let type = find[0].get("type") as? String ,
+                       let toUnderground = find[0].get("toUnderground") as? String,
+                       let underground = find[0].get("underground") as? String
                        {
                                         let point = coords as! GeoPoint
                                         let lat = point.latitude
                                         let lon = point.longitude
                                         
-                        let object = taObjects(id: String(id), address: address, complexName: complexName, deadline: deadline, developer: developer, geo: point, img: img, type: type, underground: underground, timeToUnderground: timeToUnderground, typeToUnderground: typeToUnderground)
+                        let object = taObjects(id: String(id), address: address, complexName: complexName, deadline: deadline, developer: developer, geo: point, img: img, type: type, underground: underground, toUnderground: toUnderground, cession: cession)
                         
                                     
                        
@@ -228,10 +371,12 @@ class getTaFlatPlansData: ObservableObject {
                         DispatchQueue.main.async {
                             objects.append(object)
                             array.append(anno)
-                            if array.count == complexNameArray.count && objects.count == complexNameArray.count{
+                            
+        
+                            if array.count == totalCount && objects.count == totalCount{
                                 
                                 
-                                seal.fulfill(["annotations" : array, "objects" : objects])
+                                completitionHander(["annotations" : array, "objects" : objects])
                             }
     }
                      }
@@ -239,12 +384,12 @@ class getTaFlatPlansData: ObservableObject {
                     
                     
                     
-                    
+                }
         
         }
         
     }
-        }
+        
     }
     
    
@@ -284,94 +429,8 @@ class getTaFlatPlansData: ObservableObject {
         return taFlatPlans(id: "\(id)", img: img, complexName: complexName, price: String(price), room: room, deadline: deadline, type: type, floor: String(floor), developer: developer, district: district , totalS: String(totalS), kitchenS: String(kitchenS), repair: repair, roomType: roomType, underground: underground, cession : cession, section: section, flatNumber : flatNumber, toUnderground: toUnderground)
           
     }
-    func getPromiseFlatTotal() -> Promise<Dictionary<String, Any>> {
-        return Promise {seal in
-            
-            var array = [String]()
-            
-       query
-        
-       .addSnapshotListener { (snap, err) in
-            if err != nil{
-                
-                print((err?.localizedDescription)!)
-                return
-            }
-        for i in snap!.documents{
-            
-            let complexName = i.data()["complexName"] as? String ?? ""
-            
-            array.append(complexName)
-            
-        }
 
-        array = Array(Set(array))
-        self.foundCount = snap?.documentChanges.count ?? 0
-        print("Found: ", snap!.documentChanges.count, " flats")
-        
-        
-        seal.fulfill(["foundCount" : self.foundCount, "anno" : array])
-       }
-        }
-    }
-    func getPromiseFlat() -> Promise<Array<taFlatPlans>> {
-        return Promise {seal in
-        
- 
-        var data1 = [taFlatPlans]()
-            
-    
-            var q = query
-                if startKey.count != 0 {
-                    q = q.start(afterDocument: startKey[0]!)
-                    
-                }
-            q.limit(to: 10).addSnapshotListener { (snapp, err) in
-                         if err != nil{
-                             print((err?.localizedDescription)!)
-                             return
-                         }
-                     
-                guard let snap = snapp else {
-                    
-                    return
-                }
-                guard snap.documents.count != 0 else {
-                    print("The collection is empty.")
-                    seal.fulfill(data1)
-                    return
-                }
-                  
-                guard let last = snap.documents.last else {
-                    print("emty")
-                    return
-                }
-                  
-                      
-                self.startKey = [last]
-                    
-            
-                        for i in snap.documentChanges{
-                            
-                          
-                                    DispatchQueue.main.async {
-                                        data1.append(self.parse(i))
-                                        
-                                       // if self.limit <= snap!.documentChanges.count{
-                                            
-                                            if data1.count == snap.documentChanges.count {
-                                                seal.fulfill(data1)
-                                            }
-       
-                                        }
-                        }
-                    
-                   }
-                        
-        
-            
-    }
 }
-}
+
 
 

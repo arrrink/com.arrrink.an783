@@ -8,18 +8,15 @@
 
 import SwiftUI
 import Firebase
-import NavigationStack
 import Combine
 
 import ASCollectionView_SwiftUI
 
 
 struct IpotekaView: View {
-  //  @ObservedObject var dataMaxPrice = getDataForIpotekaCalc()
-    @EnvironmentObject private var navigationStack: NavigationStack
     @State var size = UIScreen.main.bounds.width - 20
     @Environment(\.colorScheme) var colorScheme
-    @ObservedObject var to = To(to: 0.202, to2: 0.36, to3: 0.667, to4: 0.064, to5: 0.08, workType: "Найм", checkMoneyType: "2-НДФЛ", checkSpecialType: "default", bank : "vtb", ifRF: "Являюсь налоговым резидентом РФ")
+    @EnvironmentObject var to : To
     @State var price : CGFloat = 0.0
     @EnvironmentObject var getFlats : getTaFlatPlansData
     func map(_ v: [Bank]) -> [Bank] {
@@ -55,13 +52,12 @@ struct IpotekaView: View {
     func logCustom(main:Double ,val: CGFloat) -> Double {
         return Double(log(val))/log(main)
     }
-    
+    @Binding var showIpotekaView : Bool
     @State var sliderText = "Минимальный стаж на текущем месте"
     var btnBack : some View { Button(action: {
         
         
-        
-        self.navigationStack.pop()
+        self.showIpotekaView = false
         
         
             }) {
@@ -313,7 +309,6 @@ struct IpotekaView: View {
     @State var checkKey = ""
     @State var checkValue = ""
     @State var from : CGFloat = 0
-    @State var safeAreaTop = UIApplication.shared.windows.first?.safeAreaInsets.top
     
     
     func decodePrice() -> Int {
@@ -369,6 +364,13 @@ struct IpotekaView: View {
         // Price
         ProgressBar(height: size - (1 * size / 7), to: $to.flatPrice, color: Color("ColorMain"), movable: true, min: 0, max: 1, fromable: false, from: $from).onReceive(to.publisher) { (v) in
             
+            
+DispatchQueue.main.async {
+
+
+self.getFlats.currentScreen = .first
+    
+}
             checkKey = "Стоимость квартиры"
             
             checkValue = String(format: "%.1f", Double(decodePrice()) / 1000000.0) + " млн"
@@ -381,9 +383,9 @@ struct IpotekaView: View {
             
             let summIpoteka = CGFloat(decodePrice()) - to.value2 * CGFloat(decodePrice())
             
-            guard (Double(to.value4 * 500000)) < 500000 else { print("(((")
+            guard (Double(to.value4 * 500000)) < 500000 else {
                 return }
-            guard (summIpoteka * monthPercentConctant * totalPercentConctant / (totalPercentConctant - 1)) / 500000 < 1 else { print("((nnnnnn(")
+            guard (summIpoteka * monthPercentConctant * totalPercentConctant / (totalPercentConctant - 1)) / 500000 < 1 else {
                 return }
             withAnimation(Animation.linear(duration: 0.15)){
                 
@@ -413,7 +415,7 @@ struct IpotekaView: View {
             
             let summIpoteka = CGFloat(decodePrice()) - CGFloat(decodePrice()) * v
             
-            guard (Double(to.value4 * 500000)) < 500000 else { print("(((")
+            guard (Double(to.value4 * 500000)) < 500000 else {
                 
                 return }
             guard (summIpoteka * monthPercentConctant * totalPercentConctant / (totalPercentConctant - 1)) / 500000 < 1 else {
@@ -572,10 +574,10 @@ struct IpotekaView: View {
         VStack(alignment: .leading) {
             
             
-            Text("Ставка примерная. ").foregroundColor(.secondary).fontWeight(.light)
-                .font(.footnote)
-                .padding([.horizontal, .bottom])
-            
+//            Text("Ставка примерная. ").foregroundColor(.secondary).fontWeight(.light)
+//                .font(.footnote)
+//                .padding([.horizontal, .bottom])
+//
             
             
             Text("Трудоустройство")
@@ -744,7 +746,7 @@ struct IpotekaView: View {
         
         
     }
-        }.padding(.vertical, 55)
+        }.padding(.bottom, 55)
         })//.layout(scrollDirection: .vertical)
   
   
@@ -790,10 +792,10 @@ struct IpotekaView: View {
     
         //  @Namespace var animation
     @State var isNeedbtnBack = true
+    @State var showSearchView = false
     var body: some View {
-       // ScrollView(.vertical, showsIndicators: false) {
         
-        
+        if !self.showSearchView {
         
         
            VStack {
@@ -819,8 +821,11 @@ struct IpotekaView: View {
          //            if maxPrice != 0.0 {
          //                query = query.whereField("price", isLessThanOrEqualTo: Int((maxPrice / 100000).rounded() * 100000)).order(by: "price", descending: true)
                     
-                    self.navigationStack.push(                                              SearchView().environmentObject(getTaFlatPlansData(query: Firebase.Firestore.firestore().collection("taflatplans").whereField("price", isLessThanOrEqualTo: decodePrice()).order(by: "price", descending: true))))
+                        self.showSearchView = true
+                    self.getFlats.queryWHERE = "where price <= \(decodePrice()) order by price desc"
                     
+                    
+
                 }) {
                     
                     Text("Просмотреть квартиры до " + String(format: "%.1f", Double(decodePrice()) / 1000000.0)
@@ -842,10 +847,14 @@ struct IpotekaView: View {
             
            
            
-           }.navigationBarTitle("Ипотека78")
-    //}
+           }
+    } else {
+        SearchView(showSearchView: $showSearchView, currentScreen : .ipoteka).environmentObject(getFlats)
+    .environmentObject(data)
+            
     }
-    
+    }
+    @EnvironmentObject var data : FromToSearch
   
     func getYearString(to: CGFloat) -> String {
         let string = String(format: "%.0f", Double(to))
@@ -1444,12 +1453,12 @@ class getDataForIpotekaCalc : ObservableObject {
         
             db.child("taflatplans").queryOrdered(byChild: "price").queryLimited(toLast: 1).observe(.value) { (snap) in
             guard let children = snap.children.allObjects as? [DataSnapshot] else {
-            print("((((((")
-            return
+
+                return
           }
                
             guard children.count != 0 else {
-                print("cant 0")
+
                 return
             }
 

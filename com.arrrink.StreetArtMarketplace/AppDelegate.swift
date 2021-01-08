@@ -32,6 +32,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
        // UINavigationBar.appearance().backgroundColor = .clear
      //   UINavigationBar.appearance().scrollEdgeAppearance = appearance
         UINavigationBar.appearance().tintColor = .red
+        
+//        UITableView.appearance().backgroundColor = .white
+//        UITableView.appearance().backgroundView = .none
+//        UITableView.appearance().separatorStyle = .none
+//        UITableView.appearance().separatorColor = .clear
+//
+//        UITableView.appearance().separatorEffect = .none
+//
+//        UITableViewCell.appearance().contentView.backgroundColor = .white
+//           UITableViewCell.appearance().backgroundColor = .white
+//           UITableView.appearance().tableFooterView = UIView()
        // UINavigationBarAppearance.init(barAppearance: UIBarAppearance())
         FirebaseApp.configure()
         GMSServices.provideAPIKey("AIzaSyAsGfs4rovz0-6EFUerfwiSA6OMTs2Ox-M")

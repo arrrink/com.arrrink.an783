@@ -7,9 +7,8 @@
 //
 
 import SwiftUI
-import NavigationStack
 import Firebase
-import InputMask
+
 import Combine
 
 
@@ -17,9 +16,9 @@ import Combine
 struct EnterPhoneNumberView : View {
     @EnvironmentObject var getFlats: getTaFlatPlansData
 
-    @Binding var detailView : taFlatPlans
+     var detailView : taFlatPlans
     @Binding var modalController : Bool
-    @Binding var status : Bool
+    @State var status = UserDefaults.standard.value(forKey: "status") as? Bool ?? false
 
     
     @State var ccode = ""
@@ -33,7 +32,7 @@ struct EnterPhoneNumberView : View {
 
     
       var body : some View{
-        NavigationView{
+        if !self.show {
             ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .leading, spacing: 20){
                 
@@ -76,7 +75,6 @@ struct EnterPhoneNumberView : View {
                 
               } .padding(.vertical, 15)
                
-                NavigationLink(destination: LoginCodeView(detailView: $detailView, isActive: $modalController, currentModal : $show, ID: $ID, status: $status, number: number).environmentObject(getFlats), isActive: $show) {
                   
                   
                   Button(action: {
@@ -116,11 +114,10 @@ struct EnterPhoneNumberView : View {
                   }.foregroundColor(.white)
                   .background(Color("ColorMain"))
                   .cornerRadius(30)
-              }
-  
-              .navigationBarTitle("")
-              .navigationBarHidden(true)
-              .navigationBarBackButtonHidden(true)
+                  .onTapGesture {
+                    self.show = true
+                  }
+              
             }.padding(.vertical)
             }.padding(.horizontal)
             .dismissKeyboardOnTap()
@@ -131,16 +128,16 @@ struct EnterPhoneNumberView : View {
                   
               Alert(title: Text("Что-то пошло не так 🤷🏼‍♀️"), message: Text(self.msg), dismissButton: .default(Text("Ок")))
           }
-      } .navigationBarHidden(true)
-        .navigationBarTitle("")
-        .navigationBarBackButtonHidden(true)
+        } else {
+            LoginCodeView(detailView: detailView, isActive: $modalController, currentModal : $show, ID: $ID, status: $status, number: number).environmentObject(getFlats)
+        }
       }
   }
   
   struct LoginCodeView : View {
     @EnvironmentObject var getFlats: getTaFlatPlansData
 
-    @Binding var detailView : taFlatPlans
+     var detailView : taFlatPlans
    
    //   @Environment(\.presentationMode) var presentation
       @State var code = ""
@@ -154,7 +151,6 @@ struct EnterPhoneNumberView : View {
     @Binding var status : Bool
       @State var msg = ""
       @State var alert = false
-      @EnvironmentObject var navigationStack: NavigationStack
     var number : String
     @Environment(\.presentationMode) var presentation
     
@@ -174,8 +170,7 @@ struct EnterPhoneNumberView : View {
     @State var once = false
     var body : some View{
             
-        NavigationView {
-        
+        if !self.show {
       // return AnyView(
        // ScrollView(.vertical, showsIndicators: false) {
             ZStack(alignment: .bottomLeading) {
@@ -247,8 +242,7 @@ struct EnterPhoneNumberView : View {
                       
                        
                     
-                    NavigationLink(destination: DetailFlatView(data: $detailView).environmentObject(getFlats) , isActive : $show) {
-                      
+               
                         
                         Button(action: {
                         
@@ -257,7 +251,7 @@ struct EnterPhoneNumberView : View {
                         let credential =  PhoneAuthProvider.provider().credential(withVerificationID: self.ID, verificationCode: self.code.replacingOccurrences(of: " ", with: ""))
                         
                         
-                        print(self.code.replacingOccurrences(of: " ", with: ""))
+                       // print(self.code.replacingOccurrences(of: " ", with: ""))
                           
                           Auth.auth().signIn(with: credential) { (res, err) in
                               if err != nil{
@@ -283,7 +277,6 @@ struct EnterPhoneNumberView : View {
                                 
                                 
                                 print(Auth.auth().currentUser?.phoneNumber)
-                               // self.navigationStack.push(OrderView(data: detailView))
                                 // self.modalController.toggle()
                               }
                           }
@@ -338,7 +331,6 @@ struct EnterPhoneNumberView : View {
                                       
                                       
                                       print(Auth.auth().currentUser?.phoneNumber)
-                                     // self.navigationStack.push(OrderView(data: detailView))
                                       // self.modalController.toggle()
                                     }
                                 }
@@ -348,7 +340,7 @@ struct EnterPhoneNumberView : View {
                       }
                     
                     
-                  }
+                  
                     
                    Spacer()
                   }
@@ -363,78 +355,19 @@ struct EnterPhoneNumberView : View {
                   
               Alert(title: Text("Что-то пошло не так 🤷🏼‍♀️"), message: Text(self.msg), dismissButton: .default(Text("Ок")))
           }
-       }
+       
             .dismissKeyboardOnTap()
         
-     .navigationBarTitle("")
-        .navigationBarHidden(true)
-        .navigationBarBackButtonHidden(true)
+        } else {
+            DetailFlatView(getFlats : getFlats, data: detailView).environmentObject(getFlats)
+        }
       }
   }
 
 
 
-// input number formatter
 
 
-public struct FormattedTextField: View {
-    public init(_ title: String,
-                value: Binding<String>, maskForm: String? = nil) {
-        self.title = title
-        self.value = value
-        self.maskForm = maskForm
-    }
-
-    let title: String
-    let value: Binding<String>
-    let maskForm: String?
-
-    public var body: some View {
-        TextField(title, text: Binding(get: {
-            if self.isEditing {
-                return self.value.wrappedValue
-                    //self.editingValue
-            } else {
-                return self.value.wrappedValue
-                    //self.formatter.displayString(for: self.value.wrappedValue)
-            }
-        }, set: { string in
-            self.editingValue = string
-            
-            if maskForm != nil {
-                let mask: Mask = try! Mask(format: maskForm!)
-                let input: String = string
-                let result: Mask.Result = mask.apply(
-                    toText: CaretString(
-                        string: input,
-                        caretPosition: input.endIndex,
-                        caretGravity: .backward(autoskip: true)
-                    )
-                   // autocomplete: true // you may consider disabling autocompletion for your case
-                )
-                self.value.wrappedValue = result.formattedText.string
-            } else {
-                self.value.wrappedValue = string
-            }
-            
-
-        }), onEditingChanged: { isEditing in
-            self.isEditing = isEditing
-            self.editingValue = self.value.wrappedValue
-                //self.formatter.editingString(for: self.value.wrappedValue)
-        })
-    }
-
-    @State private var isEditing: Bool = false
-    @State private var editingValue: String = ""
-}
-
-public protocol TextFieldFormatter {
-    associatedtype Value
-    func displayString(for value: Value) -> String
-    func editingString(for value: Value) -> String
-    func value(from string: String) -> Value
-}
 
 
 // dismiss keyboard

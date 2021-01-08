@@ -45,7 +45,7 @@ final class PinchViewController: UIViewController {
            // NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)), name: Notification.Name("NotificationIdentifier"), object: nil)
             
             SendRoomTypeToVRView().kitchen.send("kitchen")
-            print(SendRoomTypeToVRView.r, "roomtypeUICOntr")
+          //  print(SendRoomTypeToVRView.r, "roomtypeUICOntr")
 
 
            // loadSphericalImage()
@@ -91,7 +91,7 @@ final class ARViewController: UIViewController {
             NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)), name: Notification.Name("NotificationIdentifier"), object: nil)
             
             SendRoomTypeToVRView().kitchen.send("kitchen")
-            print(SendRoomTypeToVRView.r, "roomtypeUICOntr")
+           // print(SendRoomTypeToVRView.r, "roomtypeUICOntr")
 
 
             loadSphericalImage()

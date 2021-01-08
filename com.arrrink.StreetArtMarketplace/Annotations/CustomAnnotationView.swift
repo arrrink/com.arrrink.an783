@@ -24,7 +24,6 @@ class CustomAnnotationView: MKAnnotationView {
           canShowCallout = false
             self.frame = bounds
            // let imgView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
-           // imgView.image = UIImage(named: "mappin")
             let renderer = UIGraphicsImageRenderer(size: CGSize(width: 30, height: 30))
             self.image = renderer.image { _ in
                 

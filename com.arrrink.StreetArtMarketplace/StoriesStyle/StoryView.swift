@@ -7,26 +7,23 @@
 //
 
 import SwiftUI
-import NavigationStack
 import RealmSwift
 import Firebase
 import Combine
 import SDWebImageSwiftUI
 
 struct StoryView: View {
-    @EnvironmentObject  var navigationStack: NavigationStack
-    @Environment(\.presentationMode) var presentationMode
     
     @State private var isActive = false
     var item : PostRealmFB
-    
+    @Binding var showSheetStory : Bool
     @State var onPause = false
     @State var secs : CGFloat = 0
     @State var round : CGFloat = 0
     @State var width : CGFloat = 100
+    @State var offset : CGFloat = 0
     var body: some View {
         
-         GeometryReader { geometryProxy in
                                                
                                           
                                                
@@ -55,7 +52,7 @@ struct StoryView: View {
                                                         .fontWeight(.heavy)
                                                             .lineLimit(20)
                                                             .minimumScaleFactor(0.5)
-                                                            .padding().multilineTextAlignment(.leading).frame(width: UIScreen.main.bounds.width).padding(.horizontal)
+                                                            .padding().multilineTextAlignment(.leading).frame(width: UIScreen.main.bounds.width - 30).padding(.horizontal)
                                                     }
                                                     
                                                    }
@@ -101,22 +98,24 @@ struct StoryView: View {
                                                   
                                                   if self.secs <= 3 {//4 seconds.....
                                                        
-                                                       let screenWidth = UIScreen.main.bounds.width
+                                                       let screenWidth = UIScreen.main.bounds.width - 30
                                                        
                                                       self.width = screenWidth * (self.secs / 3)
                                                      
                                                      
                                                       if self.round == 3.0 {
-                                                        self.presentationMode.wrappedValue.dismiss()
-                                                        
+                                                        withAnimation(.spring()) {
+                                                        self.showSheetStory = false
+                                                            self.secs = 0
+                                                        }
                                                       }
                                                       
                                                    }
-                                                   else {
-                                                        
-                                                    self.presentationMode.wrappedValue.dismiss()
-                                                      
-                                                   }
+//                                                   else {
+//                                                    self.showSheetStory = false
+//                                                   
+//                                                      
+//                                                   }
                                                   
                                                   }
                                        
@@ -125,19 +124,34 @@ struct StoryView: View {
                                            
                                            .transition(.move(edge: .trailing))
                                            .onTapGesture {
-                                               self.presentationMode.wrappedValue.dismiss()
+                                            withAnimation(.spring()) {
+                                            self.showSheetStory = false
+                                                self.secs = 0
+                                            }
                                            }
-                                               .gesture(plusLongPress)
+                                               .offset( y: self.offset)
+                                            .gesture(plusLongPress)
                                                
-                                            
-                                           
-                                           .edgesIgnoringSafeArea(.all)
-            
+                                               .gesture(DragGesture().onChanged({ (v) in
+                                                
+                                                if v.translation.height > 0 {
+                                                self.offset = v.translation.height
+                                                }
+                                               }).onEnded({ (v) in
+                                                if v.translation.height > UIScreen.main.bounds.height / 3 {
+                                                    self.showSheetStory = false
+                                                    self.secs = 0
+                                                }
+                                                
+                                                self.offset = 0
+                                                
+                                               }))
+                                                
             
         
-        }
+        
     }
-     var time = Timer.publish(every: 0.02, on: .main, in: .common).autoconnect()
+    var time = Timer.publish(every: 0.02, on: .main, in: .common).autoconnect()
     
     @GestureState var isLongPress = false
     var plusLongPress: some Gesture {

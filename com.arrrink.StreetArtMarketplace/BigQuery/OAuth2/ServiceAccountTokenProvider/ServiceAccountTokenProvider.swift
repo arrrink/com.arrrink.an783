@@ -1,69 +1,21 @@
+// Copyright 2019 Google LLC. All Rights Reserved.
 //
-//  BigQueryAuthProvider.swift
-//  com.arrrink.StreetArtMarketplace
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-//  Created by Арина Нефёдова on 25.11.2020.
-//  Copyright © 2020 Арина Нефёдова. All rights reserved.
+//    http://www.apache.org/licenses/LICENSE-2.0
 //
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 import Foundation
-
-
-
 #if canImport(FoundationNetworking)
   import FoundationNetworking
 #endif
-
-
-/// Response to retrieving authentication token
-///
-/// - token: Successful response will contain the authentication token
-/// - error: Unsuccessful response will contain the error
-public enum AuthResponse {
-    case token(String)
-    case error(Error)
-}
-
-/// Handles authenticating a service account
-public struct BigQueryAuthProvider {
-    /// Set scope to be BigQuery
-    private let scopes = [
-        "https://www.googleapis.com/auth/bigquery",
-        "https://www.googleapis.com/auth/bigquery.insertdata",
-    ]
-
-    public init() {}
-
-    /// Get an authentication token to be used in API calls.
-    /// The credentials file is expected to be in the same directory as the
-    /// running binary (ie. $pwd/credentials.json)
-    ///
-    /// - Parameter completionHandler: Called upon completion
-    /// - Throws: If JWT creation fails
-    public func getAuthenticationToken(completionHandler: @escaping (AuthResponse) -> Void) throws {
-        // Get current directory
-        let currentDirectoryURL = URL(
-            fileURLWithPath: FileManager.default.currentDirectoryPath
-        )
-        // Get URL of credentials file
-        let credentialsURL = currentDirectoryURL.appendingPathComponent("credentials.json")
-        guard let tokenProvider = ServiceAccountTokenProvider(
-            credentialsURL: credentialsURL,
-            scopes:scopes
-        ) else {
-           return
-        }
-        // Request token
-        try tokenProvider.withToken { (token, error) in
-            if let token = token {
-                completionHandler(.token(token.AccessToken!))
-            } else {
-                completionHandler(.error(error!))
-            }
-        }
-    }
-}
-
 
 struct ServiceAccountCredentials : Codable {
   let CredentialType : String
@@ -115,6 +67,7 @@ public class ServiceAccountTokenProvider : TokenProvider {
   
   convenience public init?(credentialsURL:URL, scopes:[String]) {
     guard let credentialsData = try? Data(contentsOf:credentialsURL, options:[]) else {
+        
       return nil
     }
     self.init(credentialsData:credentialsData, scopes:scopes)
@@ -135,7 +88,7 @@ public class ServiceAccountTokenProvider : TokenProvider {
                                       rsaKey:rsaKey)
     let json: [String: Any] = ["grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
                            "assertion": msg]
-    let data = try? JSONSerialization.data(withJSONObject: json)
+    let data = try? JSONSerialization.data(withJSONObject: json)    
   
     var urlRequest = URLRequest(url:URL(string:credentials.TokenURI)!)
     urlRequest.httpMethod = "POST"

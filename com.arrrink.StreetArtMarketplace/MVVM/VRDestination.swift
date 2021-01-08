@@ -7,20 +7,16 @@
 //
 
 import SwiftUI
-import NavigationStack
 
 struct VRDestination: View {
-    @EnvironmentObject private var navigationStack: NavigationStack
     @Binding var showRepairAR : Bool
     
     @State var currentRoom = 0
-    var data = ["Скандинавия Нео" : 0, "Классика Нео" : 1 , "Эко-стиль Нео" : 2, "Скандинавия Модерн" : 3, "Классика Модерн" : 4, "Эко-стиль Модерн" : 5, "" : 6]
-    var btns = [VRButton(id: 0, name: "Скандинавия Нео"),
-                VRButton(id: 3, name: "Классика Нео"),
-                VRButton(id: 2, name: "Эко-стиль Нео"),
-                VRButton(id: 1, name: "Скандинавия Модерн"),
-                VRButton(id: 4, name: "Классика Модерн"),
-                VRButton(id: 5, name: "Эко-стиль Модерн"),
+    var data = ["Скандинавия" : 0, "Классика" : 1 , "Эко-стиль" : 2]
+    var btns = [VRButton(id: 0, name: "Скандинавия"),
+                VRButton(id: 3, name: "Классика"),
+                VRButton(id: 2, name: "Эко-стиль")
+                
     ]
     var getVRData = SendRoomTypeToVRView()
     
@@ -38,8 +34,9 @@ struct VRDestination: View {
             VStack(alignment: .leading){
             
                 Button {
-                   // self.showRepairAR.toggle()
-                    self.navigationStack.pop()
+                    withAnimation(.spring()) {
+                    self.showRepairAR.toggle()
+                    }
                 } label: {
                     HStack {
                        

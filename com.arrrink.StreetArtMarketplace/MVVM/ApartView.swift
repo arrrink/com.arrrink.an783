@@ -8,18 +8,16 @@
 
 import SwiftUI
 import Firebase
-import NavigationStack
 import ASCollectionView_SwiftUI
 
 
 struct ApartView: View {
     //  @ObservedObject var dataMaxPrice = getDataForIpotekaCalc()
-      @EnvironmentObject private var navigationStack: NavigationStack
       @State var size = UIScreen.main.bounds.width - 20
       @Environment(\.colorScheme) var colorScheme
     
     
-    @ObservedObject var to = ToApart(price: 0.35, time : 0.31)
+    @EnvironmentObject var toApart : ToApart
     @State var profitShort : CGFloat = 0.05
     @State var profitLong : CGFloat = 0.05
     
@@ -29,7 +27,7 @@ struct ApartView: View {
     @State var totalProfitShort : CGFloat = 0.1
     @State var totalProfitLong : CGFloat = 0.055
 
-    
+    @Binding var showApartView : Bool
       
       func logCustom(main:Double ,val: CGFloat) -> Double {
           return Double(log(val))/log(main)
@@ -39,8 +37,7 @@ struct ApartView: View {
       var btnBack : some View { Button(action: {
           
           
-          
-          self.navigationStack.pop()
+        self.showApartView = false
           
           
               }) {
@@ -112,8 +109,8 @@ struct ApartView: View {
                   
                   
                   VStack(alignment: .leading,spacing: 2) {
-                      Text("Общий доход за " + String(format: "%.0f", Double(to.time * 30))
-                            + "\(self.getYearString(to: to.time * 30))").foregroundColor(.secondary)
+                      Text("Общий доход за " + String(format: "%.0f", Double(toApart.time * 30))
+                            + "\(self.getYearString(to: toApart.time * 30))").foregroundColor(.secondary)
                           
                           .fontWeight(.light)
                           
@@ -233,7 +230,7 @@ struct ApartView: View {
     func decodeText(index : Double) -> some View {
             
         return VStack {
-            Text(String(format: "%.1f", (Double(to.time * 30) * Double(decodePrice()) * index) / 1000000 ) + " млн")
+            Text(String(format: "%.1f", (Double(toApart.time * 30) * Double(decodePrice()) * index) / 1000000 ) + " млн")
             //.font(.title)
             .fontWeight(.bold)
             .fixedSize(horizontal: false, vertical: true)
@@ -293,8 +290,8 @@ struct ApartView: View {
                     
                     
                     VStack(alignment: .leading,spacing: 2) {
-                        Text("Общий доход за " + String(format: "%.0f", Double(to.time * 30))
-                              + "\(self.getYearString(to: to.time * 30))").foregroundColor(.secondary)
+                        Text("Общий доход за " + String(format: "%.0f", Double(toApart.time * 30))
+                              + "\(self.getYearString(to: toApart.time * 30))").foregroundColor(.secondary)
                             
                             .fontWeight(.light)
                             
@@ -457,9 +454,8 @@ struct ApartView: View {
       ZStack{
           
           // Price
-        ProgressBar(height: size - (1 * size / 7), to: $to.price, color: Color("ColorMain"), movable: true, min: 0.023, max: 0.999, fromable: false, from: $from).onReceive(to.publisher) { (v) in
+        ProgressBar(height: size - (1 * size / 7), to: $toApart.price, color: Color("ColorMain"), movable: true, min: 0.023, max: 0.999, fromable: false, from: $from).onReceive(toApart.publisher) { (v) in
                               
-           // profitShort = to.price  * 0.1
             
            
             let azaza = CGFloat(decodePrice())
@@ -471,7 +467,7 @@ struct ApartView: View {
         }
           
           // time
-          ProgressBar(height: size - (2 * size / 7), to: $to.time, color: Color("ColorLightBlue"), movable: true, min: 0.1, max: 0.9, fromable: false,  from: $from)
+          ProgressBar(height: size - (2 * size / 7), to: $toApart.time, color: Color("ColorLightBlue"), movable: true, min: 0.1, max: 0.9, fromable: false,  from: $from)
               
               
 
@@ -499,10 +495,14 @@ struct ApartView: View {
         ZStack{
             
             // Price
-          ProgressBar(height: size - (1 * size / 7), to: $to.price, color: Color("ColorMain"), movable: true, min: 0.023, max: 0.999, fromable: false, from: $from).onReceive(to.publisher) { (v) in
+          ProgressBar(height: size - (1 * size / 7), to: $toApart.price, color: Color("ColorMain"), movable: true, min: 0.023, max: 0.999, fromable: false, from: $from).onReceive(toApart.publisher) { (v) in
                                  
-             // profitShort = to.price  * 0.1
-              
+            DispatchQueue.main.async {
+                
+            
+            self.getFlats.currentScreen = .first
+            
+          }
               
             pricePerMonth = CGFloat(decodePrice()) * profitLong / 12  * 1.45 / 2000000
                           
@@ -512,7 +512,7 @@ struct ApartView: View {
           }
             
             // time
-            ProgressBar(height: size - (2 * size / 7), to: $to.time, color: Color("ColorLightBlue"), movable: true, min: 0.1, max: 0.9, fromable: false,  from: $from)
+            ProgressBar(height: size - (2 * size / 7), to: $toApart.time, color: Color("ColorLightBlue"), movable: true, min: 0.1, max: 0.9, fromable: false,  from: $from)
           
 
           ProgressBar(height: size - (3 * size / 7) , to: $profitLong, color: Color("ColorYellow"), movable: false, min: 0.03, max: 1, fromable: false , from: $from)
@@ -533,7 +533,7 @@ struct ApartView: View {
           }
                 Text("Прогноз доходности апартаментов расчитывается исходя из средних показателей инфляции,капитализации, заполняемости инвест отелей, расходов на банковские комиссии, комиссионное вознаграждение каналам бронирования, услуги управляющей компании, первичное приобретение интерьерного оснащения апартаментов. Налог с дохода составляет 13% для физических лиц и 6% по упрощенной системе налогооблажения. ").foregroundColor(.secondary).fontWeight(.light).padding([.horizontal, .bottom])
           
-          }.padding(.vertical, 55)
+          }.padding(.bottom, 55)
               })//.layout(scrollDirection: .vertical)
     
     
@@ -553,12 +553,13 @@ struct ApartView: View {
       
           //  @Namespace var animation
       @State var isNeedbtnBack = true
+    @State var showSearchView = false
       var body: some View {
          // ScrollView(.vertical, showsIndicators: false) {
           
           
           
-          
+        if !self.showSearchView {
              VStack {
               
               
@@ -574,10 +575,14 @@ struct ApartView: View {
                   
                   Button(action: {
                     
-                    
-                    self.navigationStack.push(                                              SearchView().environmentObject(getTaFlatPlansData(query: Firebase.Firestore.firestore().collection("taflatplans").whereField("type", isEqualTo: "Апартаменты").whereField("price", isLessThanOrEqualTo: decodePrice()).order(by: "price", descending: true))
-                    )
-                    )
+                            withAnimation(.spring()) {
+                                
+                            self.showSearchView = true
+                                self.getFlats.queryWHERE = "where type = 'Апартаменты' AND price <= \(decodePrice()) order by price desc"
+                                
+
+                                
+                  }
                       
                   }) {
                     Text("Просмотреть апартаменты до " + String(format: "%.1f", Double(decodePrice()) / 1000000.0)
@@ -599,12 +604,20 @@ struct ApartView: View {
               
              
              
-             }.navigationBarTitle("")
+             }
+        } else {
+            SearchView(showSearchView: $showSearchView, currentScreen: .apart).environmentObject(getFlats)
+        .environmentObject(data)
+                
+            
+        }
       //}
       }
-      
+    @EnvironmentObject var getFlats : getTaFlatPlansData
+    
+    @EnvironmentObject var data : FromToSearch
     func decodePrice() -> Int {
-        let decodePerToPrice = 1000000 * pow(1.052, (Double(to.price * 90000000) - 1000000) /  1000000)
+        let decodePerToPrice = 1000000 * pow(1.052, (Double(toApart.price * 90000000) - 1000000) /  1000000)
                                              
         let decodePerToPriceTotal = (decodePerToPrice / 100000).rounded() * 100000
         

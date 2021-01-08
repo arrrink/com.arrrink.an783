@@ -7,11 +7,10 @@
 //
 
 import SwiftUI
-import NavigationStack
 import RealmSwift
 
 import Firebase
-import Pages
+
 import ASCollectionView_SwiftUI
 import UIKit
 import Alamofire
@@ -46,29 +45,18 @@ struct ContentView: View {
         UserDefaults.standard.set(true, forKey: "first_start_key")
         }
 
-        print(isFirstLaunch ? "First launch" :  "NOT first launch")
-
-            return AnyView(
+     //   print(isFirstLaunch ? "First launch" :  "NOT first launch")
+        if isFirstLaunch {
+            return AnyView(OnboardingView().edgesIgnoringSafeArea(.all))
                
-                NavigationStackView{
-                    
-                    if isFirstLaunch {
-                    OnboardingView()
-                       
-                    } else {
+        } else {
+            return AnyView(HomeView( adminNumber: $adminNumber).edgesIgnoringSafeArea(.all))
                         
-                        HomeView( adminNumber: $adminNumber)
 
                             
                     }
                         
-        }
-                        
-                .edgesIgnoringSafeArea(.all)
-
-                )
-      
-
+        
 
     }
     
@@ -110,7 +98,7 @@ class getStoriesData : ObservableObject {
                 guard (snap?.documentChanges)!.count == 1 else { return }
 
                 self.adminNumber = (snap?.documentChanges)![0].document.data()["whatsappnumber"] as? String ?? ""
-                print("admin number is ", self.adminNumber)
+             //   print("admin number is ", self.adminNumber)
                 self.getStories()
                // self.getNews()
         
@@ -137,8 +125,9 @@ class getStoriesData : ObservableObject {
                     if Auth.auth().currentUser?.phoneNumber == self.adminNumber {
                         let story = PostRealmFB(id: UUID().uuidString, name: "", text: "", imglink: "https://psv4.userapi.com/c856236/u124809376/docs/d3/4f220dd33162/launch.png?extra=gM00K0L4Mi-GdUA2R882BlnULKJxtqwlT6Oq1vjrWGJUPANpY2e4C1kLtKlOYdABoP46rFMwhKf-AllYA8406yVQqZrDkgBPrEX4F5Zpumo7cn4SEipFT9SF2-6Ernho6h7_-gaoijvWUktBvc-gZvMpDLI", createdAt: Timestamp(date: Date()), storyType: .fill)
                     
-                       
+                        DispatchQueue.main.async {
                         self.data.append(story)
+                        }
                         
                     }
                     self.getNews()
@@ -187,37 +176,6 @@ class getStoriesData : ObservableObject {
                     default:
                         print("default")
                     }
-                    
-                    
-//                    if doc.type == .added {
-//                        let name = doc.document.data()["name"] as? String ?? ""
-//                        let id = doc.document.documentID
-//                        let text = doc.document.data()["text"] as? String ?? ""
-//                        
-//                        let createdAt = doc.document.data()["createdAt"] as? Timestamp ?? Timestamp(date: Date())
-//
-//
-//                        let storageRef = Storage.storage().reference(withPath: "stories/\(id).png")
-//                        
-//
-//                                       storageRef.downloadURL { (storyURL, error) in
-//                                              if error != nil {
-//                                                  print("ERROR load stories image from Storage",(error?.localizedDescription)!)
-//                                                  return
-//                                       }
-//                                          guard let storyURL = storyURL else { return }
-//                                        let story = PostRealmFB(id: id, name: name, text: text, imglink: storyURL.absoluteString, createdAt: createdAt)
-//                                        DispatchQueue.main.async {
-//                                           
-//                                            self.data.append(story)
-//                                            
-//                                        }
-//
-//                                        
-//                                        
-//                                  }
-//                    }
-
                     
                 
                 }
@@ -306,7 +264,6 @@ struct News : Identifiable, Equatable {
 
 struct HomeView: View {
         @Environment(\.colorScheme) var colorScheme
-        @EnvironmentObject private var navigationStack: NavigationStack
         @State var showSheet = false
         @State private var activeSheet: ActiveSheet = .first
         
@@ -336,7 +293,7 @@ struct HomeView: View {
         @State var showSearch = false
         
         @State var safeAreaTop = UIApplication.shared.windows.first?.safeAreaInsets.top ?? 30
-    @ObservedObject var getFlats = getTaFlatPlansData(query: Firebase.Firestore.firestore().collection("taflatplans").order(by: "price", descending: false))
+    @ObservedObject var getFlats = getTaFlatPlansData(queryWHERE: "order by price asc")
         @State var isSearchViewActive = false
          var stories = [
           Story(id: 0, image: "map", offset: 0,title: "Новостройки", subtitle: "Перейти к поиску"),
@@ -344,7 +301,6 @@ struct HomeView: View {
             Story(id: 2, image: "invest", offset: 0,title: "Апартаменты", subtitle: "Расчет доходных программ")
     ]
        
-   // @ObservedObject var data = getTaFlatPlansData(query: Firebase.Firestore.firestore().collection("taflatplans").order(by: "price", descending: true))
         @State var constantHeight : CGFloat = 75.0
             //UIScreen.main.bounds.height / 7.2
         @State var scrolled = 0
@@ -394,19 +350,17 @@ struct HomeView: View {
                                 
                             }
                             }
-                   // Spacer(minLength: self.constantHeight)
-                 
-
-               // }.padding(.top, safeAreaTop)
-                
+                  
             
             
            
             
         }
-       
+       @State var showSearchView = false
+    @State var showIpotekaView = false
+    @State var showApartView = false
         var scrollMenu : some View {
-            //scroll menu
+
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 10) {
@@ -463,13 +417,19 @@ struct HomeView: View {
                                .onTapGesture {
 
                                 if item.title == "Новостройки" {
-                                    self.navigationStack.push(SearchView().environmentObject(getFlats).environmentObject(navigationStack))
-                                    getFlats.needUpdateMap = true
-                                } else if item.title == "Ипотека" {
+
+                                    self.getFlats.queryWHERE = "order by price asc"
                                     
-                                    self.navigationStack.push(IpotekaView())
+                                    getFlats.needUpdateMap = true
+                                    
+                                    self.showSearchView = true
+                                    
+                                   
+                                    
+                                } else if item.title == "Ипотека" {
+                                    self.showIpotekaView = true
                                 } else {
-                                    self.navigationStack.push(ApartView())
+                                    self.showApartView = true
                                 }
                                }
                               
@@ -482,22 +442,27 @@ struct HomeView: View {
                                 
                             
                            
-                        }.frame(width: 246, height: 150)
+                        }.frame(width: 246, height: 155)
                     }
             }.padding(.horizontal)
             }
             //.offset( y: -1 * self.constantHeight)
+        
         }
         
         var body: some View {
-           // NavigationStackView {
+            if !self.showSearchView && !self.showApartView && !self.showIpotekaView {
+                if !self.showUploadStory {
+                    
+                        ZStack {
             ASTableView {
                 ASTableViewSection(id: 0)
                 {
 
                     VStack(spacing: 5){
                      
-                           header .padding(.top , safeAreaTop + 20)
+                           header
+                            //.padding(.top , safeAreaTop + 5)
                             
                             
                     
@@ -583,26 +548,51 @@ struct HomeView: View {
                    }
                 }
             )
+           
             .sheet(isPresented: self.$showSheet) {
 
-            if self.activeSheet == .first {
-                CartView(modalController : $showSheet).environmentObject(getTaFlatPlansData(query: Firebase.Firestore.firestore().collection("taflatplans").order(by: "price", descending: true))).environmentObject(getStoriesDataAndAdminNumber)
-            }
-            else {
-StoryView(item: currentItem)
-}
-
+                CartView(modalController : $showSheet).environmentObject(getFlats).environmentObject(getStoriesDataAndAdminNumber)
+           
 
 }
                 
-                .navigationBarHidden(true)
-                .navigationBarTitle("Главная")
-                .navigationBarBackButtonHidden(true)
+                
                 .edgesIgnoringSafeArea(.all)
-            
+                            
+                            if self.showSheetStory {
+                                
+                                withAnimation(.spring()) {
+                                    
+                                
+                                    StoryView(item: currentItem, showSheetStory : $showSheetStory)
+                                        .statusBar(hidden: true)
+                                        .edgesIgnoringSafeArea(.all)
+                                }
+                                
+                            }
+                    
+                }
+            } else {
+                UploadStory(showUploadStory: $showUploadStory, adminNumber: $getStoriesDataAndAdminNumber.adminNumber)
+            }
+            } else if self.showSearchView && !self.showApartView && !self.showIpotekaView {
+                SearchView(showSearchView : $showSearchView, currentScreen: .home).environmentObject(getFlats).environmentObject(data)
+            } else if !self.showSearchView && !self.showApartView && self.showIpotekaView{
+                IpotekaView( showIpotekaView: $showIpotekaView)
+                    .environmentObject(to)
+                    .environmentObject(getFlats)
+                
+                    .environmentObject(data)
+            } else if !self.showSearchView && self.showApartView && !self.showIpotekaView{
+                ApartView( showApartView: $showApartView)
+                    .environmentObject(toApart)
+                    .environmentObject(getFlats)
+                    .environmentObject(data)
+            }
         }
-             
-            
+    @ObservedObject var toApart = ToApart(price: 0.35, time : 0.31)
+    @ObservedObject var to = To(to: 0.202, to2: 0.36, to3: 0.667, to4: 0.064, to5: 0.08, workType: "Найм", checkMoneyType: "2-НДФЛ", checkSpecialType: "default", bank : "vtb", ifRF: "Являюсь налоговым резидентом РФ")
+            @ObservedObject var data = FromToSearch(flatPrice: [0.0,0.78], totalS: [0.0, 0.78], kitchenS: [0.0,0.78], floor: [0.0,0.78])
             @State var show = false
     @State var currentItem = PostRealmFB(id: "", name: "", text: "", imglink: "", createdAt: Timestamp(date: Date()), storyType: .fill)
     
@@ -713,8 +703,8 @@ StoryView(item: currentItem)
             }
         }
     }
-    @GestureState private var offsetPinch: CGSize = .zero
-    @GestureState var scalePinch: CGFloat = 1.0
+    @State var offsetPinch: CGSize = .zero
+    @State var scalePinch: CGFloat = 1.0
     @State var startLocationPinch: CGPoint = .zero
     @State var anchor: UnitPoint = .center
     
@@ -746,25 +736,29 @@ StoryView(item: currentItem)
                                             }
                                         
                                     }
-                                ).gesture(MagnificationGesture(minimumScaleDelta: 0).updating($scalePinch, body: { (v, s, t) in
-                                    s = v
+                                )
+                                    .highPriorityGesture(MagnificationGesture(minimumScaleDelta: 0)
+                                    .onChanged({ (g) in
+                                        isPinching = true
+                                        
+                                        if "" == self.currentImg {
+                                                                            self.currentImg = item.image
+                                                                            
+                                                                      }
+                                        DispatchQueue.main.async {
+                                            scalePinch = g
+                                        }
+                                    })
                                     
-                                }).onEnded({ (v) in
+                                    .onEnded({ (v) in
                                     isPinching = false
                                     self.currentImg = ""
                                     
                                 })
-                                .onChanged({ (g) in
-                                    isPinching = true
-                                    
-                                    if "" == self.currentImg {
-                                                                        self.currentImg = item.image
-                                                                        
-                                                                  }
-                                })
-                            
                                
-                                            )
+                                    
+                                    
+                                        )
 
                                 } else {
                                     WebView(url: item.image, colorScheme: colorScheme == .dark ? .dark : .light)
@@ -842,7 +836,8 @@ StoryView(item: currentItem)
             
             
             }
-        
+    @State var showSheetStory = false
+        @State var showUploadStory = false
         var storiesScroll : some View {
             ASCollectionView(section:
                                 
@@ -854,7 +849,6 @@ StoryView(item: currentItem)
                     if i.isFirstInSection && item.name == ""
                         && isAdminNumber {
                         VStack {
-                       // NavigationLink(destination: UploadStory()) {
                             ZStack{
                                 HStack {
                                     Text("+").font(.largeTitle).foregroundColor(Color("ColorMain")).fontWeight(.light)
@@ -869,7 +863,7 @@ StoryView(item: currentItem)
 
 
                             }.onTapGesture {
-                                self.navigationStack.push(UploadStory( adminNumber: $getStoriesDataAndAdminNumber.adminNumber))
+                                self.showUploadStory = true
                             }
                             .padding(.horizontal)
 
@@ -905,11 +899,13 @@ StoryView(item: currentItem)
 
 
 
-
+                        DispatchQueue.main.async {
+                            
+                        
                         currentItem = item
-                       self.showSheet.toggle()
+                       self.showSheetStory = true
 
-                        self.activeSheet = .second
+                        }
 
 
             let config = Realm.Configuration(schemaVersion: 1)

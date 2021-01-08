@@ -12,7 +12,7 @@ import Combine
 import FirebaseStorage
 import RealmSwift
 import Firebase
-import PromiseKit
+
 
 struct LoadStoryImage: View {
     @ObservedObject var imageLoader:StoryImageLoader

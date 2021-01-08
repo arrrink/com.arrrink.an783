@@ -15,7 +15,6 @@
 import Foundation
 import CryptoSwift
 import BigInt
-import SwiftyBase64
 
 private extension Data {
   var firstByte: UInt8 {

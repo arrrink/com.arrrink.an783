@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import NavigationStack
 
 struct OnboardingView: View {
     @State var leftData = SliderData(side: .left)
@@ -17,14 +16,16 @@ struct OnboardingView: View {
         @State var topSlider = SliderDirection.right
         @State var sliderOffset: CGFloat = 0
         
-   // @EnvironmentObject var checkAdminAcc : checkAdminAcc
-    @EnvironmentObject private var navigationStack: NavigationStack
     @State var safeAreaTop = UIApplication.shared.windows.first?.safeAreaInsets.top
     @State var safeAreaBottom = UIApplication.shared.windows.first?.safeAreaInsets.bottom
     
     @State var getStoriesData = [PostRealmFB]()
     @State var adminNumber = ""
+    @State var showHome = false
+    
     var body: some View {
+        
+        if !self.showHome {
             ZStack {
                 
                 
@@ -45,8 +46,7 @@ struct OnboardingView: View {
                     
                 
                     Button {
-                        
-                        self.navigationStack.push(HomeView(adminNumber: $adminNumber))
+                        self.showHome = true
                     } label: {
                         
                     
@@ -78,7 +78,9 @@ struct OnboardingView: View {
                 slider(data: $rightData)
 
            }
-            
+    } else {
+            HomeView(adminNumber: $adminNumber)
+        }
     
         }
         

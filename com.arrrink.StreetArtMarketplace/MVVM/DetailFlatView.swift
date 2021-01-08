@@ -9,17 +9,16 @@
 import SwiftUI
 import SDWebImageSwiftUI
 import Firebase
-import NavigationStack
-import Pages
+
 import ASCollectionView_SwiftUI
 import Combine
 
 struct DetailFlatView : View {
   
-    @EnvironmentObject private var navigationStack: NavigationStack
-    @EnvironmentObject var getFlats: getTaFlatPlansData
+  //  @Binding
+    var getFlats: getTaFlatPlansData
     
-    @Binding  var data : taFlatPlans
+      var data : taFlatPlans
     @State var modalController = false
     
     @Environment(\.presentationMode) var presentation
@@ -33,21 +32,11 @@ struct DetailFlatView : View {
     var roomTypeShort : String {
         return data.roomType == "Студии" ? "Ст" : data.roomType.replacingOccurrences(of: "-к.кв", with: "")
     }
-    var price : String {
-        
-        var string = String(data.price).reversed
-        
-        string = string.separate(every: 3, with: " ")
-        
-        string = string.reversed
-        
-       
-        return "\(string) руб."
-    }
+    
     var bottom : some View {
         VStack(alignment: .leading, spacing: 10) {
             
-            Text(price)
+            Text(String(data.price).price())
                 
                 .font(.title)
                 //.fontWeight(.black)
@@ -91,7 +80,6 @@ struct DetailFlatView : View {
     @State var offset: CGSize = .zero
     @State var isPinching = false
    
-        //let findObject = getFlats.objects.filter{$0.complexName == data.complexName}
     var overlay : some View {
         Image("logomain")
             .resizable()
@@ -132,7 +120,7 @@ struct DetailFlatView : View {
 
 
             Spacer()
-        }
+            }
 
         
 
@@ -145,20 +133,6 @@ struct DetailFlatView : View {
     
 
     var objImgCell : some View {
-        
-//        NavigationLink(destination: CellObject(data: $getFlats.tappedObject )
-//                        .environmentObject(getTaFlatPlansData(query: Firebase.Firestore.firestore().collection("taflatplans").whereField("complexName", isEqualTo: data.complexName).order(by: "price", descending: false)
-//
-//        ))
-//                       , isActive: $showObjFromDetail) {
-            
-            PushView(destination: CellObject(data: $getFlats.tappedObject )
-                        .environmentObject(getTaFlatPlansData(query: getFlats.query.whereField("complexName", isEqualTo: data.complexName)
-                                                              //, ifDetailObj : true
-                        )), isActive: $showObjFromDetail) {
-        
-            
-        
 
         ZStack(alignment: .bottomLeading) {
            
@@ -173,7 +147,7 @@ struct DetailFlatView : View {
 
             
             VStack(alignment: .leading, spacing: 5){
-                Text(findObjData().developer)
+                Text(data.developer)
                     .font(.subheadline)
                     .foregroundColor(.white)
                     .multilineTextAlignment(.leading)
@@ -182,26 +156,76 @@ struct DetailFlatView : View {
                     .foregroundColor(.white)
                     .multilineTextAlignment(.leading)
                 
-                Text(findObjData().complexName).foregroundColor(.white).fontWeight(.black)
+                Text(data.complexName).foregroundColor(.white).fontWeight(.black)
                     .multilineTextAlignment(.leading)
                     //.font(.title)
             }.padding()
 
         
         }.onTapGesture {
+            DispatchQueue.main.async {
+                
             getFlats.tappedObjectComplexName = data.complexName
             
             getFlats.tappedObject = findObjData()
+            
+            
             
            // withAnimation(.easeIn(duration: 0.75)) {
                 
             self.showObjFromDetail = true
             //}
-           
+            getFlats.dataTappedObj.removeAll()
+            
+            getFlats.limitTappedObj = 10
+            
+            getFlats.offsetTappedObj = 0
+            
+            
+            
+            let q = getFlats.queryWHERE
+                .replacingOccurrences(of: "order by price asc", with: "")
+                .replacingOccurrences(of: "order by price desc", with: "")
+                .replacingOccurrences(of: "where", with: "")
+            
+            var s : String
+            
+            if q.isEmpty {
+                s = ""
+            } else {
+                s = "( \(q) ) and "
+            }
+            
+            getFlats.getBQTotal(q: "SELECT id FROM data.taflatplans where \(s) complexName = '\(getFlats.tappedObject.complexName)' order by price asc", completionHandler: { (foundCount) in
+                
+
+                
+    guard foundCount != 0 else {
+        getFlats.noteTappedObj = "Не найдено"
+    return
+    }
+                getFlats.noteTappedObj = "\(foundCount)"
+     
+                getFlats.getBQLimitOffsetTappedObj(q: "SELECT * FROM data.taflatplans where \(s) complexName = '\(getFlats.tappedObject.complexName)' order by price asc" + " limit \(getFlats.limitTappedObj) offset \(getFlats.offsetTappedObj)", completionHandler: { (flats) in
+                    
+                   
+                        
+                    
+                    
+                    getFlats.dataTappedObj.append(contentsOf: flats)
+                        
+                    
+                })
+
+
+            })
+            
+        
+        }
         }
         
     
-        }
+       // }
 }
     var header : some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -215,8 +239,8 @@ struct DetailFlatView : View {
             HStack{
                 Image("metro").resizable().renderingMode(.template).foregroundColor(self.getMetroColor(data.underground)).frame(width: 25, height: 20)
                 Text(data.underground).fontWeight(.heavy).foregroundColor(.black).font(.footnote)
-                Text(findObjData().timeToUnderground).fontWeight(.light).foregroundColor(.gray).font(.footnote)
-                if findObjData().typeToUnderground == "Пешком" {
+                Text(data.toUnderground.replacingOccurrences(of: " пешком", with: "").replacingOccurrences(of: " транспортом", with: "")).fontWeight(.light).foregroundColor(.gray).font(.footnote)
+                if data.toUnderground.contains("пешком") {
                     Image("walk").resizable().renderingMode(.template).foregroundColor(.gray).frame(width: 20, height: 20)
                 } else {
                     Image("bus").resizable().renderingMode(.template).foregroundColor(.gray).frame(width: 20, height: 20)
@@ -278,7 +302,9 @@ struct DetailFlatView : View {
     @State var index: Int = 0
 @State var width = UIScreen.main.bounds.width
        var body: some View {
-        NavigationStackView{
+        
+        if !showObjFromDetail && !showRepairAR {
+            withAnimation {
                 ScrollView(.vertical, showsIndicators: false) {
                     
                     VStack(alignment: .leading, spacing : 0) {
@@ -325,6 +351,7 @@ struct DetailFlatView : View {
                     
                      
                 }
+       
                 .overlay(
                     VStack {
                         if isPinching   {
@@ -362,11 +389,24 @@ struct DetailFlatView : View {
                      }
                 
                 )
-       }
+        }
+        } else if showObjFromDetail {
+            withAnimation(.spring()) {
+                
+                CellObject(data: getFlats.tappedObject, showObjFromDetail: $showObjFromDetail )
+                           
+                            .environmentObject(getFlats)
+            }
+        } else {
+            withAnimation(.spring()) {
+            VRDestination(showRepairAR: $showRepairAR)
+            }
+        }
+       
         
        }
     @State var showRepairAR = false
-    @State var orderDesignPlan = "default"
+    @State var orderDesignPlan = "Дизайн проект"
     @State var isOrderRepair = false
     var repair : String {
         let r = data.repair
@@ -426,7 +466,7 @@ struct DetailFlatView : View {
                                     
                                     withAnimation {
                                         VStack(alignment: .leading) {
-                                        Text("1500 руб. за м²")
+                                        Text("1900 руб. за м²")
                                                     //.font(.title)
                                                                            .fontWeight(.bold)
                                                                            .foregroundColor(.white)
@@ -461,7 +501,7 @@ struct DetailFlatView : View {
                                                                            .fontWeight(.bold)
                                                                            .foregroundColor(.white)
                                                                            .padding(.horizontal,30)
-                                        Text("Дизайн-проект на выбор из трех отделочных решений с полным комплектом сантехники и отделочных материалов\nВы выбираете цвет стен, тип напольного покрытия, ряд основных и дополнительных опций")
+                                        Text("Дизайн-проект на выбор из трех отделочных решений с черновыми и чистовыми работами, а также полным комплектом сантехники и отделочных материалов\nВы выбираете цвет стен, тип напольного покрытия, ряд основных и дополнительных опций")
                                             .font(.subheadline)
                                            // .fontWeight(.heavy)
                                                                            .foregroundColor(.white)
@@ -475,8 +515,7 @@ struct DetailFlatView : View {
 //                                    .foregroundColor(.white)
 //                                    .padding(.top,10)
                                 
-                                
-                                PushView(destination: VRDestination(showRepairAR: $showRepairAR), isActive: $showRepairAR) {
+                              
                               
                                 HStack{
                                     
@@ -488,7 +527,9 @@ struct DetailFlatView : View {
                                         .fontWeight(.bold)
                                 }.padding(.horizontal, 30)
                                 
-                            }
+                                .onTapGesture {
+                                    showRepairAR.toggle()
+                                }
                             }
                             .padding(.vertical)
                             .padding(.bottom)
@@ -620,7 +661,9 @@ struct DetailFlatView : View {
                                 
                                 
                                 Button {
-                                    UIApplication.shared.windows.last?.rootViewController?.present(textFieldAlertView(userID: Auth.auth().currentUser?.phoneNumber ?? "default", data : FlatOrder(id: data.id, orderDesign: orderDesignPlan)), animated: true, completion: nil)
+                                    
+                                    self.showBookingActionSheet.toggle()
+//                                    UIApplication.shared.windows.last?.rootViewController?.present(textFieldAlertView(userID: Auth.auth().currentUser?.phoneNumber ?? "default", data : FlatOrder(id: data.id, orderDesign: orderDesignPlan)), animated: true, completion: nil)
                                    // textFieldAlertView(id: "g")
 //                                    Firebase.Firestore.firestore().collection("objects").document("\(j.childSnapshot(forPath: "id").value as? Int ?? 0)").setData(desc)
                                 } label: {
@@ -641,14 +684,54 @@ struct DetailFlatView : View {
                                         .fontWeight(.black)
                                         .padding(.horizontal)
                                         .font(.title)
-                                    }.sheet(isPresented: $showShareSheet) {
-                                        ShareSheet(activityItems: self.sharedItems)
-                                    
-                                    
-                                    
-                                   
+                                    }
+                                .actionSheet(isPresented: $showBookingActionSheet) {
+                                    ActionSheet(title: Text(initBooking(data: FlatOrder(id: data.id, orderDesign: orderDesignPlan))), message: Text("Мы перезвоним Вам в ближайшее время"), buttons: [
+                                        .cancel(Text("Отмена")),
+                                        .default(Text("Бронь")) {
+                                            
+                                            
+                                            let db = Firestore.firestore()
+                                           
+                                           
+                                            db.collection("cart").document(Auth.auth().currentUser?.phoneNumber ?? "default").collection("flats").document(data.id).setData(["createdAt" : Timestamp(date: Date()),  "design" : orderDesignPlan,
+                                                                                                                                                                             "img" : data.img,
+                                                                                                                                                                             "complexName" : data.complexName,
+                                                                                                                                                                             "price" : Int(data.price) ?? 0,
+                                                                                                                                                                             "room" : data.room,
+                                                                                                                                                                             "deadline" : data.deadline,
+                                                                                                                                                                             "type" : data.type,
+                                                                                                                                                                             "floor" : Int(data.floor) ?? 0,
+                                                                                                                                                                             "developer" : data.developer,
+                                                                                                                                                                             "district" : data.district,
+                                                                                                                                                                             "totalS" : Double(data.totalS) ?? 0.0,
+                                                                                                                                                                             "kitchenS" : Double(data.kitchenS) ?? 0.0,
+                                                                                                                                                                             "repair" : data.repair,
+                                                                                                                                                                             "roomType" : data.roomType,
+                                                                                                                                                                             "underground" : data.underground,
+                                                                                                                                                                             "cession" : data.cession,
+                                                                                                                                                                             "section" : data.section,
+                                                                                                                                                                             "flatNumber" : data.flatNumber,
+                                                                                                                                                                             "toUnderground" : data.toUnderground
+                                                                                                                                                                                        
+                                                                
+                                                       
+                                                       ]) { (err)  in
+                                           
+                                                           if err != nil{
+                                           
+                                                               print((err?.localizedDescription)!)
+                                                               return
+                                                           }
+                                                       }
+                                            
+                                            
+                                            }
+                                       
                                         
-                                }.frame(width: 200, height: 200)
+                                    ])
+                                }
+                                .frame(width: 200, height: 200)
                                 
                                 .background(Rectangle().fill(Color("ColorMain"))
                                                                     .cornerRadius(15)
@@ -665,6 +748,8 @@ struct DetailFlatView : View {
 //        .frame(height: 350, alignment: .topLeading)
       //  }
     }
+    @State var showBookingActionSheet = false
+    
 }
 
 struct FlatOptions : View {
@@ -690,6 +775,24 @@ struct FlatOptions : View {
 
 extension DetailFlatView {
     
+    func initBooking(data: FlatOrder) -> String{
+        
+        
+        var string = ""
+        switch data.orderDesign {
+        case "Дизайн проект":
+            string = " с дизайн проектом"
+        case "Отделка":
+            string = " с отделкой"
+        case "Отделка под ключ":
+            string = " с отделкой под ключ"
+        default:
+            break
+        }
+        
+        return "Подтверждение заявки на бронь по квартире" + string
+
+    }
         func findObjData() -> taObjects {
             
             
@@ -698,7 +801,7 @@ extension DetailFlatView {
             
             guard findObj.count != 0 else {
                
-                return taObjects(id: "", address: "", complexName: "", deadline: "", developer: "", geo: GeoPoint(latitude: 0.0, longitude: 0.0), img: "", type: "", underground: "", timeToUnderground: "", typeToUnderground: "")
+                return taObjects(id: "", address: "", complexName: "", deadline: "", developer: "", geo: GeoPoint(latitude: 0.0, longitude: 0.0), img: "", type: "", underground: "", toUnderground: "", cession: "")
             }
         return findObj[0]
     }
@@ -724,12 +827,8 @@ extension DetailFlatView {
 
                 let whatsappnumber = (snap?.documentChanges)![0].document.data()["whatsappnumber"] as? String ?? ""
                 
-            var string = String(data.price).reversed
             
-            string = string.separate(every: 3, with: " ")
-            
-            string = string.reversed
-            let urlWhatsMessage = "Доброго времени суток! Возникли вопросы по квартире #\(data.id) \(data.complexName.uppercased()) \(string) руб, \(data.room). "
+            let urlWhatsMessage = "Доброго времени суток! Возникли вопросы по квартире #\(data.id) \(data.complexName.uppercased()) \(String(data.price).price()), \(data.room). "
             
            let linkToWAMessage = "https://wa.me/\(whatsappnumber)?text=\(urlWhatsMessage)"
             
@@ -797,24 +896,6 @@ extension DetailFlatView {
     }
 }
     
-    func countRepairPrice(_ p: Int) -> String {
-        var v = ""
-        var total = 0.0
-        if let c = Double(data.totalS) {
-            total = c * Double(p)
-        } else if let c2 = Int(data.totalS) {
-            total = Double(c2) * Double(p)
-        }
-       
-       
-        
-        v = String(Int(total)).reversed
-        
-        v = v.separate(every: 3, with: " ")
-        
-        v = v.reversed
-       
-        return "\(v) руб."
-    }
+
 }
 

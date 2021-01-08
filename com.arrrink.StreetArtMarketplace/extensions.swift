@@ -7,12 +7,12 @@
 //
 
 import SwiftUI
-import NavigationStack
 import UIKit
 import Firebase
 import Combine
 import SDWebImageSwiftUI
 import WebKit
+import ASCollectionView_SwiftUI
 
 struct Blur: UIViewRepresentable {
     var style: UIBlurEffect.Style = .systemMaterial
@@ -96,9 +96,37 @@ extension UserDefaults {
     }
 
 }
+
 extension String {
     func separate(every stride: Int = 4, with separator: Character = " ") -> String {
         return String(enumerated().map { $0 > 0 && $0 % stride == 0 ? [separator, $1] : [$1]}.joined())
+    }
+    
+    
+    func price() -> String {
+            
+        var string = String(self.reversed())
+
+        string = String(string.enumerated().map { $0 > 0 && $0 % 3 == 0 ? [" ", $1] : [$1]}.joined())
+            
+            string = "\(String(string.reversed())) руб."
+           
+        return string
+        
+    }
+}
+
+struct RoundedEdge: ViewModifier {
+    let width: CGFloat
+    let color: Color
+    let cornerRadius: CGFloat
+
+    func body(content: Content) -> some View {
+        content.cornerRadius(cornerRadius - width)
+            .padding(width)
+            .background(color)
+            .cornerRadius(cornerRadius)
+            .shadow(color: Color.black.opacity(0.15), radius: 5, x: 5, y: 5)
     }
 }
 // defaultPinch
@@ -591,6 +619,43 @@ struct taFlatPlans : Identifiable, Hashable, Decodable {
     var toUnderground : String
     
 }
+struct HideRowSeparatorModifier: ViewModifier {
+    static let defaultListRowHeight: CGFloat = 44
+    var insets: EdgeInsets
+    var background: Color
+    
+    init(insets: EdgeInsets, background: Color) {
+        self.insets = insets
+        var alpha: CGFloat = 0
+        //UIColor.init(background)
+        // .getWhite(nil, alpha: &alpha)
+        //UIColor(background).getWhite(nil, alpha: &alpha)
+            // assert(alpha == 1, "Setting background to a non-opaque color will result in separators remaining visible.")
+        self.background = background
+    }
+    
+    func body(content: Content) -> some View {
+        content
+            .padding(insets)
+            .frame(
+                minWidth: 0, maxWidth: .infinity,
+                minHeight: Self.defaultListRowHeight,
+                alignment: .leading
+            )
+            .listRowInsets(EdgeInsets())
+            .background(background)
+    }
+}
+
+extension EdgeInsets {
+    static let defaultListRowInsets = Self(top: 0, leading: 16, bottom: 0, trailing: 16)
+}
+
+extension View {
+    func hideRowSeparator(insets: EdgeInsets = .defaultListRowInsets, background: Color = Color(.systemBackground)) -> some View {
+        modifier(HideRowSeparatorModifier(insets: insets, background: background))
+    }
+}
 struct taObjects : Identifiable, Hashable {
     
     var id : String
@@ -611,9 +676,9 @@ struct taObjects : Identifiable, Hashable {
     
     var underground : String
     
-    var timeToUnderground : String
+    var toUnderground : String
     
-    var typeToUnderground : String
+    var cession : String
     
     
     
@@ -780,25 +845,25 @@ extension View {
     func parseObj(_ query: QuerySnapshot) -> taObjects {
         
         
-        var object = taObjects(id: "", address: "", complexName: "", deadline: "", developer: "", geo: GeoPoint(latitude: 0.0, longitude: 0.0), img: "", type: "", underground: "", timeToUnderground: "", typeToUnderground: "")
+        var object = taObjects(id: "", address: "", complexName: "", deadline: "", developer: "", geo: GeoPoint(latitude: 0.0, longitude: 0.0), img: "", type: "", underground: "", toUnderground: "", cession: "")
 
         if let i = query.documents.first,
             let coords = i.get("geo"),
-           let address = i.get("address") as? String ?? "",
-           let complexName = i.get("complexName") as? String ?? "",
-           let deadline = i.get("deadline") as? String ?? "",
-           let developer = i.get("developer") as? String ?? "",
-           let id = i.get("id") as? Int ?? 0,
-           let img = i.get("img") as? String ?? "",
-           let timeToUnderground = i.get("timeToUnderground") as? String ?? "",
-           let type = i.get("type") as? String ?? "",
-           let typeToUnderground = i.get("typeToUnderground") as? String ?? "",
-           let underground = i.get("underground") as? String ?? ""
+           let address = i.get("address") as? String,
+           let complexName = i.get("complexName") as? String,
+           let deadline = i.get("deadline") as? String ,
+           let developer = i.get("developer") as? String ,
+           let id = i.get("id") as? Int,
+           let img = i.get("img") as? String,
+           let cession = i.get("cession") as? String,
+           let type = i.get("type") as? String ,
+           let toUnderground = i.get("toUnderground") as? String,
+           let underground = i.get("underground") as? String 
            {
                             let point = coords as! GeoPoint
                             
                             
-             object = taObjects(id: String(id), address: address, complexName: complexName, deadline: deadline, developer: developer, geo: point, img: img, type: type, underground: underground, timeToUnderground: timeToUnderground, typeToUnderground: typeToUnderground)
+            object = taObjects(id: String(id), address: address, complexName: complexName, deadline: deadline, developer: developer, geo: point, img: img, type: type, underground: underground, toUnderground: toUnderground, cession: cession)
         }
         return object
     }
@@ -1025,7 +1090,10 @@ struct ImagesPicker: UIViewControllerRepresentable {
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
      
             if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-                parent.selectedImages.append(ImagesArray(id: "\(parent.selectedImages.count)", image: image))
+                
+                DispatchQueue.main.async {
+                    self.parent.selectedImages.append(ImagesArray(id: "\(self.parent.selectedImages.count)", image: image))
+                }
             }
      
             parent.presentationMode.wrappedValue.dismiss()
