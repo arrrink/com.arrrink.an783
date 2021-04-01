@@ -10,41 +10,42 @@ import UIKit
 import Firebase
 import GooglePlaces
 import GoogleMaps
+import FirebaseAuth
+import FirebaseInstallations
+import FirebaseMessaging
+import UserNotifications
+
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
 
-
-
+var gcmMessageIDKey = "gcm.message.id"
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-       
-       // UINavigationController.init().interactivePopGestureRecognizer?.delegate = nil
-      //  UINavigationController.init().interactivePopGestureRecognizer?.isEnabled = true
-      //  let appearance = UINavigationBarAppearance()
         
-       // appearance.configureWithOpaqueBackground()
-       
-    //    UINavigationBar.appearance().showsLargeContentViewer = false
-       // UINavigationBar.appearance().standardAppearance = appearance
-      //  UINavigationBar.appearance().compactAppearance = appearance
-//        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "Ubuntu", size: 27), NSAttributedString.Key.foregroundColor:UIColor.white]
-//        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "Ubuntu-Light", size: 15), NSAttributedString.Key.foregroundColor:UIColor.white], for: .highlighted)
-       // UINavigationBar.appearance().backgroundColor = .clear
-     //   UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        
         UINavigationBar.appearance().tintColor = .red
-        
-//        UITableView.appearance().backgroundColor = .white
-//        UITableView.appearance().backgroundView = .none
-//        UITableView.appearance().separatorStyle = .none
-//        UITableView.appearance().separatorColor = .clear
-//
-//        UITableView.appearance().separatorEffect = .none
-//
-//        UITableViewCell.appearance().contentView.backgroundColor = .white
-//           UITableViewCell.appearance().backgroundColor = .white
-//           UITableView.appearance().tableFooterView = UIView()
-       // UINavigationBarAppearance.init(barAppearance: UIBarAppearance())
         FirebaseApp.configure()
+        
+//
+//        if #available(iOS 10.0, *) {
+//                    // For iOS 10 display notification (sent via APNS)
+//                    UNUserNotificationCenter.current().delegate = self
+//                    let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+//                    UNUserNotificationCenter.current().requestAuthorization(
+//                        options: authOptions,
+//                        completionHandler: {_, _ in })
+//                } else {
+//                    let settings: UIUserNotificationSettings =
+//                        UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+//                    application.registerUserNotificationSettings(settings)
+//                }
+
+              //  application.registerForRemoteNotifications()
+
+               // Messaging.messaging().delegate = self
+       
+        
         GMSServices.provideAPIKey("AIzaSyAsGfs4rovz0-6EFUerfwiSA6OMTs2Ox-M")
         return true
     }
@@ -62,7 +63,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
+   
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+      let firebaseAuth = Auth.auth()
+      firebaseAuth.setAPNSToken(deviceToken, type: AuthAPNSTokenType.prod)
+
+  }
 
 
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+      // If you are receiving a notification message while your app is in the background,
+      // this callback will not be fired till the user taps on the notification launching the application.
+      // TODO: Handle data of notification
+
+      // With swizzling disabled you must let Messaging know about the message, for Analytics
+      // Messaging.messaging().appDidReceiveMessage(userInfo)
+
+      // Print message ID.
+//      if let messageID = userInfo[gcmMessageIDKey] {
+//        print("Message ID: \(messageID)")
+//      }
+//
+//      // Print full message.
+//      print(userInfo)
+//
+//      completionHandler(UIBackgroundFetchResult.newData)
+    }
 }
 

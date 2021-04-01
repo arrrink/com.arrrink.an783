@@ -156,10 +156,6 @@ struct MapView : UIViewRepresentable {
         
         func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
             
-            
-        
-            
-            
             guard view.annotation != nil else {
                 return
             }
@@ -174,7 +170,11 @@ struct MapView : UIViewRepresentable {
                 
                 return
             }
-            
+            guard !view.annotation!.isKind(of: MKClusterAnnotation.self)
+            else {
+                
+                return
+            }
             
             if let title = view.annotation?.title! {
                 self.parent.getObjects.tappedObjectComplexName = title

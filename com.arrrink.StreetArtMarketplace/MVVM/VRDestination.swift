@@ -28,8 +28,9 @@ struct VRDestination: View {
                 NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: nil, userInfo: ["current": "\(currentRoom)"])
                 
             }
-            .edgesIgnoringSafeArea(.all)
-            
+//            .edgesIgnoringSafeArea(.all)
+//            .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
+                
             
             VStack(alignment: .leading){
             

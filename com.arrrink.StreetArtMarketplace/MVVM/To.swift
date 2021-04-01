@@ -13,6 +13,7 @@ import SwiftUI
 import Firebase
 
 
+
 class To: ObservableObject, Identifiable {
     let id = UUID()
     let publisher = PassthroughSubject<CGFloat, Never>()
@@ -65,7 +66,7 @@ class To: ObservableObject, Identifiable {
     @Published var maxPrice : String = "99800000"
     
     @Published var banks = [Bank]()
-   
+    @Published var canLoad : Bool? = nil
     var percent: CGFloat {
         
         let find = dataBank.filter { $0.img == bank}
@@ -169,7 +170,7 @@ class To: ObservableObject, Identifiable {
     }
     
     
-    @Published var dataBank = [ Bank(id: 0, name: "ДОМ.РФ", img: "domrf",
+    @Published var dataBank = [ Bank(id: 0, urlToBank : "https://domrfbank.ru/mortgage/", name: "ДОМ.РФ", img: "domrf",
                                      minSumOfCredit: 500000,
                                      maxSumOfCredit: 30000000,
                                      maxPV: 0.85,
@@ -195,10 +196,10 @@ class To: ObservableObject, Identifiable {
                                      ],
                                      specialIpotekaTypes: [SpecialIpotekaType(id: 0, typeName: "Военная ипотека", minPV: 0.1, percent: 7.5),
                                                            SpecialIpotekaType(id: 1, typeName: "Семейная ипотека", minPV: 0.1, percent: 5.7),
-                                                           SpecialIpotekaType(id: 2, typeName: "Госпрограмма 2020", minPV: 0.15, percent: 6.1)
+                                                           SpecialIpotekaType(id: 2, typeName: "Госпрограмма 2021", minPV: 0.15, percent: 6.1)
                                      ],
                                      err: "", totalPercent : 0.0),
-                                Bank(id: 1, name: "Абсолют Банк", img: "absolut",
+                                Bank(id: 1, urlToBank: "https://absolutbank.ru/personal/loans/mortgage/new-buildings/", name: "Абсолют Банк", img: "absolut",
                                                                  minSumOfCredit: 500000,
                                                                  maxSumOfCredit: 50000000,
                                                                  maxPV: 0.9,
@@ -226,7 +227,7 @@ class To: ObservableObject, Identifiable {
                                                                  err: "", totalPercent : 0.0),
                                 
                             
-                                Bank(id: 2, name: "ЮниКредит Банк", img: "unicredit",
+                                Bank(id: 2, urlToBank: "https://www.unicreditbank.ru/ru/personal/borrow/mortgages.html", name: "ЮниКредит Банк", img: "unicredit",
                                                                  minSumOfCredit: 500000,
                                                                  maxSumOfCredit: 12000000,
                                                                  maxPV: 1,
@@ -251,9 +252,9 @@ class To: ObservableObject, Identifiable {
                                                                             
                                                                  ],
                                                                  specialIpotekaTypes: [SpecialIpotekaType(id: 0, typeName: "Семейная ипотека", minPV: 0.2, percent: 6.0),
-                                                                                       SpecialIpotekaType(id: 1, typeName: "Госпрограмма 2020", minPV: 0.2, percent: 5.9)],
+                                                                                       SpecialIpotekaType(id: 1, typeName: "Госпрограмма 2021", minPV: 0.2, percent: 5.9)],
                                                                  err: "", totalPercent : 0.0),
-                                Bank(id: 3, name: "ТКБ", img: "tkb",
+                                Bank(id: 3, urlToBank: "https://www.tkbbank.ru/private/credits/mortgage/",name: "ТКБ", img: "tkb",
                                                                  minSumOfCredit: 500000,
                                                                  maxSumOfCredit: 20000000,
                                                                  maxPV: 0.9,
@@ -280,7 +281,7 @@ class To: ObservableObject, Identifiable {
                                                                  ],
                                                                  specialIpotekaTypes: [SpecialIpotekaType(id: 0, typeName: "Семейная ипотека", minPV: 0.3, percent: 5.9)],
                                                                  err: "", totalPercent : 0.0),
-                                Bank(id: 4, name: "Росбанк Дом", img: "rosbankdom",
+                                Bank(id: 4,urlToBank: "https://www.rosbank.ru/ipoteka/", name: "Росбанк Дом", img: "rosbankdom",
                                                                  minSumOfCredit: 600000,
                                                                  maxSumOfCredit: 99000000,
                                                                  maxPV: 0.9,
@@ -307,10 +308,10 @@ class To: ObservableObject, Identifiable {
                                                                             
                                                                  ],
                                                                  specialIpotekaTypes: [SpecialIpotekaType(id: 0, typeName: "Семейная ипотека", minPV: 0.15, percent: 5.0),
-                                                                                       SpecialIpotekaType(id: 1, typeName: "Госпрограмма 2020", minPV: 0.15, percent: 6.15)],
+                                                                                       SpecialIpotekaType(id: 1, typeName: "Госпрограмма 2021", minPV: 0.15, percent: 6.15)],
                                                                  err: "", totalPercent : 0.0),
                                 
-                                Bank(id: 5, name: "БЖФ Банк", img: "bjf",
+                                Bank(id: 5,urlToBank: "https://bgfbank.ru/ipoteka/stroyashcheesya-zhile/", name: "БЖФ Банк", img: "bjf",
                                                                  minSumOfCredit: 450000,
                                                                  maxSumOfCredit: 20000000,
                                                                  maxPV: 0.9,
@@ -337,7 +338,7 @@ class To: ObservableObject, Identifiable {
                                                                  ],
                                                                  specialIpotekaTypes: [SpecialIpotekaType](),
                                                                  err: "", totalPercent : 0.0),
-                                Bank(id: 6, name: "Сбер", img: "sber",
+                                Bank(id: 6,urlToBank: "https://www.sberbank.ru/ru/person/credits/home/buying_project", name: "Сбер", img: "sber",
                                                                  minSumOfCredit: 300000,
                                                                  maxSumOfCredit: 60000000,
                                                                  maxPV: 0.85,
@@ -363,11 +364,11 @@ class To: ObservableObject, Identifiable {
                                                                             
                                                                  ],
                                                                  specialIpotekaTypes: [SpecialIpotekaType(id: 0, typeName: "Семейная ипотека", minPV: 0.15, percent: 5.0),
-                                                                                       SpecialIpotekaType(id: 1, typeName: "Госпрограмма 2020", minPV: 0.15, percent: 6.1),
+                                                                                       SpecialIpotekaType(id: 1, typeName: "Госпрограмма 2021", minPV: 0.15, percent: 6.1),
                                                                                        SpecialIpotekaType(id: 0, typeName: "Военная ипотека", minPV: 0.15, percent: 7.9)
                                                                  ],
                                                                  err: "", totalPercent : 0.0),
-                                Bank(id: 7, name: "ВТБ", img: "vtb",
+                                Bank(id: 7,urlToBank: "https://www.vtb.ru/personal/ipoteka/novostrojki",  name: "ВТБ", img: "vtb",
                                                                  minSumOfCredit: 600000,
                                                                  maxSumOfCredit: 60000000,
                                                                  maxPV: 0.85,
@@ -393,11 +394,11 @@ class To: ObservableObject, Identifiable {
                                                                             
                                                                  ],
                                                                  specialIpotekaTypes: [SpecialIpotekaType(id: 0, typeName: "Семейная ипотека", minPV: 0.1, percent: 7.4),
-                                                                                       SpecialIpotekaType(id: 1, typeName: "Госпрограмма 2020", minPV: 0.15, percent: 6.1),
+                                                                                       SpecialIpotekaType(id: 1, typeName: "Госпрограмма 2021", minPV: 0.15, percent: 6.1),
                                                                                        SpecialIpotekaType(id: 0, typeName: "Военная ипотека", minPV: 0.10, percent: 7.4)
                                                                  ],
                                                                  err: "", totalPercent : 0.0),
-                                Bank(id: 8, name: "Альфа Банк", img: "alfa",
+                                Bank(id: 8,urlToBank: "https://alfabank.ru/get-money/mortgage/novostrojki/", name: "Альфа Банк", img: "alfa",
                                                                  minSumOfCredit: 600000,
                                                                  maxSumOfCredit: 50000000,
                                                                  maxPV: 0.85,
@@ -423,7 +424,7 @@ class To: ObservableObject, Identifiable {
                                                                             
                                                                  ],
                                                                  specialIpotekaTypes: [SpecialIpotekaType(id: 0, typeName: "Семейная ипотека", minPV: 0.1, percent: 7.4),
-                                                                                       SpecialIpotekaType(id: 1, typeName: "Госпрограмма 2020", minPV: 0.15, percent: 5.99),
+                                                                                       SpecialIpotekaType(id: 1, typeName: "Госпрограмма 2021", minPV: 0.15, percent: 5.99),
                                                                                        SpecialIpotekaType(id: 0, typeName: "Военная ипотека", minPV: 0.10, percent: 7.79)
                                                                  ],
                                                                  err: "", totalPercent : 0.0)
@@ -480,7 +481,7 @@ class To: ObservableObject, Identifiable {
    }
     
     
-    init( to: CGFloat, to2: CGFloat, to3: CGFloat, to4: CGFloat, to5: CGFloat, workType: String, checkMoneyType: String, checkSpecialType: String, bank : String, ifRF : String) {
+    init(to: CGFloat, to2: CGFloat, to3: CGFloat, to4: CGFloat, to5: CGFloat, workType: String, checkMoneyType: String, checkSpecialType: String, bank : String, ifRF : String) {
         
         self.flatPrice = to // total price of flat
         self.value2 = to2 // PV
@@ -494,7 +495,27 @@ class To: ObservableObject, Identifiable {
         self.ifRF = ifRF
        // getMaxPrice()
         
-        findPercent()
+        
+        
+        
+             let db = Firestore.firestore()
+             db.collection("ipoteka").addSnapshotListener { (snap, err) in
+
+                 if err != nil {
+                     print((err?.localizedDescription)!)
+                     return
+                 }
+                
+                 guard (snap?.documentChanges)!.count == 1 else { return }
+
+                 self.canLoad = (snap?.documentChanges)![0].document.data()["canLoad"] as? Bool ?? false
+                guard self.canLoad == true else {return}
+                
+                self.findPercent()
+         
+     }
+
+        
        
     }
     
@@ -531,7 +552,12 @@ class To: ObservableObject, Identifiable {
     
     
     func findPercent() {
-
+        guard self.canLoad == true else {
+            
+            
+            return
+            
+        }
         var index = 0
        
         let decodePerToPrice = 1000000 * pow(1.0481, (self.flatPrice * 99800000 - 1000000) /  1000000)
@@ -567,14 +593,14 @@ class To: ObservableObject, Identifiable {
                             dataBank[i.id].totalPercent = 0.0
                             
                             dataBank[index].err = "Ипотека не выдаётся налоговым нерезидентам РФ"
-                            print(i.name," ",i.err)
+                           // print(i.name," ",i.err)
                         } else {
                             if (checkMoneyType == "Выписка из ПФР") && i.ifcheckMoneyTypePFR == false {
                                 
                                 dataBank[i.id].totalPercent = 0.0
                                 
                                 dataBank[index].err = "Не принимает подтверждение дохода из ПФР"
-                                print(i.name," ",i.err)
+                               // print(i.name," ",i.err)
                             } else {
                                 
                                 if (checkMoneyType == "По двум документам") && i.if2docs == false {
@@ -582,7 +608,7 @@ class To: ObservableObject, Identifiable {
                                     dataBank[i.id].totalPercent = 0.0
                                     
                                     dataBank[index].err = "Ипотека не может быть выдана по двум документам"
-                                    print(i.name," ",i.err)
+                                  //  print(i.name," ",i.err)
                                 } else {
                                     if (creditDuration * 30).rounded() <= i.maxYearCreditDuration {
                                         if (creditDuration * 30).rounded() >= i.minYearCreditDuration {
@@ -605,14 +631,14 @@ class To: ObservableObject, Identifiable {
                                                         } else {
                                                             dataBank[i.id].totalPercent = 0.0
                                                             dataBank[index].err = "Первоначальный взнос по данной программе меньше минимально допустимых \(Int(j.minPV * 100))%"
-                                                            print(i.name," ",i.err)
+                                                           // print(i.name," ",i.err)
                                                         }
                                                         break
                                                     } else {
                                                         
                                                         dataBank[i.id].totalPercent = 0.0
                                                         dataBank[index].err = "По данной программе нет возможности подать заявку в этот банк"
-                                                        print(i.name," ",i.err)
+                                                       // print(i.name," ",i.err)
                                                     }
                                                     
                                                     
@@ -643,14 +669,14 @@ class To: ObservableObject, Identifiable {
                                                                                     dataBank[i.id].totalPercent = 0.0
                                                                                     
                                                                                     dataBank[index].err = "Первоначальный взнос меньше минимально допустимых \(Int(k.minPVIf2docs * 100))%"
-                                                                                    print(i.name," ",i.err)
+                                                                                   // print(i.name," ",i.err)
                                                                                 }
                                                                                 
                                                                             } else {
                                                                                 dataBank[i.id].totalPercent = 0.0
                                                                                 
                                                                                 dataBank[index].err = "Ипотека не выдаётся по двум документам владельцам бизнеса"
-                                                                                print(i.name," ",i.err)
+                                                                              //  print(i.name," ",i.err)
                                                                             }
                                                                             } else {
                                                                                 dataBank[i.id].totalPercent = Double(k.percent)
@@ -672,7 +698,7 @@ class To: ObservableObject, Identifiable {
                                                                 dataBank[i.id].totalPercent = 0.0
                                                                 
                                                                 dataBank[index].err = "Первоначальный взнос меньше минимально допустимых \(Int(j.minPV * 100))%"
-                                                                print(i.name," ",i.err)
+                                                              //  print(i.name," ",i.err)
                                                             }
                                                             
                                                             
@@ -701,7 +727,7 @@ class To: ObservableObject, Identifiable {
                                             
                                             
                                            
-                                            print(i.name," ",i.err, " ", creditDuration * 30)
+                                          //  print(i.name," ",i.err, " ", creditDuration * 30)
                                         }
                                         
                                     } else {
@@ -709,7 +735,7 @@ class To: ObservableObject, Identifiable {
                                         dataBank[i.id].totalPercent = 0.0
                                         
                                         dataBank[index].err = "Максимальный срок ипотеки может быть не более \(Int(i.maxYearCreditDuration)) лет"
-                                        print(i.name," ",i.err)
+                                       // print(i.name," ",i.err)
                                     }
                                     
                                 }
@@ -724,14 +750,14 @@ class To: ObservableObject, Identifiable {
                         dataBank[i.id].totalPercent = 0.0
                         
                         dataBank[index].err = "Первоначальный взнос больше максимально допустимых \(Int(i.maxPV * 100))%"
-                        print(i.name," ",i.err)
+                      //  print(i.name," ",i.err)
                     }
                 } else {
                     
                     dataBank[i.id].totalPercent = 0.0
                     
                     dataBank[index].err = "Максимальная сумма кредита должна быть не более \(Int(i.maxSumOfCredit) / 1000000) 000 000 рублей"
-                    print(i.name," ",i.err)
+                 //   print(i.name," ",i.err)
                 }
                 
                 
@@ -741,7 +767,7 @@ class To: ObservableObject, Identifiable {
                 dataBank[i.id].totalPercent = 0.0
                 
                 dataBank[index].err = "Минимальная сумма кредита должна быть не менее \(Int(i.minSumOfCredit) / 1000) 000 рублей"
-                print(i.name," ",i.err)
+               // print(i.name," ",i.err)
             }
             
         }
@@ -764,12 +790,12 @@ class To: ObservableObject, Identifiable {
         
             db.child("taflatplans").queryOrdered(byChild: "price").queryLimited(toLast: 1).observe(.value) { (snap) in
             guard let children = snap.children.allObjects as? [DataSnapshot] else {
-            print("((((((")
+           // print("((((((")
             return
           }
                
             guard children.count != 0 else {
-                print("cant 0")
+               // print("cant 0")
                 return
             }
 
@@ -786,6 +812,7 @@ class To: ObservableObject, Identifiable {
     }
 
 }
+
 
 
 class FromToSearch: ObservableObject, Identifiable {
@@ -895,24 +922,10 @@ class FromToSearch: ObservableObject, Identifiable {
         ]
     
     
-    @Published var deadline = ["Сдан",
-    "4 кв. 2020",
-    "1 кв. 2021",
-    "2 кв. 2021",
-    "3 кв. 2021",
-    "4 кв. 2021",
-    "1 кв. 2022",
-    "2 кв. 2022",
-    "3 кв. 2022",
-    "4 кв. 2022",
-    "1 кв. 2023",
-    "2 кв. 2023",
-    "3 кв. 2023",
-    "4 кв. 2023",
-    "1 кв. 2024",
-    "4 кв. 2024",
-    "4 кв. 2025"
-]
+    
+    
+    @Published var deadline = [String]()
+    @Published var  defaultArrDeadline = [String]()
     init(flatPrice: [CGFloat], totalS: [CGFloat], kitchenS: [CGFloat], floor: [CGFloat]) {
         
         self.flatPrice = flatPrice
@@ -930,7 +943,24 @@ class FromToSearch: ObservableObject, Identifiable {
 
         
         let db = Firestore.firestore()
-        
+        db.collection("deadline").document("deadline").getDocument { (snapp, err) in
+            if err != nil{
+                
+                print((err?.localizedDescription)!)
+                return
+            }
+            guard let snap = snapp else {return}
+            
+                
+            let deadlineArr = (snap.get("deadline") as? String ?? "").components(separatedBy: ", ")
+                
+                DispatchQueue.main.async {
+                    self.deadline = deadlineArr
+                    
+                    self.defaultArrDeadline = deadlineArr
+                }
+            
+        }
         db.collection("objects").getDocuments { (snapp, err) in
             
             if err != nil{
@@ -939,6 +969,8 @@ class FromToSearch: ObservableObject, Identifiable {
                 return
             }
             guard let snap = snapp else {return}
+            
+            
             for i in snap.documents{
                 
                // let id = i.documentID

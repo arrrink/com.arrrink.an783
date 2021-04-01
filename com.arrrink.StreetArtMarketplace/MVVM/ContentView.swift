@@ -8,7 +8,7 @@
 
 import SwiftUI
 import RealmSwift
-
+import FirebaseMessaging
 import Firebase
 
 import ASCollectionView_SwiftUI
@@ -20,16 +20,7 @@ import CoreLocation
 import HTMLEntities
 
 
-//
-//
-//struct Model : Decodable {
-//    var content : Rendered
-//
-//    struct Rendered: Decodable {
-//        var rendered: String
-//       }
-//
-//}
+
 
 struct ContentView: View {
 
@@ -47,10 +38,22 @@ struct ContentView: View {
 
      //   print(isFirstLaunch ? "First launch" :  "NOT first launch")
         if isFirstLaunch {
-            return AnyView(OnboardingView().edgesIgnoringSafeArea(.all))
+            return AnyView(OnboardingView()
+//                           .edgesIgnoringSafeArea(.all)
+//                            .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
+
+            )
                
         } else {
-            return AnyView(HomeView( adminNumber: $adminNumber).edgesIgnoringSafeArea(.all))
+            return AnyView(HomeView( adminNumber: $adminNumber)
+                            .statusBar(hidden: false)
+//                            .edgesIgnoringSafeArea(.all)
+//                            .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
+
+                           // .statusBar(hidden: true)
+                           
+                           
+            )
                         
 
                             
@@ -131,6 +134,7 @@ class getStoriesData : ObservableObject {
                         
                     }
                     self.getNews()
+                    
                 }
                 snap.documentChanges.forEach { (doc) in
                     
@@ -239,11 +243,14 @@ class getStoriesData : ObservableObject {
                     
                 }
         }
-    
+           // self.dataNews.shuffle()
     
     
 }
     }
+    func shuffle() {
+            self.data.shuffle()
+        }
 }
 enum NewsType {
     case video, photo
@@ -267,13 +274,13 @@ struct HomeView: View {
         @State var showSheet = false
         @State private var activeSheet: ActiveSheet = .first
         
+    @ObservedObject var to = To(to: 0.2452, to2: 0.36, to3: 0.667, to4: 0.032, to5: 0.04, workType: "Найм", checkMoneyType: "2-НДФЛ", checkSpecialType: "default", bank : "domrf", ifRF : "Являюсь налоговым резидентом РФ")
         @State var price : CGFloat = 0.0
         @Binding var adminNumber : String
        // @ObservedObject var checkAdminAccc = checkAdminAcc()
         @ObservedObject var getStoriesDataAndAdminNumber = getStoriesData()
 //            .environmentObject(checkAdminAccc)
 //            .environmentObject(getStoriesData)
-        
         
         @State private var selection: Int? = nil
         
@@ -292,7 +299,7 @@ struct HomeView: View {
         @State var showCart = false
         @State var showSearch = false
         
-        @State var safeAreaTop = UIApplication.shared.windows.first?.safeAreaInsets.top ?? 30
+    @State var safeAreaTop = UIApplication.shared.windows.last?.safeAreaInsets.top
     @ObservedObject var getFlats = getTaFlatPlansData(queryWHERE: "order by price asc")
         @State var isSearchViewActive = false
          var stories = [
@@ -300,6 +307,12 @@ struct HomeView: View {
             Story(id: 1, image: "percent", offset: 0,title: "Ипотека", subtitle: "Калькулятор и предложения банков"),
             Story(id: 2, image: "invest", offset: 0,title: "Апартаменты", subtitle: "Расчет доходных программ")
     ]
+    
+    var stories2 = [
+     Story(id: 0, image: "map", offset: 0,title: "Новостройки", subtitle: "Перейти к поиску"),
+      
+       Story(id: 2, image: "invest", offset: 0,title: "Апартаменты", subtitle: "Расчет доходных программ")
+]
        
         @State var constantHeight : CGFloat = 75.0
             //UIScreen.main.bounds.height / 7.2
@@ -428,7 +441,7 @@ struct HomeView: View {
                                     
                                 } else if item.title == "Ипотека" {
                                     self.showIpotekaView = true
-                                } else {
+                                } else if item.title == "Апартаменты" {
                                     self.showApartView = true
                                 }
                                }
@@ -455,19 +468,25 @@ struct HomeView: View {
                 if !self.showUploadStory {
                     
                         ZStack {
+                            
+                       //     GeometryReader { r in
             ASTableView {
                 ASTableViewSection(id: 0)
                 {
 
                     VStack(spacing: 5){
-                     
+                        
                            header
-                            //.padding(.top , safeAreaTop + 5)
+                          
                             
-                            
+                           // .padding(.top , r.safeAreaInsets.top)
+                        //}
+                           // .padding(.top, self.isiPhone5() ? safeAreaTop ?? 15.0 + 30 : safeAreaTop ?? 15.0)
                     
                     scrollMenu
                         }.background(
+                            
+                            
                             VStack {
                                 
                             Color("ColorMain")
@@ -476,6 +495,9 @@ struct HomeView: View {
                                     .frame(height: self.constantHeight)
                                // Spacer()
                             }
+//                            .edgesIgnoringSafeArea(.all)
+//                            .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
+
                         )
                        
                         
@@ -503,26 +525,29 @@ struct HomeView: View {
             }
             .separatorsEnabled(false)
             .scrollIndicatorEnabled(false)
-            
-            
-                
-//            .background(
-//                VStack {
-//
-//                Color("ColorMain")
-//                Color.init(.systemBackground)
-//
-//               }
-//            )
-            
-       // }
+
             .background(
+                VStack {
+                if self.getStoriesDataAndAdminNumber.dataNews.count != 0 {
                 VStack {
                     
                 Color("ColorMain")
                 Color.init(.systemBackground)
 
                }
+            } else {
+                VStack {
+                    
+                Color("ColorMain")
+                    .frame(height: 100)
+                Color.init(.systemBackground)
+
+               }
+                }
+                }
+//                .edgesIgnoringSafeArea(.all)
+//                .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
+
             )
             .overlay(
                 VStack {
@@ -530,9 +555,11 @@ struct HomeView: View {
 //                        ZStack {
 //                        Color.init(.systemBackground)
                             HStack {
-                            WebImage(url: URL(string: currentImg))
-                                .resizable()
-                                .scaledToFit()
+                                
+                                UrlImageView(urlString: currentImg, contentMode: .fit)
+//                            WebImage(url: URL(string: currentImg))
+//                                .resizable()
+                               // .scaledToFit()
                                 //.position(locationPinch)
                                 .scaleEffect(scalePinch)
                                 //.scaleEffect(scalePinch, a)
@@ -551,13 +578,15 @@ struct HomeView: View {
            
             .sheet(isPresented: self.$showSheet) {
 
-                CartView(modalController : $showSheet).environmentObject(getFlats).environmentObject(getStoriesDataAndAdminNumber)
+                CartView(modalController : $showSheet)
+                    .environmentObject(getFlats)
+                    .environmentObject(getStoriesDataAndAdminNumber)
            
 
 }
                 
                 
-                .edgesIgnoringSafeArea(.all)
+              
                             
                             if self.showSheetStory {
                                 
@@ -566,32 +595,50 @@ struct HomeView: View {
                                 
                                     StoryView(item: currentItem, showSheetStory : $showSheetStory)
                                         .statusBar(hidden: true)
-                                        .edgesIgnoringSafeArea(.all)
+//                                        .edgesIgnoringSafeArea(.all)
+//                                        .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
+
                                 }
                                 
                             }
                     
                 }
+                        .statusBar(hidden: false)
             } else {
                 UploadStory(showUploadStory: $showUploadStory, adminNumber: $getStoriesDataAndAdminNumber.adminNumber)
+//                    .edgesIgnoringSafeArea(.all)
+//                    .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
             }
-            } else if self.showSearchView && !self.showApartView && !self.showIpotekaView {
-                SearchView(showSearchView : $showSearchView, currentScreen: .home).environmentObject(getFlats).environmentObject(data)
-            } else if !self.showSearchView && !self.showApartView && self.showIpotekaView{
+            }
+            else if self.showSearchView && !self.showApartView && !self.showIpotekaView {
+                SearchView(showSearchView : $showSearchView, currentScreen: .home)
+                    .environmentObject(getFlats)
+                    .environmentObject(data)
+//                    .edgesIgnoringSafeArea(.all)
+//                    .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
+
+            }
+            
+            else if !self.showSearchView && !self.showApartView && self.showIpotekaView{
                 IpotekaView( showIpotekaView: $showIpotekaView)
                     .environmentObject(to)
                     .environmentObject(getFlats)
-                
                     .environmentObject(data)
+//                    .edgesIgnoringSafeArea(.all)
+//                    .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
+//
+            
             } else if !self.showSearchView && self.showApartView && !self.showIpotekaView{
                 ApartView( showApartView: $showApartView)
                     .environmentObject(toApart)
                     .environmentObject(getFlats)
                     .environmentObject(data)
+//                    .edgesIgnoringSafeArea(.all)
+//                    .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
             }
         }
     @ObservedObject var toApart = ToApart(price: 0.35, time : 0.31)
-    @ObservedObject var to = To(to: 0.202, to2: 0.36, to3: 0.667, to4: 0.064, to5: 0.08, workType: "Найм", checkMoneyType: "2-НДФЛ", checkSpecialType: "default", bank : "vtb", ifRF: "Являюсь налоговым резидентом РФ")
+    
             @ObservedObject var data = FromToSearch(flatPrice: [0.0,0.78], totalS: [0.0, 0.78], kitchenS: [0.0,0.78], floor: [0.0,0.78])
             @State var show = false
     @State var currentItem = PostRealmFB(id: "", name: "", text: "", imglink: "", createdAt: Timestamp(date: Date()), storyType: .fill)
@@ -724,7 +771,9 @@ struct HomeView: View {
 //                                .resizable()
 //                                .scaledToFit()
                                 if item.type == .photo {
-                                ASRemoteImageView(URL(string: item.image)!, false, contentMode: .fit)
+                                    
+                                    UrlImageView(urlString: item.image, contentMode: .fit)
+                               // ASRemoteImageView(URL(string: item.image)!, false, contentMode: .fit)
                                 
                                 .overlay(
                                     ZStack {
@@ -876,8 +925,11 @@ struct HomeView: View {
 
                     ZStack{
                         HStack {
-                            ASRemoteImageView((URL(string: item.imglink) ?? URL(string: "https://psv4.userapi.com/c856236/u124809376/docs/d3/4f220dd33162/launch.png?extra=gM00K0L4Mi-GdUA2R882BlnULKJxtqwlT6Oq1vjrWGJUPANpY2e4C1kLtKlOYdABoP46rFMwhKf-AllYA8406yVQqZrDkgBPrEX4F5Zpumo7cn4SEipFT9SF2-6Ernho6h7_-gaoijvWUktBvc-gZvMpDLI"))!, false, contentMode: .fill)
-                                .aspectRatio(contentMode: .fill)
+                        UrlImageView(urlString: item.imglink, contentMode : .fill)
+//                            ASRemoteImageView((URL(string: item.imglink) ?? URL(string: "https://psv4.userapi.com/c856236/u124809376/docs/d3/4f220dd33162/launch.png?extra=gM00K0L4Mi-GdUA2R882BlnULKJxtqwlT6Oq1vjrWGJUPANpY2e4C1kLtKlOYdABoP46rFMwhKf-AllYA8406yVQqZrDkgBPrEX4F5Zpumo7cn4SEipFT9SF2-6Ernho6h7_-gaoijvWUktBvc-gZvMpDLI"))!, false, contentMode: .fill)
+//
+                                
+                            //.aspectRatio(contentMode: . )
                                 .background(Color.white)
                                 
                             
@@ -962,6 +1014,7 @@ struct MyButtonStyle: ButtonStyle {
   }
 
 }
+
 
 
 

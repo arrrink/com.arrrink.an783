@@ -33,24 +33,7 @@ struct FilterView: View {
                               "40 мин транспортом",
                               "50 мин транспортом"
     ]
-    var  defaultArrDeadline = ["Сдан",
-                        "4 кв. 2020",
-                        "1 кв. 2021",
-                        "2 кв. 2021",
-                        "3 кв. 2021",
-                        "4 кв. 2021",
-                        "1 кв. 2022",
-                        "2 кв. 2022",
-                        "3 кв. 2022",
-                        "4 кв. 2022",
-                        "1 кв. 2023",
-                        "2 кв. 2023",
-                        "3 кв. 2023",
-                        "4 кв. 2023",
-                        "1 кв. 2024",
-                        "4 кв. 2024",
-                        "4 кв. 2025"
-                    ]
+  
     
 
     var scroll : some View {
@@ -286,8 +269,8 @@ struct FilterView: View {
         ScrollView(.horizontal, showsIndicators: false) {
         HStack(spacing: 15){
 
-            ForEach(defaultArrDeadline, id: \.self) { i  in
-                TabButtonChooseFromNowToDeadlineOrDefault(selected: $data.deadline, defaultArr: defaultArrDeadline, title: i)
+            ForEach(data.defaultArrDeadline, id: \.self) { i  in
+                TabButtonChooseFromNowToDeadlineOrDefault(selected: $data.deadline, defaultArr: data.defaultArrDeadline, title: i)
             }
           
         }
@@ -384,7 +367,7 @@ struct FilterView: View {
         
         data.type = defaultArrType
         
-        data.deadline = defaultArrDeadline
+            data.deadline = data.defaultArrDeadline
         
         data.timeToMetro = defaultArrToMetro
         
@@ -503,7 +486,7 @@ struct FilterView: View {
             
         }
 
-        if defaultArrDeadline.count != data.deadline.count {
+            if data.defaultArrDeadline.count != data.deadline.count {
 
             data.query += " and ( "
             for (n, i) in data.deadline.enumerated() {

@@ -380,6 +380,9 @@ struct DetailFlatView : View {
                
 
                 .edgesIgnoringSafeArea([.top, .bottom])
+//                .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
+                    
+                
                 .background(
                 
                      VStack {
@@ -582,7 +585,7 @@ struct DetailFlatView : View {
                                      .background(Rectangle().fill(Color.white)
                                                                          .cornerRadius(15)
                                                                          .shadow(color: Color.black.opacity(0.15), radius: 5, x: 5, y: 5))
-                                    
+                                    .padding(.horizontal, self.isiPhone5() ? 15 : 0)
                                 
                                 Button {
                                     openCall()

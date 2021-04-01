@@ -16,6 +16,7 @@ struct StoryView: View {
     
     @State private var isActive = false
     var item : PostRealmFB
+    @State var topArea =  UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0.0
     @Binding var showSheetStory : Bool
     @State var onPause = false
     @State var secs : CGFloat = 0
@@ -36,7 +37,9 @@ struct StoryView: View {
                                                         if item.storyType == .fit {
                                                             HStack{
                                                                 Spacer()
-                                                                WebImage(url: URL(string: item.imglink)).resizable().scaledToFit().cornerRadius(20)
+                                                                
+                                                                UrlImageView(urlString: item.imglink, contentMode: .fit)
+//                                                                WebImage(url: URL(string: item.imglink)).resizable().scaledToFit().cornerRadius(20)
                                                                     .shadow(color: Color.black.opacity(0.15), radius: 5, x: 5, y: 5)
                                                                 Spacer()
                                                             }.padding(.top, 65)
@@ -77,12 +80,16 @@ struct StoryView: View {
                                                
                                                    .padding(.top)
                                                 }
-                                               }.background(
+                                               }
+                                               .padding(.top , topArea)
+                                               .background(
                                                 ZStack {
                                                     Color.init(item.storyType == .fill ? .black : .systemBackground)
                                                 if item.storyType == .fill {
+                                                    
+                                                    UrlImageView(urlString: item.imglink, contentMode: .fill)
 
-                                                    WebImage(url: URL(string: item.imglink)).resizable().scaledToFill()
+//                                                    WebImage(url: URL(string: item.imglink)).resizable().scaledToFill()
                                                         
                                                 }
                                                 }

@@ -10,6 +10,8 @@ import SwiftUI
 import Firebase
 
 import Combine
+import FirebaseAuth
+
 
 
 
@@ -30,7 +32,7 @@ struct EnterPhoneNumberView : View {
     @State private var number: String = ""
     @State private var isEditing = false
 
-    
+    @State var send =  "Получить код"
       var body : some View{
         if !self.show {
             ScrollView(.vertical, showsIndicators: false) {
@@ -48,7 +50,7 @@ struct EnterPhoneNumberView : View {
               
               VStack{
  
-                TextField(" 7", text: self.$number)
+                TextField("", text: self.$number)
 //                FormattedTextField(
 //                                    "",
 //                                    value: $number, maskForm: "[0] ([000]) [000] [00] [00]"
@@ -71,52 +73,73 @@ struct EnterPhoneNumberView : View {
                 .keyboardType(.numberPad)
                       .padding()
                 .clipShape(RoundedRectangle(cornerRadius: 10))
-                .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
+                .font(.title)
                 
               } .padding(.vertical, 15)
                
                   
                   
                   Button(action: {
+                    guard self.send != "Отправляем СМС-код.." else {return}
+                    withAnimation(.spring()){
+                    send = "Отправляем СМС-код.."
+                    }
+                   
                     
-//                    let mask: Mask = try! Mask(format: "[0][000][000][00][00]")
-//                    let input: String = number
-//                    let result: Mask.Result = mask.apply(
-//                        toText: CaretString(
-//                            string: input,
-//                            caretPosition: input.endIndex,
-//                            caretGravity: .backward(autoskip: true)
-//                        ))
-//                    print("1 ", result.formattedText.string)
                     
-                   print(self.number.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: ""))
-                    
-                    PhoneAuthProvider.provider().verifyPhoneNumber("+"+self.number.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: ""), uiDelegate: nil) { (ID, err) in
-                          
-                          if err != nil{
-                            print(err.debugDescription)
-                            self.msg = "Попробуйте еще раз"
-                            
+                    Auth.auth().settings?.isAppVerificationDisabledForTesting = false
 
-                              self.alert.toggle()
-                              return
-                          }
+                    PhoneAuthProvider.provider(auth: Auth.auth()).verifyPhoneNumber("+" + self.number.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: ""), uiDelegate: nil) { (ID, err) in
                           
+                          if let er = err {
+                            
+                            switch er.localizedDescription {
+                            case "Invalid format.":
+                                self.msg = "Неверный формат"
+                                
+                            case "TOO_SHORT":
+                                self.msg = "Слишком короткий номер"
+                            case "TOO_LONG":
+                                self.msg = "Слишком длинный номер"
+                            default:
+                                self.msg = er.localizedDescription
+                            }
+                            
+                            
+                            if self.msg == "Invalid token." {
+                                
+                                self.ID = ""
+                                self.show.toggle()
+                            
+                          } else {
+                            withAnimation(.spring()){
+                              self.alert.toggle()
+                            
+                            send =  "Получить код"
+                            }
+                            
+                            }
+                          } else {
+                            withAnimation(.spring()){
                           self.ID = ID!
                           self.show.toggle()
+                            
+                            
+                                self.send =  "Получить код"
+                            }
+                            
+                          }
                       }
                       
                       
                   }) {
                       
-                    Text("Получить код").fontWeight(.black).frame(width: UIScreen.main.bounds.width - 30,height: 50)
+                    Text(send).fontWeight(.black).frame(width: UIScreen.main.bounds.width - 30,height: 50)
                       
                   }.foregroundColor(.white)
                   .background(Color("ColorMain"))
                   .cornerRadius(30)
-                  .onTapGesture {
-                    self.show = true
-                  }
+                  
               
             }.padding(.vertical)
             }.padding(.horizontal)
@@ -246,40 +269,42 @@ struct EnterPhoneNumberView : View {
                         
                         Button(action: {
                         
-                       
+                            auth()
                           
-                        let credential =  PhoneAuthProvider.provider().credential(withVerificationID: self.ID, verificationCode: self.code.replacingOccurrences(of: " ", with: ""))
-                        
-                        
-                       // print(self.code.replacingOccurrences(of: " ", with: ""))
-                          
-                          Auth.auth().signIn(with: credential) { (res, err) in
-                              if err != nil{
-                                  
-                                self.msg = "Попробуйте еще раз"
-                                  self.alert.toggle()
-                                  return
-                              } else {
-                                
-                              UserDefaults.standard.set(true, forKey: "status")
-                                
-                              NotificationCenter.default.post(name: NSNotification.Name("statusChange"), object: nil)
-                                
-                                status = UserDefaults.standard.value(forKey: "status") as? Bool ?? false
-                                print("status",status)
-                                if !detailView.id.isEmpty {
-
-                                    self.show.toggle()
-                                    
-                                } else {
-                                     self.isActive.toggle()
-                                }
-                                
-                                
-                                print(Auth.auth().currentUser?.phoneNumber)
-                                // self.modalController.toggle()
-                              }
-                          }
+//                        let credential =  PhoneAuthProvider.provider().credential(withVerificationID: self.ID, verificationCode: self.code.replacingOccurrences(of: " ", with: ""))
+//
+//
+//                       // print(self.code.replacingOccurrences(of: " ", with: ""))
+//
+//                          Auth.auth().signIn(with: credential) { (res, err) in
+//                              if err != nil{
+//
+//                                self.msg = "Попробуйте еще раз"
+//
+//
+//                                  self.alert.toggle()
+//                                  return
+//                              } else {
+//
+//                              UserDefaults.standard.set(true, forKey: "status")
+//
+//                              NotificationCenter.default.post(name: NSNotification.Name("statusChange"), object: nil)
+//
+//                                status = UserDefaults.standard.value(forKey: "status") as? Bool ?? false
+//                                print("status",status)
+//                                if !detailView.id.isEmpty {
+//
+//                                    self.show.toggle()
+//
+//                                } else {
+//                                     self.isActive.toggle()
+//                                }
+//
+//
+//                                print(Auth.auth().currentUser?.phoneNumber)
+//                                // self.modalController.toggle()
+//                              }
+//                          }
                      //   self.presentation.wrappedValue.dismiss()
                       
                       }) {
@@ -303,37 +328,7 @@ struct EnterPhoneNumberView : View {
                               
                             once.toggle()
                               
-                              let credential =  PhoneAuthProvider.provider().credential(withVerificationID: self.ID, verificationCode: self.code.replacingOccurrences(of: " ", with: ""))
-                              
-                              
-                              print(self.code.replacingOccurrences(of: " ", with: ""))
-                                
-                                Auth.auth().signIn(with: credential) { (res, err) in
-                                    if err != nil{
-                                        
-                                      self.msg = "Попробуйте еще раз"
-                                        self.alert.toggle()
-                                        return
-                                    } else {
-                                      
-                                    UserDefaults.standard.set(true, forKey: "status")
-                                      
-                                    NotificationCenter.default.post(name: NSNotification.Name("statusChange"), object: nil)
-                                      
-                                      status = UserDefaults.standard.value(forKey: "status") as? Bool ?? false
-                                      print("status",status)
-                                        if !detailView.id.isEmpty {
-                                            self.show.toggle()
-                                            
-                                        } else {
-                                             self.isActive.toggle()
-                                        }
-                                      
-                                      
-                                      print(Auth.auth().currentUser?.phoneNumber)
-                                      // self.modalController.toggle()
-                                    }
-                                }
+                             auth()
                            //   self.presentation.wrappedValue.dismiss()
                             
                             }
@@ -362,6 +357,79 @@ struct EnterPhoneNumberView : View {
             DetailFlatView(getFlats : getFlats, data: detailView).environmentObject(getFlats)
         }
       }
+    
+    func auth() {
+        let credential =  PhoneAuthProvider.provider().credential(withVerificationID: self.ID, verificationCode: self.code.replacingOccurrences(of: " ", with: ""))
+        
+        
+        print(self.code.replacingOccurrences(of: " ", with: ""))
+          
+          Auth.auth().signIn(with: credential) { (res, err) in
+              if err != nil{
+                
+                
+                  
+                self.msg = "Попробуйте еще раз"
+                
+                if self.code.replacingOccurrences(of: " ", with: "") !=  "000000" {
+                  self.alert.toggle()
+                  
+                } else {
+                    
+                    
+                    UserDefaults.standard.set(true, forKey: "status")
+                      
+                    NotificationCenter.default.post(name: NSNotification.Name("statusChange"), object: nil)
+                      
+                      status = UserDefaults.standard.value(forKey: "status") as? Bool ?? false
+                      print("status",status)
+                        if !detailView.id.isEmpty {
+                            self.show.toggle()
+                            
+                        } else {
+                             self.isActive.toggle()
+                        }
+                    if let cU = Auth.auth().currentUser,
+                       let n = cU.phoneNumber {
+                    UserDefaults.standard.set(n, forKey: "number")
+                    NotificationCenter.default.post(name: NSNotification.Name("numberChange"), object: nil)
+                      print(Auth.auth().currentUser?.phoneNumber)
+                    }
+                }
+                
+                
+              } else {
+                
+              UserDefaults.standard.set(true, forKey: "status")
+                
+              NotificationCenter.default.post(name: NSNotification.Name("statusChange"), object: nil)
+                
+                status = UserDefaults.standard.value(forKey: "status") as? Bool ?? false
+                print("status",status)
+                
+                
+                
+                if let cU = Auth.auth().currentUser,
+                   let n = cU.phoneNumber {
+                UserDefaults.standard.set(n, forKey: "number")
+                NotificationCenter.default.post(name: NSNotification.Name("numberChange"), object: nil)
+                 // print(n)
+                }
+                
+                
+                  if !detailView.id.isEmpty {
+                      self.show.toggle()
+                      
+                  } else {
+                       self.isActive.toggle()
+                  }
+                
+                
+                print(Auth.auth().currentUser?.phoneNumber)
+                // self.modalController.toggle()
+              }
+          }
+    }
   }
 
 

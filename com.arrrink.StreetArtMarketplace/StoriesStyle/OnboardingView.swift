@@ -23,6 +23,10 @@ struct OnboardingView: View {
     @State var adminNumber = ""
     @State var showHome = false
     
+    func relativeLoc(_ pageIndex: Int) -> Int{
+        print(pageIndex)
+        return ((3 * 10000) + pageIndex) % 3
+    }
     var body: some View {
         
         if !self.showHome {
@@ -30,11 +34,11 @@ struct OnboardingView: View {
                 
                 
                 VStack(spacing: 15) {
-                    if pageIndex == 0 {
+                    if relativeLoc(pageIndex) == 0 {
                         LottieView(filename: "agency", loopMode: .playOnce, animationSpeed: 0.7)
-                    } else if pageIndex == 1 {
+                    } else if relativeLoc(pageIndex) == 1 {
                         LottieView(filename: "city", loopMode: .playOnce, animationSpeed: 0.7)
-                    } else {
+                    } else if relativeLoc(pageIndex) == 2{
                         LottieView(filename: "find", loopMode: .loop, animationSpeed: 0.7)
                     }
                     
@@ -44,7 +48,7 @@ struct OnboardingView: View {
                         .fontWeight(.bold)
                         .foregroundColor(.white)
                     
-                
+                    if pageIndex == 2 {
                     Button {
                         self.showHome = true
                     } label: {
@@ -60,6 +64,7 @@ struct OnboardingView: View {
                                 .multilineTextAlignment(.center)
                             .background(Capsule().fill(Color.white) .shadow(color: Color.black.opacity(0.15), radius: 5, x: 5, y: 5))
                     }
+                }
                   // }.buttonStyle(MyButtonStyle())
                             
                      
@@ -77,9 +82,11 @@ struct OnboardingView: View {
                 slider(data: $leftData)
                 slider(data: $rightData)
 
-           }
+            }
+            .statusBar(hidden: true)
     } else {
             HomeView(adminNumber: $adminNumber)
+                .statusBar(hidden: false)
         }
     
         }

@@ -89,7 +89,7 @@ struct CellObject2: View {
             
             objImgCell
             
-            
+                .padding(.horizontal, self.isiPhone5() ? 15 : 0)
             
         }.padding(.bottom, (UIApplication.shared.windows.first?.safeAreaInsets.bottom)! + 15)
         
@@ -163,7 +163,9 @@ struct CellObject2: View {
         header
        // .animation(.default)
             .background(Color.init(.systemBackground))
-            .edgesIgnoringSafeArea(.all)
+//            .edgesIgnoringSafeArea(.all)
+//            .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
+                
     }
 }
 
@@ -399,7 +401,7 @@ struct CellObject: View {
             
             objImgCell
             
-            
+                .padding(.horizontal, self.isiPhone5() ? 15 : 0)
             
        }
         
@@ -606,7 +608,7 @@ struct CellObjectHeader: View {
             
             objImgCell
             
-            
+                .padding(.horizontal, self.isiPhone5() ? 15 : 0)
             
        }
         
@@ -722,9 +724,9 @@ extension View {
         "Фрунзенская",
         "Московские ворота",
         "Электросила",
-        "Парк победы",
+        "Парк Победы",
         "Московская",
-        "Звездная",
+        "Звёздная",
         "Купчино"
         
         :
@@ -757,11 +759,11 @@ extension View {
             
             case "Беговая",
                  "Новокрестовская",
-                 "Приморский",
+                 "Приморская",
                  "Василеостровская",
                 "Гостиный двор",
                 "Маяковская",
-                "Площадь Александра Невского - 1",
+                "Площадь Ал. Невского - 1",
                 "Елизаровская",
                 "Ломоносовская",
                 "Пролетарская",
@@ -773,7 +775,7 @@ extension View {
                 case "Спасская",
                      "Достоевская",
                      "Лиговский проспект",
-                     "Площадь Александра Невского - 2",
+
                      "Новочерскасская",
                      "Ладожская",
                      "Проспект Большевиков",

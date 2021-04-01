@@ -26,7 +26,7 @@ struct ApartView: View {
     
     @State var totalProfitShort : CGFloat = 0.1
     @State var totalProfitLong : CGFloat = 0.055
-
+    @State var safeAreaTop = UIApplication.shared.windows.last?.safeAreaInsets.top
     @Binding var showApartView : Bool
       
       func logCustom(main:Double ,val: CGFloat) -> Double {
@@ -432,7 +432,6 @@ struct ApartView: View {
 @State var type = "Краткосрочная"
    
       @State var from : CGFloat = 0
-      @State var safeAreaTop = UIApplication.shared.windows.first?.safeAreaInsets.top
       var ApartCollectionView: some View
   {
           ASCollectionView(staticContent: { () -> ViewArrayBuilder.Wrapper in
@@ -443,6 +442,8 @@ struct ApartView: View {
                       Text("Доходные программы").font(.title).fontWeight(.light)
                       Spacer()
                   }
+                //  .padding(.top, self.isiPhone5() ? safeAreaTop ?? 15.0 + 30 : safeAreaTop ?? 15.0)
+                
         HStack {
          TabButton(selected: $type, title: "Краткосрочная")
         TabButton(selected: $type, title: "Долгосрочная")
@@ -560,7 +561,6 @@ struct ApartView: View {
           
           
         if !self.showSearchView {
-             VStack {
               
               
               
@@ -568,9 +568,10 @@ struct ApartView: View {
                   
                   
                   
-                  ApartCollectionView.edgesIgnoringSafeArea(.all)
-                 
-                  VStack {
+                  ApartCollectionView
+//                    .edgesIgnoringSafeArea(.all)
+//                    .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
+                  
                       
                   
                   Button(action: {
@@ -588,23 +589,24 @@ struct ApartView: View {
                     Text("Просмотреть апартаменты до " + String(format: "%.1f", Double(decodePrice()) / 1000000.0)
                               + " млн")
                           .font(.subheadline)
-                          .fontWeight(.light)
+                          .fontWeight(.heavy)
                           .frame(width: UIScreen.main.bounds.width - 30,height: 40, alignment: .center)
                       
                   }
                   .foregroundColor(.white)
-                  .background(Color("ColorMain"))
+                  .background(Color("ColorMain")
+                                )
                   .cornerRadius(30)
-                  .padding(.bottom, 15)
+                  .padding(.bottom, UIApplication.shared.windows.last?.safeAreaInsets.top ?? 0.0 + 15)
 
               }
-              }
+              
               
               
               
              
              
-             }
+             
         } else {
             SearchView(showSearchView: $showSearchView, currentScreen: .apart).environmentObject(getFlats)
         .environmentObject(data)

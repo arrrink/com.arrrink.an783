@@ -137,11 +137,10 @@ struct UploadStory: View {
                 HStack {
                     Spacer()
                 Button {
-                    if Auth.auth().currentUser?.phoneNumber == adminNumber  {
+                   // print("bo")
                         
                         convertObjects()
-                        
-                }
+                
                 
                 } label: {
                     
@@ -165,7 +164,7 @@ struct UploadStory: View {
 //
 //                } label: {
 //
-//                    Text("CONVERT TOTAL FLATS JSON TO FIRESTORE")
+//                    Text("OCONVERT TTAL FLATS JSON TO FIRESTORE")
 //
 //                        .foregroundColor(.white).padding().background(Color.red.cornerRadius(15))
 //                }
@@ -298,7 +297,7 @@ struct UploadStory: View {
             
                 
                 Alamofire.AF.request("https://agency78.spb.ru/inst/2211obj.json", method: .get).responseJSON { (response) in
-
+                   
                     switch response.result {
                             
                             case .success(let value):
@@ -322,18 +321,19 @@ struct UploadStory: View {
 
 
                      let address = j["address"] as? String ?? ""
-
-
+                                   
                                                                            // coordinates
 
-                                    let key : String = "AIzaSyAsGfs4rovz0-6EFUerfwiSA6OMTs2Ox-M"
+                                    let key : String = "AIzaSyBfgeKnTd3pArjhH0MArmZ9gY1vDp3sZ_M"
+                                  //  AIzaSyAsGfs4rovz0-6EFUerfwiSA6OMTs2Ox-M"
                                      let postParameters:[String: Any] = [ "address": "\(address)" ,"key":key]
                                                                                    let url : String = "https://maps.googleapis.com/maps/api/geocode/json"
 
-                                                                                   AF.request(url, method: .get, parameters: postParameters, encoding: URLEncoding.default, headers: nil).responseJSON { (response) in
+                                    AF.request(url, method: .get, parameters: postParameters, encoding: URLEncoding.default, headers: nil).responseJSON { (response) in
 
-
-                                                                                       guard let value = response.value as? [String: AnyObject] else {
+                                        print(address)
+                                        print(response.result)
+                                                                                                    guard let value = response.value as? [String: AnyObject] else {
 
                                                                                         return
                                                                                        }
@@ -343,8 +343,9 @@ struct UploadStory: View {
                                                                                         return
                                                                                        }
 
-                                                                                       if results.count > 0 {
-
+                                        print(results.count)
+                                        if results.count > 0 {
+                                            
                              guard let coor = results[0]["geometry"] as? [String: AnyObject]  else {
 
                                 return
@@ -352,7 +353,7 @@ struct UploadStory: View {
 
                                                                                        if  let location = coor["location"] as? [String: AnyObject]  {
 
-
+                                                                                        print("kek")
 
 
 
@@ -389,7 +390,7 @@ struct UploadStory: View {
 
 
                                     DispatchQueue.main.async {
-
+                                        
                                         Firebase.Firestore.firestore().collection("objects").document("\(j["id"] as? Int ?? 0)").setData(desc as [String : Any]) { (er) in
                                             if er != nil {
                                                 print(er!.localizedDescription)

@@ -27,8 +27,3 @@ struct LoadingRectangle: View {
     }
 }
 
-struct LoadingRectangle_Previews: PreviewProvider {
-    static var previews: some View {
-        LoadingRectangle(progress: 0.7)
-    }
-}

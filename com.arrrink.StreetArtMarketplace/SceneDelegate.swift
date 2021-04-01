@@ -8,12 +8,22 @@
 
 import UIKit
 import SwiftUI
+import Firebase
+import FirebaseAuth
+
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+      for urlContext in URLContexts {
+          let url = urlContext.url
+          Auth.auth().canHandle(url)
+        print(url)
+      }
+      // URL not auth related, developer should handle it.
+    }
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
@@ -23,7 +33,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
             
           
-        let content = ContentView()
+        let content = ContentView().edgesIgnoringSafeArea(.all)
+            .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
+               
+                
+        
+        
         
            
             if let windowScene = scene as? UIWindowScene {

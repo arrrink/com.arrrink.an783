@@ -54,19 +54,26 @@ struct SearchView: View {
                     .frame(width: 25, height: 25)
                     .foregroundColor( Color("ColorMain"))
                     .padding(10)
-                } .background(Color.white).cornerRadius(23).padding(.leading,10)
+                } .background(Color.white).cornerRadius(23)
+        
+
+              //  .padding(.leading,10)
+                .padding(.top, UIApplication.shared.windows.last?.safeAreaInsets.top ?? 0.0 + 5)
+                .padding(.horizontal)
+        
             }
         }
     @EnvironmentObject var data : FromToSearch
 
     var currentScreen : Screens
     @State var height = UIScreen.main.bounds.height
-    @State var safeAreaTop = UIApplication.shared.windows.first?.safeAreaInsets.top
+    @State var safeAreaTop = UIApplication.shared.windows.first?.safeAreaInsets.top ?? 15.0
+    
+    @State var bottom = 190 + (UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? 0.0)
     var body: some View {
         VStack{
-        ZStack(alignment: .bottom) {
+        ZStack(alignment: .topLeading) {
             
-            ZStack(alignment: .topLeading) {
             
                 MapView(manager: self.$manager, alert: self.$alert, showObjectDetails: self.$showObjectDetails, complexNameArray: $getFlats.annoData, tappedComplexName : $getFlats.tappedComplexName).environmentObject(getFlats)
                     
@@ -88,24 +95,24 @@ struct SearchView: View {
                         return CellObject2(data : $getFlats.tappedObject, totalData: $getFlats.objects)
                        
                     })
-                    
-            .edgesIgnoringSafeArea(.all)
+                   
+           
                 
                
-                    btnBack.padding(.top, safeAreaTop )
+                    
                 
                   
-            }
+            
             
          GeometryReader{reader in
             
-            VStack(spacing: 10){
+            VStack(spacing: 5){
                 
-                BottomSheet( offset: self.$offset, value: (-reader.frame(in: .global).height + 190), currentScreen: currentScreen ).environmentObject(getFlats).environmentObject(data)
+                BottomSheet( offset: self.$offset, value: (-reader.frame(in: .global).height + bottom ), currentScreen: currentScreen ).environmentObject(getFlats).environmentObject(data)
                    
-                    .padding(.top, safeAreaTop )
+                    .padding(.top,  UIApplication.shared.windows.last?.safeAreaInsets.top ?? 0.0 + 10)
                     
-                    .offset(y: reader.frame(in: .global).height - 190)
+                    .offset(y: reader.frame(in: .global).height - bottom)
                     .offset(y: self.offset)
                                    .gesture(DragGesture().onChanged({ (value) in
                                        
@@ -118,7 +125,7 @@ struct SearchView: View {
                                            
                                            if value.startLocation.y > reader.frame(in: .global).midX{
                                                
-                                               if value.translation.height < 0 && self.offset > (-reader.frame(in: .global).height + 190){
+                                               if value.translation.height < 0 && self.offset > (-reader.frame(in: .global).height + bottom){
                                                    
                                                    self.offset = value.translation.height
                                                }
@@ -128,7 +135,7 @@ struct SearchView: View {
             
                                                if value.translation.height > 0 && self.offset < 0{
                                                    
-                                                   self.offset = (-reader.frame(in: .global).height + 190) + value.translation.height
+                                                   self.offset = (-reader.frame(in: .global).height + bottom) + value.translation.height
                                                }
                                            }
                                        }
@@ -143,7 +150,7 @@ struct SearchView: View {
                                                
                                                if -value.translation.height > reader.frame(in: .global).midX{
                                                    
-                                                   self.offset = (-reader.frame(in: .global).height + 190)
+                                                   self.offset = (-reader.frame(in: .global).height + bottom)
                                                    
                                                    return
                                                }
@@ -155,7 +162,7 @@ struct SearchView: View {
                                                
                                                if value.translation.height < reader.frame(in: .global).midX{
                                                    
-                                                   self.offset = (-reader.frame(in: .global).height + 190)
+                                                   self.offset = (-reader.frame(in: .global).height + bottom)
                                                    
                                                    return
                                                }
@@ -164,12 +171,16 @@ struct SearchView: View {
                                            }
                                        }
                                    }))
-            } .edgesIgnoringSafeArea(.bottom)
-     
+            }
+
+//            .edgesIgnoringSafeArea(.bottom)
+//            .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: UIScreen.main.bounds.height)
                 
             }
                
+            btnBack
                 
+             //   .padding(.top, safeAreaTop )
                      
         }
         }
@@ -248,8 +259,11 @@ struct BottomSheet : View {
                             .renderingMode(.template)
                             .frame(width: 25, height: 25)
                             .foregroundColor( Color("ColorMain"))
-                            .padding(10)
-                        } .background(Color.white).cornerRadius(23).padding(.trailing,10)
+                            .padding([.leading, .bottom], 10)
+                            
+                            .padding([.trailing, .top], 12)
+                        } .background(Color.white).cornerRadius(23)
+                        .padding(.trailing,10)
                     }
             }
             VStack {
@@ -273,6 +287,9 @@ struct BottomSheet : View {
                                     .shadow(color: Color.black.opacity(0.1), radius: 5, x: -5, y: -5))
                 }.sheet(isPresented: $showFilterView) {
                     FilterView(showFilterView: $showFilterView).environmentObject(data).environmentObject(getFlats)
+                        .edgesIgnoringSafeArea(.bottom)
+                    
+                    
                 }
                 .onAppear() {
                    
@@ -317,7 +334,8 @@ struct BottomSheet : View {
         }
       
            
-        }.edgesIgnoringSafeArea(.bottom)
+        }
+        //.edgesIgnoringSafeArea(.bottom)
         .onAppear {
             
             NotificationCenter.default.addObserver(forName: NSNotification.Name("statusChange"), object: nil, queue: .main) { (_) in
